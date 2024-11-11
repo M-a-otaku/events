@@ -9,7 +9,7 @@ class EventsView extends GetView<EventsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
       appBar: _appBar(),
       body: Obx(() => _body()),
     );
@@ -35,7 +35,8 @@ class EventsView extends GetView<EventsController> {
     return Center(
       child: IconButton(
         onPressed: controller.getEvents,
-        icon: const Icon(Icons.change_circle),
+        icon: const Icon(Icons.reset_tv),
+        iconSize: 35,
       ),
     );
   }

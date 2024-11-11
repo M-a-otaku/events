@@ -68,11 +68,9 @@ class MyEventsView extends GetView<MyEventsController> {
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
         child: Obx(
           () => ListView.separated(
-            itemCount: controller.Events.length,
+            itemCount: controller.myEvents.length,
             itemBuilder: (_, index) => MyEventsWidget(
-              event: controller.Events[index],
-              // onTap: () => controller.goToEvent(index)
-              onTap: () {},
+              event: controller.myEvents[index],
             ),
             separatorBuilder: (_, __) => const SizedBox(height: 12),
           ),

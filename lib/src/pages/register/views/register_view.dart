@@ -11,48 +11,50 @@ class RegisterView extends GetView<RegisterController> {
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: _appBar(),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(bottom: 50),
-            width: double.infinity,
-            height: 150,
-            decoration: const BoxDecoration(
-                color: Colors.blueAccent,
-                borderRadius:
-                BorderRadius.only(bottomRight: Radius.elliptical(70, 70))),
-            child: Container(
-              margin: EdgeInsets.only(bottom: 20, top: 20),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(bottom: 50),
+              width: double.infinity,
+              height: 150,
               decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-              ),
-              child: const Icon(
-                Icons.person,
-                size: 50,
+                  color: Colors.blueAccent,
+                  borderRadius:
+                  BorderRadius.only(bottomRight: Radius.elliptical(70, 70))),
+              child: Container(
+                margin: EdgeInsets.only(bottom: 20, top: 20),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                ),
+                child: const Icon(
+                  Icons.person,
+                  size: 50,
+                ),
               ),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Welcome",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "Please Enter Your Information.",
-                  style: TextStyle(fontSize: 20),
-                ),
-              ],
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 25),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Welcome",
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "Please Enter Your Information.",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 15),
-          _body(),
-        ],
+            const SizedBox(height: 16),
+            _body(),
+          ],
+        ),
       ),
     );
   }
@@ -90,8 +92,6 @@ class RegisterView extends GetView<RegisterController> {
               tag:  Obx(() => _login()),
               child:  Obx(() => _login()),
             ),
-
-            const SizedBox(height: 16),
 
           ],
         ),
@@ -162,11 +162,13 @@ class RegisterView extends GetView<RegisterController> {
 
   Widget _firstname() {
     return TextFormField(
+      maxLength: 20,
       controller: controller.firstnameController,
       autofocus: true,
       textInputAction: TextInputAction.next,
       validator: controller.validate,
       decoration: InputDecoration(
+        counter: const Offstage(),
         labelText: "Firstname",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -178,11 +180,13 @@ class RegisterView extends GetView<RegisterController> {
 
   Widget _lastname() {
     return TextFormField(
+      maxLength: 20,
       controller: controller.lastnameController,
       autofocus: true,
       textInputAction: TextInputAction.next,
       validator: controller.validate,
       decoration: InputDecoration(
+        counter: const Offstage(),
         labelText: "Firstname",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -195,15 +199,12 @@ class RegisterView extends GetView<RegisterController> {
 
   Widget _username() {
     return TextFormField(
+      maxLength: 20,
       controller: controller.usernameController,
-      // autofocus: true,
       textInputAction: TextInputAction.next,
       validator: controller.validateUsername,
       decoration: InputDecoration(
-        prefixIcon: Icon(
-          Icons.person_pin,
-          color: Colors.grey,
-        ),
+        counter: const Offstage(),
         labelText: "username",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -215,15 +216,13 @@ class RegisterView extends GetView<RegisterController> {
   Widget _repeatPassword() {
     return Obx(
           () => TextFormField(
+            maxLength: 20,
         controller: controller.repeatPassController,
         validator: controller.validatePassword,
         textInputAction: TextInputAction.next,
         obscureText: controller.isrepeatPasswordVisible.value,
         decoration: InputDecoration(
-          prefixIcon: Icon(
-            Icons.lock_outline_sharp,
-            color: Colors.grey,
-          ),
+          counter: const Offstage(),
           suffixIcon: IconButton(
               onPressed: controller.onPressedRepeat,
               icon: Icon(controller.isrepeatPasswordVisible.value
@@ -241,15 +240,13 @@ class RegisterView extends GetView<RegisterController> {
   Widget _password() {
     return Obx(
       () => TextFormField(
+        maxLength: 20,
         controller: controller.passwordController,
         validator: controller.validatePassword,
         textInputAction: TextInputAction.next,
         obscureText: controller.isPasswordVisible.value,
         decoration: InputDecoration(
-          prefixIcon: Icon(
-            Icons.lock_outline_sharp,
-            color: Colors.grey,
-          ),
+          counter: const Offstage(),
           suffixIcon: IconButton(
               onPressed: controller.onPressed,
               icon: Icon(controller.isPasswordVisible.value

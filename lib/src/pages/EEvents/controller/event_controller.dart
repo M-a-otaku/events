@@ -4,17 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class EventController extends GetxController {
-final EventRepository _repository = EventRepository();
+  final int userId;
+  EventController({required this.userId});
+
+
+  final EventRepository _repository = EventRepository();
 RxList<EventModel> events = RxList();
 RxBool isLoading = false.obs;
 RxBool isRetry = false.obs;
+
 RxBool isDescending = false.obs;
-// int currentIndex = 0;
-//
-// void changeIndex(int index){
-//   currentIndex = index;
-//   update();
-// }
 
 Future<void> getEvents() async {
   isLoading.value = true;

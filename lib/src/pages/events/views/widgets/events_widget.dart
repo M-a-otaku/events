@@ -27,11 +27,12 @@ class EventsWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Hero(
-              tag: event.poster,
-              child: Image.asset(
-                event.poster,
-                height: 115,
-              ),
+              tag: (event.image!.isNotEmpty)
+            ? ClipOval(child: Image.memory(event.image!))
+            : const Icon(Icons.event, color: Colors.white),
+              child: (event.image!.isNotEmpty)
+                  ? ClipOval(child: Image.memory(event.image!))
+                  : const Icon(Icons.event, color: Colors.white),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

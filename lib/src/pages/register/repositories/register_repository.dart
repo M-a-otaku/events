@@ -8,7 +8,7 @@ class RegisterRepository {
   Future<Either<String, Map<String, dynamic>>?> register(
       RegisterDto dto) async {
     try {
-      final url = UrlRepository.users;
+      final url = UrlRepository.register;
 
       // check if user already exist
       final http.Response check = await http.get(url);

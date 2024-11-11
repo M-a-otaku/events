@@ -1,7 +1,7 @@
 import 'package:events/src/pages/login/repositories/login_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get_storage/get_storage.dart';
 import '../../../infrastructure/routes/route_names.dart';
 
 class LoginController extends GetxController {
@@ -9,34 +9,16 @@ class LoginController extends GetxController {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  final _box = GetStorage();
+
   RxBool isLoading = false.obs;
   RxBool isPasswordVisible = true.obs;
-  RxBool isLoggedIn = false.obs;
+  RxBool rememberMe = false.obs;
 
-  @override
-  Future<void> onInit() async {
-    super.onInit();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey("username")) {
-      if (prefs.getString("username") == usernameController.text &&
-          prefs.getString("password") == passwordController.text) {
-        isLoggedIn(true);
-      } else {
-        isLoggedIn(false);
-      }
-    }
+  void changeRemember(bool? val) {
+    rememberMe.value = !rememberMe.value;
   }
 
-  Future<void> emptyPrefs() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove("username");
-    prefs.remove("password");
-  }
-
-  void emptyController() {
-    usernameController.text = "";
-    passwordController.text = "";
-  }
 
   void onPressed() {
     isPasswordVisible.value = !isPasswordVisible.value;
@@ -68,21 +50,12 @@ class LoginController extends GetxController {
 
   Future<void> toEventsPage() async {
     if (!(formKey.currentState?.validate() ?? false)) return;
-    // isLoading.value = true;
-    // if (usernameController.text.trim() == usernameController.text &&
-    //     passwordController.text.trim() == passwordController.text) {
-    //   SharedPreferences prefs = await SharedPreferences.getInstance();
-    //   prefs.setString("username", usernameController.text.trim().toString());
-    //   prefs.setString("password", passwordController.text.trim().toString());
-    //   emptyController();
-    //   isLoggedIn(true);
-    // }
-    final result = await _repository.login(
+    isLoading.value = true;
+    final responseOrException = await _repository.login(
       username: usernameController.text,
       password: passwordController.text,
     );
-
-    result?.fold(
+    responseOrException?.fold(
       (exception) {
         isLoading.value = false;
         Get.showSnackbar(
@@ -96,11 +69,22 @@ class LoginController extends GetxController {
           ),
         );
       },
-      (success) {
+      (response) async {
         isLoading.value = false;
-        // Get.offNamed(RouteNames.events);
-        // Get.offNamed(RouteNames.car);
-        Get.offNamed(RouteNames.home);
+        if (rememberMe.value == true) {
+          await _box.write(
+            'credential',
+            {
+              "username": usernameController.text,
+              "password": passwordController.text,
+              "userId": response["id"],
+            },
+          );
+        }
+        Get.offNamed(
+          RouteNames.home ,
+          parameters: {"userId": '${response["id"]}'},
+        );
       },
     );
   }

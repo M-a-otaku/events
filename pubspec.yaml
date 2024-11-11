@@ -1,5 +1,5 @@
 name: events
-description: "A new Flutter project."
+description: "Final"
 version: 0.0.1
 homepage:
 
@@ -11,11 +11,11 @@ dependencies:
   flutter:
     sdk: flutter
   get: ^4.6.6
-  http: ^1.2.2
+  http: ^0.13.5
   either_dart: ^1.0.0
   shared_preferences: ^2.3.3
   image_picker: ^0.8.7
-
+  get_storage: ^2.1.1
 
 dev_dependencies:
   flutter_test:

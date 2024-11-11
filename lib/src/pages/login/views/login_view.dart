@@ -8,48 +8,50 @@ class LoginView extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(bottom: 50),
-            width: double.infinity,
-            height: 150,
-            decoration: const BoxDecoration(
-                color: Colors.blueAccent,
-                borderRadius:
-                    BorderRadius.only(bottomLeft: Radius.elliptical(70, 70))),
-            child: Container(
-              margin: EdgeInsets.only(bottom: 20, top: 20),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(bottom: 50),
+              width: double.infinity,
+              height: 150,
               decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-              ),
-              child: const Icon(
-                Icons.person,
-                size: 50,
+                  color: Colors.blueAccent,
+                  borderRadius:
+                      BorderRadius.only(bottomLeft: Radius.elliptical(70, 70))),
+              child: Container(
+                margin: EdgeInsets.only(bottom: 20, top: 20),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                ),
+                child: const Icon(
+                  Icons.person,
+                  size: 50,
+                ),
               ),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Welcome",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "Sign in to continue.",
-                  style: TextStyle(fontSize: 20),
-                ),
-              ],
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 25),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Welcome",
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "Sign in to continue.",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 15),
-          _body(),
-        ],
+            const SizedBox(height: 15),
+            _body(),
+          ],
+        ),
       ),
     );
   }
@@ -66,11 +68,30 @@ class LoginView extends GetView<LoginController> {
             const SizedBox(height: 16),
             _password(),
             const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Obx(
+                  () => Checkbox(
+                    value: controller.rememberMe.value,
+                    onChanged: controller.changeRemember,
+                  ),
+                ),
+                const SizedBox(
+                  width: 6,
+                ),
+                const Text(
+                  "Remember Me",
+                )
+              ],
+            ),
+            const SizedBox(height: 16),
             Obx(() => _login()),
             const SizedBox(height: 16),
             Hero(
-              tag:_or(),
-              child:_or(),
+              tag: _or(),
+              child: _or(),
             ),
             const SizedBox(height: 16),
             // Obx(() => _register()),
@@ -145,12 +166,14 @@ class LoginView extends GetView<LoginController> {
 
   Widget _username() {
     return TextFormField(
+      maxLength: 20,
       controller: controller.usernameController,
       autofocus: true,
       textInputAction: TextInputAction.next,
       validator: controller.validateUsername,
       decoration: InputDecoration(
-        prefixIcon: Icon(
+        counter: const Offstage(),
+        prefixIcon: const Icon(
           Icons.person_pin,
           color: Colors.grey,
         ),
@@ -165,12 +188,14 @@ class LoginView extends GetView<LoginController> {
   Widget _password() {
     return Obx(
       () => TextFormField(
+        maxLength: 20,
         controller: controller.passwordController,
         validator: controller.validatePassword,
         textInputAction: TextInputAction.next,
         obscureText: controller.isPasswordVisible.value,
         decoration: InputDecoration(
-          prefixIcon: Icon(
+          counter: const Offstage(),
+          prefixIcon: const Icon(
             Icons.lock_outline_sharp,
             color: Colors.grey,
           ),

@@ -4,13 +4,13 @@ import 'package:either_dart/either.dart';
 import '../../../infrastructure/commons/url_repository.dart';
 
 class LoginRepository {
-  Future<Either<String, bool>?> login({
+  Future<Either<String,  Map<String, dynamic>>?> login({
     required String username,
     required String password,
   })
   async {
     try {
-      final url = UrlRepository.users;
+      final url = UrlRepository.login(username,password);
       final http.Response response = await http.get(url);
       final List<dynamic> users = json.decode(response.body);
 
@@ -19,7 +19,7 @@ class LoginRepository {
           if (user["username"] == username) {
             Map<String, dynamic> theUser = user;
             if (theUser["password"] == password) {
-              return const Right(true);
+              return Right(users.first);
             } else {
               return const Left('Password is not correct');
             }
