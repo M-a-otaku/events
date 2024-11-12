@@ -5,8 +5,7 @@ import '../models/my_events_model.dart';
 import '../repositories/my_events_repository.dart';
 
 class MyEventsController extends GetxController {
-  final int userId;
-  MyEventsController({required this.userId});
+
 
 
   final MyEventsRepository _repository = MyEventsRepository();
@@ -23,7 +22,7 @@ class MyEventsController extends GetxController {
   Future<void> getEvents() async {
     isLoading.value = true;
     isRetry.value = false;
-    final result = await _repository.getMyEvents(creatorId: userId);
+    final result = await _repository.getMyEvents(creatorId: 1);
     result?.fold(
       (exception) {
         isLoading.value = false;
@@ -48,7 +47,7 @@ class MyEventsController extends GetxController {
 
   Future<void> addEvent() async {
     final result = await Get.toNamed(RouteNames.addEvents,
-    parameters: {"creatorId": "$userId"});
+    parameters: {"creatorId": "1"});
     if (result != null) {
       myEvents.add(MyEventsModel.fromJson(json: result));
     }
@@ -57,7 +56,7 @@ class MyEventsController extends GetxController {
   Future<void> toEditPage({required int eventId}) async {
     final result = await Get.toNamed(
       RouteNames.editEvents,
-      parameters: {"creatorId": "$userId", "eventId": "$eventId"},
+      parameters: {"creatorId": "1", "eventId": "$eventId"},
     );
     if (result != null) {
       int index = myEvents.indexWhere((event) => event.id == eventId);
@@ -65,50 +64,50 @@ class MyEventsController extends GetxController {
     }
   }
 
-  Future<void> removeEvent ({required int eventId}) async {
-    int index = myEvents.indexWhere((event) => event.id == eventId);
-    if (myEvents[index].participants != 0) {
-      Get.showSnackbar(
-        GetSnackBar(
-          messageText: const Text(
-            "You Can't Delete Events When they're not empty",
-            style: TextStyle(color: Colors.black, fontSize: 14),
-          ),
-          backgroundColor: Colors.redAccent.withOpacity(.2),
-          duration: const Duration(seconds: 5),
-        ),
-      );
-      return;
-    }
-    final result = await _repository.deleteEventById(eventId: eventId);
-    result.fold(
-          (exception) {
-            Get.showSnackbar(
-              GetSnackBar(
-                messageText: Text(
-                  exception,
-                  style: const TextStyle(color: Colors.black, fontSize: 14),
-                ),
-                backgroundColor: Colors.redAccent.withOpacity(.2),
-                duration: const Duration(seconds: 5),
-              ),
-            );
-      },
-          (_) {
-        myEvents.removeAt(index);
-        Get.showSnackbar(
-          GetSnackBar(
-            messageText: const Text(
-              "Event deleted successfully",
-              style: TextStyle(color: Colors.black, fontSize: 14),
-            ),
-            backgroundColor: Colors.greenAccent.withOpacity(.2),
-            duration: const Duration(seconds: 5),
-          ),
-        );
-      },
-    );
-  }
+  // Future<void> removeEvent ({required int eventId}) async {
+  //   int index = myEvents.indexWhere((event) => event.id == eventId);
+  //   if (myEvents[index].participants != 0) {
+  //     Get.showSnackbar(
+  //       GetSnackBar(
+  //         messageText: const Text(
+  //           "You Can't Delete Events When they're not empty",
+  //           style: TextStyle(color: Colors.black, fontSize: 14),
+  //         ),
+  //         backgroundColor: Colors.redAccent.withOpacity(.2),
+  //         duration: const Duration(seconds: 5),
+  //       ),
+  //     );
+  //     return;
+  //   }
+  //   final result = await _repository.deleteEventById(eventId: eventId);
+  //   result.fold(
+  //         (exception) {
+  //           Get.showSnackbar(
+  //             GetSnackBar(
+  //               messageText: Text(
+  //                 exception,
+  //                 style: const TextStyle(color: Colors.black, fontSize: 14),
+  //               ),
+  //               backgroundColor: Colors.redAccent.withOpacity(.2),
+  //               duration: const Duration(seconds: 5),
+  //             ),
+  //           );
+  //     },
+  //         (_) {
+  //       myEvents.removeAt(index);
+  //       Get.showSnackbar(
+  //         GetSnackBar(
+  //           messageText: const Text(
+  //             "Event deleted successfully",
+  //             style: TextStyle(color: Colors.black, fontSize: 14),
+  //           ),
+  //           backgroundColor: Colors.greenAccent.withOpacity(.2),
+  //           duration: const Duration(seconds: 5),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   void onPriceChanged(value) => priceLimits.value = value;
 

@@ -42,7 +42,7 @@ class EventsView extends GetView<EventsController> {
   }
 
   AppBar _appBar() =>
-      AppBar(centerTitle: true, title: const Text("home page"),
+      AppBar(centerTitle: true, title: Text("home"),
           actions: const [
         Icon(
           Icons.menu,

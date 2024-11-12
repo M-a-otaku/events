@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class EventController extends GetxController {
-  final int userId;
-  EventController({required this.userId});
-
 
   final EventRepository _repository = EventRepository();
 RxList<EventModel> events = RxList();

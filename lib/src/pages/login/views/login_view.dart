@@ -200,7 +200,7 @@ class LoginView extends GetView<LoginController> {
             color: Colors.grey,
           ),
           suffixIcon: IconButton(
-              onPressed: controller.onPressed,
+              onPressed: controller.onPressedVisible,
               icon: Icon(controller.isPasswordVisible.value
                   ? Icons.visibility
                   : Icons.visibility_off_outlined)),

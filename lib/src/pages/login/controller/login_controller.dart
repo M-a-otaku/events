@@ -1,15 +1,14 @@
 import 'package:events/src/pages/login/repositories/login_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import '../../../infrastructure/routes/route_names.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController {
   final LoginRepository _repository = LoginRepository();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  final _box = GetStorage();
 
   RxBool isLoading = false.obs;
   RxBool isPasswordVisible = true.obs;
@@ -20,7 +19,7 @@ class LoginController extends GetxController {
   }
 
 
-  void onPressed() {
+  void onPressedVisible() {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
@@ -51,11 +50,11 @@ class LoginController extends GetxController {
   Future<void> toEventsPage() async {
     if (!(formKey.currentState?.validate() ?? false)) return;
     isLoading.value = true;
-    final responseOrException = await _repository.login(
+    final result = await _repository.login(
       username: usernameController.text,
       password: passwordController.text,
     );
-    responseOrException?.fold(
+    result?.fold(
       (exception) {
         isLoading.value = false;
         Get.showSnackbar(
@@ -71,19 +70,20 @@ class LoginController extends GetxController {
       },
       (response) async {
         isLoading.value = false;
-        if (rememberMe.value == true) {
-          await _box.write(
-            'credential',
-            {
-              "username": usernameController.text,
-              "password": passwordController.text,
-              "userId": response["id"],
-            },
-          );
-        }
+        SharedPreferences preferences =
+        await SharedPreferences.getInstance();
+        // if (rememberMe.value == true) {
+        //   await _box.write(
+        //     'credential',
+        //     {
+        //       "username": usernameController.text,
+        //       "password": passwordController.text,
+        //       "userId": response["id"],
+        //     },
+        //   );
+        // }
         Get.offNamed(
-          RouteNames.home ,
-          parameters: {"userId": '${response["id"]}'},
+          RouteNames.home
         );
       },
     );

@@ -31,7 +31,7 @@ class EventsModel {
     image = base64Decode(imageBase!);
   }
 
-  factory EventsModel.fromJson({required Map<String, dynamic> json}) {
+  factory EventsModel.fromJason({required Map<String, dynamic> json}) {
     return EventsModel(
       imageBase: json["imageBase"],
       title: json["title"],

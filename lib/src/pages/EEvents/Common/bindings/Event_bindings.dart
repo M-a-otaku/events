@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 class EventBindings extends Bindings {
   @override
   void dependencies() {
-    int? userId = int.parse(Get.parameters["userId"] ?? "");
-    Get.lazyPut(() => EventController(userId: userId));
+    Get.lazyPut(() => EventController());
   }
 }

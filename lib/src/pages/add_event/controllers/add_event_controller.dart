@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +8,9 @@ import '../repositories/add_event_repository.dart';
 import '../models/add_event_dto.dart';
 
 class AddEventController extends GetxController {
+  final int userId;
+  AddEventController({required this.userId});
+
   final AddEventRepository _repository = AddEventRepository();
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -14,9 +18,9 @@ class AddEventController extends GetxController {
   final capacityController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  var image = Rx<File?>(null);
+  Rxn<Uint8List> image = Rxn();
   final ImagePicker _picker = ImagePicker();
-  String? _selectedImage;
+  // String? _selectedImage;
   String isImageUpload = "";
   var selectedTime = TimeOfDay.now().obs;
 
@@ -52,7 +56,7 @@ class AddEventController extends GetxController {
 
     if (returnedImage == null) return;
     {
-      _selectedImage = (returnedImage.path);
+      isImageUpload = (returnedImage.path);
     }
   }
 
@@ -68,12 +72,12 @@ class AddEventController extends GetxController {
     }
   }
 
-  Future<void> pickImage(ImageSource source) async {
-    final pickedFile = await _picker.pickImage(source: source);
-    if (pickedFile != null) {
-      image.value = File(pickedFile.path);
-    }
-  }
+  // Future<void> pickImage(ImageSource source) async {
+  //   final pickedFile = await _picker.pickImage(source: source);
+  //   if (pickedFile != null) {
+  //     image.value = File(pickedFile.path);
+  //   }
+  // }
 
   String? validate(String? value) {
     if (value != null && value.isEmpty) return 'required';
@@ -113,12 +117,14 @@ class AddEventController extends GetxController {
     final int capacity = int.parse(capacityController.text);
     final AddEventDto dto = AddEventDto(
         title: titleController.text,
-        poster: _selectedImage,
+        imageBase: isImageUpload,
         description: descriptionController.text,
         date: dateController.text,
         time: "${selectedTime.value.hour}:${selectedTime.value.minute}",
         capacity: capacity,
-        price: price);
+        price: 1,
+        creatorId: 1,
+        );
 
     final result = await _repository.addEvent(dto: dto);
     result?.fold(

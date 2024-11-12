@@ -13,10 +13,10 @@ class UrlRepository {
 
   static Uri users = Uri.parse('$_baseUrl$_users');
   static Uri userByUsername({required String username}) {
-    return Uri.parse('$_baseUrl$_users?username=$username');
+    return Uri.parse('http://$_baseUrl$_users?username=$username');
   }
   static Uri userById({required int id}) {
-    return Uri.parse('$_baseUrl$_users/$id');
+    return Uri.parse('http://$_baseUrl$_users/$id');
   }
   static Uri events = Uri.http(_baseUrl, _events);
   static Uri details = Uri.http(_baseUrl, _details);

@@ -15,7 +15,7 @@ class EventsRepository {
       List<dynamic> result = json.decode(response.body);
 
       for (Map<String, dynamic> events in result) {
-        event.add((EventsModel.fromJson(json: events)));
+        event.add((EventsModel.fromJason(json: events)));
       }
       return Right(event);
     } catch (e) {
@@ -23,19 +23,19 @@ class EventsRepository {
     }
   }
 
-  Future<Either<String, UserModel>> getUserById({required int id}) async {
-    try {
-      final url = UrlRepository.userById(id: id);
-      print(url);
-      final http.Response response = await http.get(url);
-      final Map<String, dynamic> result = json.decode(response.body);
-      print(response.body);
-      return Right(UserModel.fromJson(result));
-    } catch (e) {
-      print(e.toString());
-      return Left(e.toString());
-    }
-  }
+  // Future<Either<String, UserModel>> getUserById({required int id}) async {
+  //   try {
+  //     final url = UrlRepository.userById(id: id);
+  //     print(url);
+  //     final http.Response response = await http.get(url);
+  //     final Map<String, dynamic> result = json.decode(response.body);
+  //     print(response.body);
+  //     return Right(UserModel.fromJson(result));
+  //   } catch (e) {
+  //     print(e.toString());
+  //     return Left(e.toString());
+  //   }
+  // }
 
   Future<Either<String, bool>> editBookmarked({
     required EventsUserDto dto,
@@ -46,7 +46,8 @@ class EventsRepository {
       final response = await http.patch(
         url,
         body: json.encode(dto.toJson()),
-        headers: {"Content-Type": "application/json"},
+        headers: {'Content-type': 'application/json',
+          'Accept': 'application/json',},
       );
       if (response.statusCode != 200) {
         return const Left(

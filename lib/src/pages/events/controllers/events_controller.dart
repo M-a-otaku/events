@@ -6,9 +6,7 @@ import '../models/events_user_dto.dart';
 import '../repositories/events_repository.dart';
 
 class EventsController extends GetxController {
-  final int userId;
 
-  EventsController({required this.userId});
 
   final EventsRepository _repository = EventsRepository();
   RxList<EventsModel> events = RxList();
@@ -25,33 +23,33 @@ class EventsController extends GetxController {
   double min = 0;
 
 
-  Future<void> getUserById() async {
-    isLoading.value = true;
-    isRetry.value = false;
-    final result = await _repository.getUserById(id: userId);
-    result?.fold(
-          (exception) {
-        isLoading.value = false;
-        isRetry.value = true;
-        Get.showSnackbar(
-          GetSnackBar(
-            messageText: Text(
-              exception,
-              style: const TextStyle(color: Colors.black, fontSize: 14),
-            ),
-            backgroundColor: Colors.redAccent.withOpacity(.2),
-            duration: const Duration(seconds: 5),
-          ),
-        );
-      },
-          (user) {
-            isLoading.value =false;
-            isRetry.value=false;
-        bookmarkedEvents.value = user.bookmarked;
-        getEvents();
-      },
-    );
-  }
+  // Future<void> getUserById() async {
+  //   isLoading.value = true;
+  //   isRetry.value = false;
+  //   final result = await _repository.getUserById(id: userId);
+  //   result?.fold(
+  //         (exception) {
+  //       isLoading.value = false;
+  //       isRetry.value = true;
+  //       Get.showSnackbar(
+  //         GetSnackBar(
+  //           messageText: Text(
+  //             exception,
+  //             style: const TextStyle(color: Colors.black, fontSize: 14),
+  //           ),
+  //           backgroundColor: Colors.redAccent.withOpacity(.2),
+  //           duration: const Duration(seconds: 5),
+  //         ),
+  //       );
+  //     },
+  //         (user) {
+  //           isLoading.value =false;
+  //           isRetry.value=false;
+  //       bookmarkedEvents.value = user.bookmarked;
+  //       getEvents();
+  //     },
+  //   );
+  // }
 
   Future<void> getEvents() async {
     events.clear();
@@ -92,13 +90,14 @@ class EventsController extends GetxController {
     getEvents();
   }
 
-  Future<void> onBookmarks() async {
-    await Get.toNamed(
-      RouteNames.bookmark,
-      parameters: {"userId": "$userId"},
-    );
-    getUserById();
-  }
+  // Future<void> onBookmarks() async {
+  //   await Get.toNamed(
+  //     RouteNames.bookmark,
+  //     parameters: {"userId": "$userId"},
+  //   );
+  //   // getUserById();
+  //   getEvents();
+  // }
 
   void onChangedPrice(value) => priceLimits.value = value;
 
@@ -122,40 +121,40 @@ class EventsController extends GetxController {
     isRetry.value = false;
   }
 
-  Future<void> onBookmark(int eventId) async {
-    (bookmarkedEvents.contains(eventId))
-        ? bookmarkedEvents.remove(eventId)
-        : bookmarkedEvents.add(eventId);
-
-    final EventsUserDto dto = EventsUserDto(bookmark: bookmarkedEvents);
-    final result = await _repository.editBookmarked(dto: dto, userId: userId);
-    result.fold(
-          (exception) {
-            Get.showSnackbar(
-              GetSnackBar(
-                messageText: Text(
-                  exception,
-                  style: const TextStyle(color: Colors.black, fontSize: 14),
-                ),
-                backgroundColor: Colors.redAccent.withOpacity(.2),
-                duration: const Duration(seconds: 5),
-              ),
-            );
-      },
-          (_) {
-            Get.showSnackbar(
-              GetSnackBar(
-                messageText: const Text(
-                  "the Event bookmarked successfully",
-                  style: TextStyle(color: Colors.black, fontSize: 14),
-                ),
-                backgroundColor: Colors.greenAccent.withOpacity(.2),
-                duration: const Duration(seconds: 5),
-              ),
-            );
-      },
-    );
-  }
+  // Future<void> onBookmark(int eventId) async {
+  //   (bookmarkedEvents.contains(eventId))
+  //       ? bookmarkedEvents.remove(eventId)
+  //       : bookmarkedEvents.add(eventId);
+  //
+  //   final EventsUserDto dto = EventsUserDto(bookmark: bookmarkedEvents);
+  //   final result = await _repository.editBookmarked(dto: dto, userId: userId);
+  //   result.fold(
+  //         (exception) {
+  //           Get.showSnackbar(
+  //             GetSnackBar(
+  //               messageText: Text(
+  //                 exception,
+  //                 style: const TextStyle(color: Colors.black, fontSize: 14),
+  //               ),
+  //               backgroundColor: Colors.redAccent.withOpacity(.2),
+  //               duration: const Duration(seconds: 5),
+  //             ),
+  //           );
+  //     },
+  //         (_) {
+  //           Get.showSnackbar(
+  //             GetSnackBar(
+  //               messageText: const Text(
+  //                 "the Event bookmarked successfully",
+  //                 style: TextStyle(color: Colors.black, fontSize: 14),
+  //               ),
+  //               backgroundColor: Colors.greenAccent.withOpacity(.2),
+  //               duration: const Duration(seconds: 5),
+  //             ),
+  //           );
+  //     },
+  //   );
+  // }
 
   double get minPrice => priceLimits.value.start.floorToDouble();
   double get maxPrice => priceLimits.value.end.floorToDouble();
@@ -168,6 +167,6 @@ class EventsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getUserById();
+    getEvents();
   }
 }

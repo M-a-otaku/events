@@ -8,11 +8,10 @@ import '../../my_events/controllers/my_events_controller.dart';
 class NavBarBindings extends Bindings{
   @override
   void dependencies() {
-    int? userId = int.parse(Get.parameters["userId"] ?? "");
-    Get.lazyPut(()=> NavBarController(userId: userId));
-    Get.lazyPut(()=> EventController(userId: userId));
-    Get.lazyPut(()=> EventsController(userId: userId));
-    Get.lazyPut(()=> MyEventsController(userId:userId));
+    Get.lazyPut(()=> NavBarController());
+    Get.lazyPut(()=> EventController());
+    Get.lazyPut(()=> EventsController());
+    Get.lazyPut(()=> MyEventsController());
   }
 
 
