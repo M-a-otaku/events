@@ -9,6 +9,7 @@ class MyEventsView extends GetView<MyEventsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       floatingActionButton: _fab(),
       // floatingActionButton: Hero(
       //   tag: Obx(() => _fab()),
@@ -17,8 +18,7 @@ class MyEventsView extends GetView<MyEventsController> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: _appBar(),
       body: RefreshIndicator(
-          onRefresh: controller.onRefresh,
-          child: Obx(() => _body())),
+          onRefresh: controller.onRefresh, child: Obx(() => _body())),
     );
   }
 
@@ -53,16 +53,19 @@ class MyEventsView extends GetView<MyEventsController> {
     );
   }
 
-  AppBar _appBar() =>
-      AppBar(centerTitle: true, title: const Text("My Events"), actions: const [
-        Icon(
-          Icons.menu,
-          color: Colors.white,
-        ),
-        SizedBox(
-          width: 20,
-        )
-      ]);
+  AppBar _appBar() => AppBar(
+          centerTitle: true,
+          title: const Text("My Events"),
+          backgroundColor: Colors.grey,
+          actions: const [
+            Icon(
+              Icons.menu,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 20,
+            )
+          ]);
 
   Widget _fab() {
     return FloatingActionButton(
@@ -79,7 +82,9 @@ class MyEventsView extends GetView<MyEventsController> {
           () => ListView.separated(
             itemCount: controller.myEvents.length,
             itemBuilder: (_, index) => MyEventsWidget(
-              event: controller.myEvents[index],
+              myEvent: controller.myEvents[index],
+              removeEvent: () => controller.removeEvent(
+                  eventId: controller.myEvents[index].id),
             ),
             separatorBuilder: (_, __) => const SizedBox(height: 12),
           ),

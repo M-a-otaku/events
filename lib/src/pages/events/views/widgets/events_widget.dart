@@ -17,38 +17,67 @@ class EventsWidget extends GetView<EventsController> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: Colors.blueAccent[200],
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          Hero(
-            tag: (event.image != null && event.image!.isNotEmpty)
-                ? ClipOval(child: Image.memory(base64Decode(event.image!)) , clipBehavior: Clip.hardEdge,)
-                : const Icon(Icons.event, color: Colors.white),
+          // Positioned image
+          Positioned(
+            right: 0,
+            top: -20,
             child: (event.image != null && event.image!.isNotEmpty)
-                ? ClipOval(child: Image.memory(base64Decode(event.image!)))
-                : const Icon(Icons.event, color: Colors.white),
+                ? ClipOval(
+              child: Image.memory(
+                base64Decode(event.image!),
+                width: 80,
+                height: 80,
+                fit: BoxFit.cover,
+              ),
+            )
+                : const Icon(
+              Icons.event,
+              color: Colors.white,
+              size: 80,
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // Text information
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(event.title,
-                  style: const TextStyle(fontSize: 20, color: Colors.white)),
-              Text(event.description,
-                  style: const TextStyle(fontSize: 20, color: Colors.white)),
-              Text(event.date.toString(),
-                  style: const TextStyle(fontSize: 20, color: Colors.white)),
-              Text(event.time.toString(),
-                  style: const TextStyle(fontSize: 20, color: Colors.white)),
-              Text('${event.participants} / ${event.capacity}',
-                  style: const TextStyle(fontSize: 20, color: Colors.white)),
-              Text(event.price.toString(),
-                  style: const TextStyle(fontSize: 20, color: Colors.white)),
+              Text(
+                event.userId.toString(),
+                style: const TextStyle(fontSize: 18, color: Colors.white),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                event.description,
+                style: const TextStyle(fontSize: 16, color: Colors.white),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '${event.date.year}-${event.date.month}-${event.date.day}',
+                style: const TextStyle(fontSize: 16, color: Colors.white),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '${event.time.hour}:${event.time.minute}',
+                style: const TextStyle(fontSize: 16, color: Colors.white),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '${event.participants ?? 0} / ${event.capacity}',
+                style: const TextStyle(fontSize: 16, color: Colors.white),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "\$${event.price}",
+                style: const TextStyle(fontSize: 18, color: Colors.white),
+              ),
             ],
           ),
         ],

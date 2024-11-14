@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../controllers/add_event_controller.dart';
 
@@ -13,7 +14,7 @@ class AddEventView extends GetView<AddEventController> {
       floatingActionButton: _fab(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: _appBar(),
-      body: Obx(()=> _body(context)),
+      body: Obx(() => _body(context)),
     );
   }
 
@@ -21,8 +22,8 @@ class AddEventView extends GetView<AddEventController> {
     return (controller.isLoading.value)
         ? const FloatingActionButton(
             onPressed: null,
-            child:CircularProgressIndicator(),
-            )
+            child: CircularProgressIndicator(),
+          )
         : FloatingActionButton(
             onPressed: controller.onSubmit,
             child: const Icon(Icons.check),
@@ -56,7 +57,7 @@ class AddEventView extends GetView<AddEventController> {
                   );
                 } else {
                   const SizedBox(height: 32);
-                return const Text("No image selected");
+                  return const Text("No image selected");
                 }
               }),
               const SizedBox(height: 32),
@@ -88,53 +89,53 @@ class AddEventView extends GetView<AddEventController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Obx(() => DropdownButton<String>(
-                    padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                    hint: const Text("year"),
-                    value: controller.selectedYear.value.isEmpty
-                        ? null
-                        : controller.selectedYear.value,
-                    items: controller.years.map((year) {
-                      return DropdownMenuItem(
-                        value: year,
-                        child: Text(year),
-                      );
-                    }).toList(),
-                    onChanged: (value) =>
-                    controller.selectedYear.value = value ?? '',
-                  )),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 8),
+                        hint: const Text("year"),
+                        value: controller.selectedYear.value.isEmpty
+                            ? null
+                            : controller.selectedYear.value,
+                        items: controller.years.map((year) {
+                          return DropdownMenuItem(
+                            value: year,
+                            child: Text(year),
+                          );
+                        }).toList(),
+                        onChanged: (value) =>
+                            controller.selectedYear.value = value ?? '',
+                      )),
                   Obx(() => DropdownButton<String>(
-                    padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                    hint: const Text("month"),
-                    value: controller.selectedMonth.value.isEmpty
-                        ? null
-                        : controller.selectedMonth.value,
-                    items: controller.months.map((month) {
-                      return DropdownMenuItem(
-                        value: month,
-                        child: Text(month),
-                      );
-                    }).toList(),
-                    onChanged: (value) =>
-                    controller.selectedMonth.value = value ?? '',
-                  )),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 8),
+                        hint: const Text("month"),
+                        value: controller.selectedMonth.value.isEmpty
+                            ? null
+                            : controller.selectedMonth.value,
+                        items: controller.months.map((month) {
+                          return DropdownMenuItem(
+                            value: month,
+                            child: Text(month),
+                          );
+                        }).toList(),
+                        onChanged: (value) =>
+                            controller.selectedMonth.value = value ?? '',
+                      )),
                   Obx(() => DropdownButton<String>(
-                    padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                    hint: const Text("day"),
-                    value: controller.selectedDay.value.isEmpty
-                        ? null
-                        : controller.selectedDay.value,
-                    items: controller.days.map((day) {
-                      return DropdownMenuItem(
-                        value: day,
-                        child: Text(day),
-                      );
-                    }).toList(),
-                    onChanged: (value) =>
-                    controller.selectedDay.value = value ?? '',
-                  )),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 8),
+                        hint: const Text("day"),
+                        value: controller.selectedDay.value.isEmpty
+                            ? null
+                            : controller.selectedDay.value,
+                        items: controller.days.map((day) {
+                          return DropdownMenuItem(
+                            value: day,
+                            child: Text(day),
+                          );
+                        }).toList(),
+                        onChanged: (value) =>
+                            controller.selectedDay.value = value ?? '',
+                      )),
                 ],
               ),
               // _datePicker(context)
@@ -148,11 +149,17 @@ class AddEventView extends GetView<AddEventController> {
 
   Widget _title() {
     return TextFormField(
+      maxLength: 20,
+      readOnly: (controller.isLoading.value ? true : false),
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+      ],
       controller: controller.titleController,
       autofocus: true,
       textInputAction: TextInputAction.next,
       validator: controller.validate,
       decoration: InputDecoration(
+        counter: const Offstage(),
         prefixIcon: const Icon(
           Icons.person_pin,
           color: Colors.grey,
@@ -167,11 +174,17 @@ class AddEventView extends GetView<AddEventController> {
 
   Widget _description() {
     return TextFormField(
+      maxLength: 50,
+      readOnly: (controller.isLoading.value ? true : false),
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+      ],
       controller: controller.descriptionController,
       autofocus: true,
       textInputAction: TextInputAction.next,
       validator: controller.validate,
       decoration: InputDecoration(
+        counter: const Offstage(),
         prefixIcon: const Icon(
           Icons.person_pin,
           color: Colors.grey,
@@ -186,10 +199,16 @@ class AddEventView extends GetView<AddEventController> {
 
   Widget _price() {
     return TextFormField(
+      maxLength: 6,
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+      ],
       controller: controller.priceController,
       textInputAction: TextInputAction.next,
       validator: controller.validatePrice,
       decoration: InputDecoration(
+        counter: const Offstage(),
         labelText: "Price",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -200,11 +219,17 @@ class AddEventView extends GetView<AddEventController> {
 
   Widget _capacity() {
     return TextFormField(
+      maxLength: 6,
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+      ],
       controller: controller.capacityController,
       autofocus: true,
       textInputAction: TextInputAction.next,
       validator: controller.validateCapacity,
       decoration: InputDecoration(
+        counter: const Offstage(),
         labelText: "Capacity",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

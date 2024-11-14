@@ -51,24 +51,59 @@ class MyEventsController extends GetxController {
   Future<void> addEvent() async {
     final result = await Get.toNamed(RouteNames.addEvents);
     if (result != null) {
+      print(result["time"]);
       myEvents.add(MyEventsModel.fromJson(json: result));
     }
   }
 
   Future<void> toEditPage({required int eventId}) async {
+    isLoading.value = true;
+    int index = myEvents.indexWhere((event) => event.id == eventId);
+    if (myEvents[index].participants != 0) {
+      isLoading.value = false;
+      Get.showSnackbar(
+        GetSnackBar(
+          messageText: const Text(
+            "You Can't edit Events When they're not empty",
+            style: TextStyle(color: Colors.black, fontSize: 14),
+          ),
+          backgroundColor: Colors.redAccent.withOpacity(.2),
+          duration: const Duration(seconds: 5),
+        ),
+      );
+      return;
+    }
+
     final result = await Get.toNamed(
       RouteNames.editEvents,
-      parameters: {"creatorId": "1", "eventId": "$eventId"},
+      parameters: {"id": "$eventId"},
     );
     if (result != null) {
-      int index = myEvents.indexWhere((event) => event.id == eventId);
-      myEvents[index] = MyEventsModel.fromJson(json: result);
+      MyEventsModel newEvent = MyEventsModel.fromJson(json: result);
+      if(index != -1){
+        myEvents[index]=myEvents[index].copyWith(
+          date: newEvent.date,
+          time: newEvent.time,
+          filled: newEvent.filled,
+          participants: newEvent.participants,
+          title: newEvent.title,
+          description: newEvent.description,
+          image: newEvent.image,
+          price: newEvent.price,
+          userId: newEvent.userId,
+          id: newEvent.id,
+          capacity: newEvent.capacity,
+        );
+      }
+
     }
   }
 
   Future<void> removeEvent({required int eventId}) async {
+    isLoading.value = true;
     int index = myEvents.indexWhere((event) => event.id == eventId);
     if (myEvents[index].participants != 0) {
+      isLoading.value = false;
       Get.showSnackbar(
         GetSnackBar(
           messageText: const Text(
@@ -84,6 +119,7 @@ class MyEventsController extends GetxController {
     final result = await _repository.deleteEventById(eventId: eventId);
     result.fold(
       (exception) {
+        isLoading.value = false;
         Get.showSnackbar(
           GetSnackBar(
             messageText: Text(
@@ -96,6 +132,7 @@ class MyEventsController extends GetxController {
         );
       },
       (_) {
+        isLoading.value = false;
         myEvents.removeAt(index);
         Get.showSnackbar(
           GetSnackBar(

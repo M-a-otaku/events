@@ -68,6 +68,8 @@ class AddEventController extends GetxController {
         minuteLabelText: 'Select Minute');
     if (pickedTime != null && pickedTime != selectedTime.value) {
       selectedTime.value = pickedTime;
+      print(pickedTime);
+      print(selectedTime);
     }
   }
 

@@ -59,6 +59,11 @@ class EventsController extends GetxController {
 
     getEvents();
   }
+  Future<void> logout() async {
+    await Get.toNamed(
+      RouteNames.login,
+    );
+  }
 
   // Future<void> onBookmarks() async {
   //   await Get.toNamed(

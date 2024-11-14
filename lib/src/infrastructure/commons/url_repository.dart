@@ -24,6 +24,9 @@ class UrlRepository {
 
   static Uri myEvents (int userId)=>Uri.http( _baseUrl , _events);
 
+  static Uri getEventsByUserId({required int userId}) {
+    return Uri.parse('$_baseUrl$_events?userId=$userId');
+  }
 
   static Uri details = Uri.http(_baseUrl, _details);
 
@@ -38,6 +41,9 @@ class UrlRepository {
   static Uri deleteEventById({required int eventId}) {
     return Uri.parse('$_baseUrl$_events/$eventId');
   }
+
+  static Uri deleteEventById22({required int eventId}) =>
+      Uri.http(_baseUrl, _events);
 
 // static Uri itemsById({required int itemId}) {
 //   return Uri.http(_baseUrl, '$_items/$itemId');

@@ -6,7 +6,7 @@ class MyEventsModel {
   final DateTime date;
   final DateTime time;
   final int capacity;
-  final double price;
+  final int price;
   int? participants = 0;
   final String? image;
   bool filled;
@@ -40,6 +40,33 @@ class MyEventsModel {
       filled: json["filled"],
     );
   }
+
+  MyEventsModel copyWith({
+    String? image,
+    String? title,
+    String? description,
+    DateTime? time,
+    DateTime? date,
+    int? capacity,
+    int? price,
+    int? id,
+    int? userId,
+    int? participants,
+    bool? filled,
+  }) =>
+      MyEventsModel(
+        image: image ?? this.image,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        capacity: capacity ?? this.capacity,
+        price: price ?? this.price,
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        participants: participants ?? this.participants,
+        filled: filled ?? this.filled,
+        time: time ?? this.time,
+        date: date ?? this.date,
+      );
 
   @override
   String toString() {

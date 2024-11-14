@@ -9,12 +9,11 @@ class EventsView extends GetView<EventsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
-
       appBar: _appBar(),
       body: RefreshIndicator(
-          onRefresh: controller.onRefresh,
-          child: Obx(() => _body())),
+          onRefresh: controller.onRefresh, child: Obx(() => _body())),
     );
   }
 
@@ -43,16 +42,23 @@ class EventsView extends GetView<EventsController> {
     );
   }
 
-  AppBar _appBar() =>
-      AppBar(centerTitle: true, title: Text("home"), actions: const [
-        Icon(
-          Icons.menu,
-          color: Colors.white,
-        ),
-        SizedBox(
-          width: 20,
-        )
-      ]);
+  AppBar _appBar() => AppBar(
+    backgroundColor: Colors.grey,
+          centerTitle: true,
+          title: Text("home"),
+          leading: IconButton(
+          icon:  Icon( Icons.logout),
+            color: Colors.white, onPressed: controller.logout,
+          ),
+          actions: const [
+            Icon(
+              Icons.menu,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 20,
+            )
+          ]);
 
   Widget _success() => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),

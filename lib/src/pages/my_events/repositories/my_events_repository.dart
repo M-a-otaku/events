@@ -7,13 +7,15 @@ import '../../shared/local_storage_keys.dart';
 import '../models/my_events_model.dart';
 
 class MyEventsRepository {
-  Future<Either<String, List<MyEventsModel>>> getMyEvents({required int userId}) async {
+  Future<Either<String, List<MyEventsModel>>> getMyEvents(
+      {required int userId}) async {
     try {
-      final SharedPreferences preferences = await SharedPreferences.getInstance();
-      final int userId = preferences.getInt(LocalKeys.userId)??-1;
+      final SharedPreferences preferences =
+          await SharedPreferences.getInstance();
+      final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
       print(userId.toString());
       List<MyEventsModel> events = [];
-      if(userId == -1){
+      if (userId == -1) {
         return const Right([]);
       }
       final url = UrlRepository.myEvents(userId);
@@ -22,7 +24,9 @@ class MyEventsRepository {
       print(url);
 
       for (Map<String, dynamic> event in result) {
-        events.add((MyEventsModel.fromJson(json: event)));
+        if (event["userId"] == userId) {
+          events.add((MyEventsModel.fromJson(json: event)));
+        }
       }
       return Right(events);
     } catch (e) {
@@ -33,7 +37,12 @@ class MyEventsRepository {
   Future<Either<String, bool>> deleteEventById({required int eventId}) async {
     try {
       final url = UrlRepository.deleteEventById(eventId: eventId);
-      final http.Response response = await http.delete(url);
+      final http.Response response = await http.delete(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
       if (response.statusCode != 200) {
         return const Left("can't delete this event");
       }
