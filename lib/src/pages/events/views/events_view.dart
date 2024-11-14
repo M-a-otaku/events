@@ -10,11 +10,13 @@ class EventsView extends GetView<EventsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+
       appBar: _appBar(),
-      body: Obx(() => _body()),
+      body: RefreshIndicator(
+          onRefresh: controller.onRefresh,
+          child: Obx(() => _body())),
     );
   }
-
 
   Widget _body() {
     if (controller.isLoading.value) {
@@ -42,8 +44,7 @@ class EventsView extends GetView<EventsController> {
   }
 
   AppBar _appBar() =>
-      AppBar(centerTitle: true, title: Text("home"),
-          actions: const [
+      AppBar(centerTitle: true, title: Text("home"), actions: const [
         Icon(
           Icons.menu,
           color: Colors.white,
@@ -61,7 +62,7 @@ class EventsView extends GetView<EventsController> {
             itemBuilder: (_, index) => EventsWidget(
               event: controller.events[index],
               // onTap: () => controller.goToEvent(index)
-              onTap: () {},
+              // onTap: () {},
             ),
             separatorBuilder: (_, __) => const SizedBox(height: 12),
           ),

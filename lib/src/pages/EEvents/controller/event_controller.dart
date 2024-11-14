@@ -1,3 +1,4 @@
+import '../../my_events/models/my_events_model.dart';
 import '../model/event_model.dart';
 import '../repositories/events_repository.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,8 @@ class EventController extends GetxController {
 
   final EventRepository _repository = EventRepository();
 RxList<EventModel> events = RxList();
+  RxList<MyEventsModel> eventList = RxList();
+
 RxBool isLoading = false.obs;
 RxBool isRetry = false.obs;
 

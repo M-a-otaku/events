@@ -1,5 +1,7 @@
+import 'events_model.dart';
+
 class EventsUserDto {
-  List bookmark;
+  List<EventsModel> bookmark;
 
   EventsUserDto({
     required this.bookmark,
@@ -7,7 +9,7 @@ class EventsUserDto {
 
   Map<String, dynamic> toJson() {
     return {
-      "bookmarked": bookmark,
+      "bookmark": bookmark,
     };
   }
 }

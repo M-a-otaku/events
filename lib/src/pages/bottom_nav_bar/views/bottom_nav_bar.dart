@@ -4,6 +4,7 @@ import 'package:events/src/pages/events/views/events_view.dart';
 import 'package:events/src/pages/my_events/views/my_events_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../my_events/views/widgets/sddns.dart';
 
 class BottomNavBar extends GetView<NavBarController> {
   const BottomNavBar({super.key});
@@ -18,6 +19,7 @@ class BottomNavBar extends GetView<NavBarController> {
             EventsView(),
             MyEventsView(),
             EventsScreen(),
+            // EventsScreen2(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(

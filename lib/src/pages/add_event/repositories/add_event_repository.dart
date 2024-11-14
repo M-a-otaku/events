@@ -14,7 +14,7 @@ class AddEventRepository {
       final url = UrlRepository.events;
       http.Response response = await http.post(
         url,
-        body: json.encode(dto),
+        body: json.encode(dto.toJson()),
         headers: {"Content-Type": "application/json"},
       );
       final Map<String, dynamic> result = json.decode(response.body);
@@ -23,35 +23,8 @@ class AddEventRepository {
       }
       return const Left('Error');
     } catch (e) {
+      print(e.toString());
       return Left(e.toString());
-    }
-  }
-
-  Future<Either<String, String>> uploadImage() async {
-    var image = Rx<File?>(null);
-    final url = UrlRepository.events;
-    if (image.value == null) {
-      return const Left("No image selected");
-    }
-
-    var request = http.MultipartRequest(
-      'poster', Uri.parse("$url"),
-    );
-    var picture = await http.MultipartFile.fromPath(
-      'file', image.value!.path,
-    );
-    request.files.add(picture);
-
-    try {
-      var response = await request.send();
-
-      if (response.statusCode == 200) {
-        return const Right("Image uploaded successfully");
-      } else {
-        return const Left("Failed to upload image");
-      }
-    } catch (e) {
-      return Left("Error: $e");
     }
   }
 

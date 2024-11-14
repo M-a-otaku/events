@@ -1,31 +1,36 @@
-import 'dart:typed_data';
-import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AddEventDto {
-  final int creatorId;
+  final int userId;
   final String title;
   final String description;
-  final String date;
   final String time;
+  final String date;
   final int capacity;
   final int price;
-  int? participants = 0;
-  String? imageBase = '';
-  bool filled = false;
+  int participants ;
+  final String? image;
+  bool filled ;
 
   AddEventDto({
-    required this.creatorId,
-    this.imageBase,
+    required this.userId,
+    required this.filled,
+    this.image,
     required this.title,
     required this.description,
     required this.date,
     required this.time,
     required this.capacity,
+    required this.participants,
     required this.price,
   });
 
 Map<String, dynamic> toJson() => {
-        "imageBase": imageBase,
+        "image": image,
+        "userId": userId,
+        "filled": filled,
         "participants": participants,
         "title": title,
         "description": description,

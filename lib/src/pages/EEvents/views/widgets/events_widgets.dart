@@ -22,7 +22,7 @@ class CarItems extends GetView<EventController> {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: textColor,
+            color: Colors.white,
           ),
         ),
         Text(
@@ -30,7 +30,7 @@ class CarItems extends GetView<EventController> {
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.bold,
-            color: textColor,
+            color: Colors.white,
           ),
         )
       ],

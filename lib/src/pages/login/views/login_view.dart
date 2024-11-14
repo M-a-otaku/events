@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../controller/login_controller.dart';
 
@@ -20,17 +21,7 @@ class LoginView extends GetView<LoginController> {
                   color: Colors.blueAccent,
                   borderRadius:
                       BorderRadius.only(bottomLeft: Radius.elliptical(70, 70))),
-              child: Container(
-                margin: EdgeInsets.only(bottom: 20, top: 20),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                ),
-                child: const Icon(
-                  Icons.person,
-                  size: 50,
-                ),
-              ),
+              child: Hero(tag: _icon(), child: _icon()),
             ),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 25),
@@ -55,6 +46,20 @@ class LoginView extends GetView<LoginController> {
       ),
     );
   }
+  Widget _icon(){
+    return Container(
+      margin: EdgeInsets.only(bottom: 20, top: 20),
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white,
+      ),
+      child: const Icon(
+        Icons.person,
+        size: 50,
+      ),
+    );
+  }
+
 
   Widget _body() {
     return Form(
@@ -75,7 +80,9 @@ class LoginView extends GetView<LoginController> {
                 Obx(
                   () => Checkbox(
                     value: controller.rememberMe.value,
-                    onChanged: controller.changeRemember,
+                    onChanged: (controller.isLoading.value
+                        ? null
+                        : controller.changeRemember),
                   ),
                 ),
                 const SizedBox(
@@ -89,10 +96,7 @@ class LoginView extends GetView<LoginController> {
             const SizedBox(height: 16),
             Obx(() => _login()),
             const SizedBox(height: 16),
-            Hero(
-              tag: _or(),
-              child: _or(),
-            ),
+            _or(),
             const SizedBox(height: 16),
             // Obx(() => _register()),
             Hero(
@@ -165,21 +169,27 @@ class LoginView extends GetView<LoginController> {
       );
 
   Widget _username() {
-    return TextFormField(
-      maxLength: 20,
-      controller: controller.usernameController,
-      autofocus: true,
-      textInputAction: TextInputAction.next,
-      validator: controller.validateUsername,
-      decoration: InputDecoration(
-        counter: const Offstage(),
-        prefixIcon: const Icon(
-          Icons.person_pin,
-          color: Colors.grey,
-        ),
-        labelText: "username",
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+    return Obx(
+      () => TextFormField(
+        maxLength: 20,
+        controller: controller.usernameController,
+        autofocus: true,
+        textInputAction: TextInputAction.next,
+        validator: controller.validateUsername,
+        readOnly: (controller.isLoading.value ? false : false),
+        inputFormatters: [
+          FilteringTextInputFormatter.deny(RegExp(r'\s')),
+        ],
+        decoration: InputDecoration(
+          counter: const Offstage(),
+          prefixIcon: const Icon(
+            Icons.person_pin,
+            color: Colors.grey,
+          ),
+          labelText: "username",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       ),
     );
@@ -188,11 +198,15 @@ class LoginView extends GetView<LoginController> {
   Widget _password() {
     return Obx(
       () => TextFormField(
-        maxLength: 20,
         controller: controller.passwordController,
         validator: controller.validatePassword,
         textInputAction: TextInputAction.next,
         obscureText: controller.isPasswordVisible.value,
+        maxLength: 20,
+        // readOnly: (controller.isLoading.value ? true : false),
+        inputFormatters: [
+          FilteringTextInputFormatter.deny(RegExp(r'\s')),
+        ],
         decoration: InputDecoration(
           counter: const Offstage(),
           prefixIcon: const Icon(

@@ -37,9 +37,7 @@ class RegisterController extends GetxController {
       return 'Please enter password';
     } else {
       if (!regex.hasMatch(value!)) {
-        return '''Please enter valid password 
-    minimum 8 to maximum 20 Characters
-        ''';
+        return 'Please enter valid password minimum 8 Characters';
       } else {
         return null;
       }

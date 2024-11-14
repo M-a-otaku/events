@@ -1,54 +1,48 @@
-import 'dart:typed_data';
-import 'dart:convert';
-
 class MyEventsModel {
   final int id;
-  final int creatorId;
+  final int userId;
   final String title;
   final String description;
-  final String date;
-  final String time;
+  final DateTime date;
+  final DateTime time;
   final int capacity;
   final double price;
   int? participants = 0;
-  String? imageBase = '';
-  Uint8List? image;
+  final String? image;
   bool filled;
 
   MyEventsModel({
     required this.id,
-    required this.creatorId,
+    required this.userId,
+    required this.image,
     this.participants,
-    this.imageBase,
     required this.title,
     required this.filled,
     required this.description,
-    required this.date,
     required this.time,
+    required this.date,
     required this.capacity,
     required this.price,
-  }) {
-    image = base64Decode(imageBase!);
-  }
+  });
 
   factory MyEventsModel.fromJson({required Map<String, dynamic> json}) {
     return MyEventsModel(
-      imageBase: json["imageBase"],
+      image: json["image"],
       title: json["title"],
       description: json["description"],
-      date: json["date"],
-      time: json["time"],
+      date: DateTime.tryParse(json['date']) ?? DateTime.now(),
+      time: DateTime.tryParse(json['time']) ?? DateTime.now(),
       capacity: json["capacity"],
       price: json["price"],
       id: json["id"],
       participants: json["participants"],
-      creatorId: json["creatorId"],
+      userId: json["userId"],
       filled: json["filled"],
     );
   }
 
   @override
   String toString() {
-    return "$imageBase, $title, $description, $date, $time, $capacity, $price";
+    return "$image, $title, $description, $date ,$time, $filled, $capacity, $price";
   }
 }

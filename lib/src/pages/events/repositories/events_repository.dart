@@ -9,54 +9,40 @@ import '../models/user_model.dart';
 class EventsRepository {
   Future<Either<String, List<EventsModel>>> getEvents() async {
     try {
-      List<EventsModel> event = [];
+      List<EventsModel> events = [];
       final url = UrlRepository.events;
       http.Response response = await http.get(url);
       List<dynamic> result = json.decode(response.body);
 
-      for (Map<String, dynamic> events in result) {
-        event.add((EventsModel.fromJason(json: events)));
+      for (Map<String, dynamic> event in result) {
+        events.add((EventsModel.fromJson(json: event)));
       }
-      return Right(event);
+      return Right(events);
     } catch (e) {
       return Left(e.toString());
     }
   }
 
-  // Future<Either<String, UserModel>> getUserById({required int id}) async {
+  // Future<Either<String, bool>> editBookmarked({
+  //   required EventsUserDto dto,
+  //   required int userId,
+  // }) async {
   //   try {
-  //     final url = UrlRepository.userById(id: id);
-  //     print(url);
-  //     final http.Response response = await http.get(url);
-  //     final Map<String, dynamic> result = json.decode(response.body);
-  //     print(response.body);
-  //     return Right(UserModel.fromJson(result));
+  //     final url = UrlRepository.userById(id: userId);
+  //     final response = await http.patch(
+  //       url,
+  //       body: json.encode(dto.toJson()),
+  //       headers: {'Content-type': 'application/json',
+  //         'Accept': 'application/json',},
+  //     );
+  //     if (response.statusCode != 200) {
+  //       return const Left(
+  //         'Cant add this event to bookmarks',
+  //       );
+  //     }
+  //     return const Right(true);
   //   } catch (e) {
-  //     print(e.toString());
   //     return Left(e.toString());
   //   }
   // }
-
-  Future<Either<String, bool>> editBookmarked({
-    required EventsUserDto dto,
-    required int userId,
-  }) async {
-    try {
-      final url = UrlRepository.userById(id: userId);
-      final response = await http.patch(
-        url,
-        body: json.encode(dto.toJson()),
-        headers: {'Content-type': 'application/json',
-          'Accept': 'application/json',},
-      );
-      if (response.statusCode != 200) {
-        return const Left(
-          'Cant add this event to bookmarks',
-        );
-      }
-      return const Right(true);
-    } catch (e) {
-      return Left(e.toString());
-    }
-  }
 }

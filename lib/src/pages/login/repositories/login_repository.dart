@@ -4,33 +4,48 @@ import 'package:either_dart/either.dart';
 import '../../../infrastructure/commons/url_repository.dart';
 
 class LoginRepository {
-  Future<Either<String,  Map<String, dynamic>>?> login({
+  Future<Either<String, int>?> login({
     required String username,
     required String password,
-  })
-  async {
+  }) async {
     try {
-      final url = UrlRepository.login(username,password);
-      final http.Response response = await http.get(url);
-      final List<dynamic> users = json.decode(response.body);
+      final url = UrlRepository.login(username, password);
 
-      if (users.any((user) => user["username"] == username)) {
-        for (Map<String, dynamic> user in users) {
-          if (user["username"] == username) {
-            Map<String, dynamic> theUser = user;
-            if (theUser["password"] == password) {
-              return Right(users.first);
+      if (url == null) {
+        return const Left('Invalid URL');
+      }
+
+      final http.Response response = await http.get(url);
+
+      if (response.statusCode != 200) {
+        return Left('Failed to fetch data: ${response.statusCode}');
+      }
+
+      final List<dynamic>? users = json.decode(response.body);
+
+      if (users == null || users.isEmpty) {
+        return const Left('No users found');
+      }
+
+      for (var user in users) {
+        if (user["username"] != null && user["username"] == username) {
+          if (user["password"] != null && user["password"] == password) {
+            if (user["id"] != null) {
+              print(user["id"]);
+              return Right(user["id"]);
             } else {
-              return const Left('Password is not correct');
+              return const Left('User ID not found');
             }
+          } else {
+            return const Left('Password is not correct');
           }
         }
-      } else {
-        return const Left('User not found');
       }
+
+      return const Left('User not found');
     } catch (e) {
+      print(e.toString());
       return Left(e.toString());
     }
-    return null;
   }
 }

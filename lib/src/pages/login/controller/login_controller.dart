@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import '../../../infrastructure/routes/route_names.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../shared/local_storage_keys.dart';
+
 class LoginController extends GetxController {
   final LoginRepository _repository = LoginRepository();
   final usernameController = TextEditingController();
@@ -18,7 +20,6 @@ class LoginController extends GetxController {
     rememberMe.value = !rememberMe.value;
   }
 
-
   void onPressedVisible() {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
@@ -30,9 +31,7 @@ class LoginController extends GetxController {
       return 'Please enter password';
     } else {
       if (!regex.hasMatch(value!)) {
-        return '''Please enter valid password 
-    minimum 8 to maximum 20 Characters
-        ''';
+        return 'Please enter valid password minimum 8 Characters';
       } else {
         return null;
       }
@@ -70,21 +69,12 @@ class LoginController extends GetxController {
       },
       (response) async {
         isLoading.value = false;
-        SharedPreferences preferences =
-        await SharedPreferences.getInstance();
-        // if (rememberMe.value == true) {
-        //   await _box.write(
-        //     'credential',
-        //     {
-        //       "username": usernameController.text,
-        //       "password": passwordController.text,
-        //       "userId": response["id"],
-        //     },
-        //   );
-        // }
-        Get.offNamed(
-          RouteNames.home
-        );
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        if (rememberMe.value) {
+          preferences.setBool(LocalKeys.rememberMe, true);
+        }
+        preferences.setInt(LocalKeys.userId, response);
+        Get.offNamed(RouteNames.home);
       },
     );
   }

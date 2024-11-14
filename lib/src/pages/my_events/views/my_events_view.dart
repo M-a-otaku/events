@@ -9,14 +9,16 @@ class MyEventsView extends GetView<MyEventsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButton: _fab(),
+      floatingActionButton: _fab(),
       // floatingActionButton: Hero(
       //   tag: Obx(() => _fab()),
       //   child: Obx(() => _fab()),
       // ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: _appBar(),
-      body: Obx(() => _body()),
+      body: RefreshIndicator(
+          onRefresh: controller.onRefresh,
+          child: Obx(() => _body())),
     );
   }
 
@@ -25,6 +27,13 @@ class MyEventsView extends GetView<MyEventsController> {
       return _loading();
     } else if (controller.isRetry.value) {
       return _retry();
+    } else if (controller.myEvents.isEmpty) {
+      return const Center(
+        child: Text(
+          "list is empty",
+          style: TextStyle(fontSize: 16, color: Colors.black),
+        ),
+      );
     }
     return _success();
   }
@@ -55,14 +64,14 @@ class MyEventsView extends GetView<MyEventsController> {
         )
       ]);
 
-  // Widget _fab() {
-  //   return FloatingActionButton(
-  //     onPressed: (controller.isLoading.value || controller.isRetry.value)
-  //         ? controller.addEvent
-  //         : controller.addEvent,
-  //     child: const Icon(Icons.add),
-  //   );
-  // }
+  Widget _fab() {
+    return FloatingActionButton(
+      onPressed: (controller.isLoading.value || controller.isRetry.value)
+          ? controller.addEvent
+          : controller.addEvent,
+      child: const Icon(Icons.add),
+    );
+  }
 
   Widget _success() => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),

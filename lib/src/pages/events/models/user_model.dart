@@ -1,3 +1,5 @@
+import 'events_model.dart';
+
 class UserModel {
   String firstName;
   String lastName;
@@ -5,7 +7,7 @@ class UserModel {
   String username;
   String password;
   int id;
-  List bookmarked;
+  List<EventsModel> bookmark;
 
   UserModel({
     required this.firstName,
@@ -13,7 +15,7 @@ class UserModel {
     required this.gender,
     required this.username,
     required this.password,
-    required this.bookmarked,
+    required this.bookmark,
     required this.id,
   });
 
@@ -25,7 +27,7 @@ class UserModel {
       gender: json["gender"],
       username: json["username"],
       password: json["password"],
-      bookmarked: json["bookmarked"],
+      bookmark: json["bookmark"],
     );
   }
 

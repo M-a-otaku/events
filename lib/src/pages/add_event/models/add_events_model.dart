@@ -1,17 +1,17 @@
-class EventsModel {
+class AddEventsModel {
   final int id;
   final int userId;
   final String title;
   final String description;
   final DateTime date;
-  final DateTime time;
+  final String time;
   final int capacity;
   final double price;
   int? participants = 0;
   final String? image;
   bool filled;
 
-  EventsModel({
+  AddEventsModel({
     required this.id,
     required this.userId,
     required this.image,
@@ -25,13 +25,13 @@ class EventsModel {
     required this.price,
   });
 
-  factory EventsModel.fromJson({required Map<String, dynamic> json}) {
-    return EventsModel(
+  factory AddEventsModel.fromJson({required Map<String, dynamic> json}) {
+    return AddEventsModel(
       image: json["image"],
       title: json["title"],
       description: json["description"],
       date: DateTime.tryParse(json['date']) ?? DateTime.now(),
-      time: DateTime.tryParse(json['time']) ?? DateTime.now(),
+      time: (json['time']) ?? DateTime.now().toString(),
       capacity: json["capacity"],
       price: json["price"],
       id: json["id"],

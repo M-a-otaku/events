@@ -56,7 +56,7 @@ class RoutePages {
       GetPage(
           name: RoutePaths.addEvents,
           page: () => const AddEventView(),
-          binding: AddEventBindings())
+          binding: AddEventBindings()),
     ]
     )
   ];
