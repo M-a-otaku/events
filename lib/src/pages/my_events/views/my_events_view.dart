@@ -85,6 +85,8 @@ class MyEventsView extends GetView<MyEventsController> {
               myEvent: controller.myEvents[index],
               removeEvent: () => controller.removeEvent(
                   eventId: controller.myEvents[index].id),
+              onTap: () =>
+                  controller.toEditPage(eventId: controller.myEvents[index].id),
             ),
             separatorBuilder: (_, __) => const SizedBox(height: 12),
           ),

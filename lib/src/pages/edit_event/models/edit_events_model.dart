@@ -1,4 +1,7 @@
-class AddEventsModel {
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class EditEventsModel {
   final int id;
   final int userId;
   final String title;
@@ -6,12 +9,12 @@ class AddEventsModel {
   final DateTime date;
   // final DateTime time;
   final int capacity;
-  final double price;
+  final int price;
   int? participants = 0;
   final String? image;
   bool filled;
 
-  AddEventsModel({
+  EditEventsModel({
     required this.id,
     required this.userId,
     required this.image,
@@ -25,13 +28,13 @@ class AddEventsModel {
     required this.price,
   });
 
-  factory AddEventsModel.fromJson({required Map<String, dynamic> json}) {
-    return AddEventsModel(
+  factory EditEventsModel.fromJson({required Map<String, dynamic> json}) {
+    return EditEventsModel(
       image: json["image"],
       title: json["title"],
       description: json["description"],
       date: DateTime.tryParse(json['date']) ?? DateTime.now(),
-      // time:  DateTime.tryParse(json['time']) ?? DateTime.now(),
+      // /time: DateTime.tryParse(json['time']) ?? DateTime.now(),
       capacity: json["capacity"],
       price: json["price"],
       id: json["id"],

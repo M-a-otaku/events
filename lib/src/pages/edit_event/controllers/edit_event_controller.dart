@@ -7,21 +7,27 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared/local_storage_keys.dart';
-import '../repositories/add_event_repository.dart';
-import '../models/add_event_dto.dart';
+import '../models/edit_event_dto.dart';
+import '../repositories/edit_event_repository.dart';
 
-class AddEventController extends GetxController {
-  final AddEventRepository _repository = AddEventRepository();
+class EditEventController extends GetxController {
+  final String eventId;
+
+  EditEventController({required this.eventId});
+
+  RxMap imagePick = RxMap();
+
+  final EditEventRepository _repository = EditEventRepository();
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   final priceController = TextEditingController();
   final capacityController = TextEditingController();
-  TextEditingController dateController = TextEditingController();
+  final dateController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  var selectedYear = DateTime.now().year.toString().obs;
-  var selectedMonth = DateTime.now().month.toString().obs;
-  var selectedDay = DateTime.now().day.toString().obs;
+  var selectedYear = ''.obs;
+  var selectedMonth = ''.obs;
+  var selectedDay = ''.obs;
   final years =
       List<String>.generate(10, (i) => (DateTime.now().year + i).toString());
   final months =
@@ -29,9 +35,8 @@ class AddEventController extends GetxController {
   final days =
       List<String>.generate(31, (i) => (i + 1).toString().padLeft(2, '0'));
 
-  String formattedDate =
-      DateFormat('yyyy-MM-dd    kk-mm').format(DateTime.now());
-
+  String formattedDate = DateFormat('yyyy-MM-dd    kk-mm')
+      .format(DateTime.now());
 
   final ImagePicker _picker = ImagePicker();
   var imageBase64 = Rx<String?>(null);
@@ -163,6 +168,7 @@ class AddEventController extends GetxController {
   }
 
   Future<void> onSubmit() async {
+    isLoading.value = true;
     if (!(formKey.currentState?.validate() ?? false)) return;
      DateTime? date = selectedDate;
     if (date == null) {
@@ -173,25 +179,21 @@ class AddEventController extends GetxController {
       ));
       return;
     }
-    isLoading.value = true;
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    print("${preferences.getInt(LocalKeys.userId) ?? -1}");
     final int price = int.parse(priceController.text);
     final int capacity = int.parse(capacityController.text);
-    final AddEventDto dto = AddEventDto(
-      title: titleController.text,
-      image: imageBase64.value,
-      description: descriptionController.text,
-      date: date ,
-      // time: DateTime.now().copyWith(hour: selectedTime.value.hour , minute: selectedTime.value.minute) ,
-      capacity: capacity,
-      price: price,
-      userId: preferences.getInt(LocalKeys.userId) ?? -1,
-      participants: 0,
-      filled: false,
-    );
-
-    final result = await _repository.addEvent(dto: dto);
+    final result = await _repository.editEvent(
+        eventId: eventId,
+        dto: EditEventDto(
+            userId: preferences.getInt(LocalKeys.userId) ?? -1,
+            filled: false,
+            title: titleController.text,
+            description: descriptionController.text,
+            date: date,
+            // time: DateTime.now(),
+            capacity: capacity,
+            participants: 0,
+            price: price));
     result?.fold(
       (exception) {
         isLoading.value = false;
@@ -213,12 +215,65 @@ class AddEventController extends GetxController {
     );
   }
 
+  void getEvent(String eventId) async {
+    isLoading.value = true;
+    final result = await _repository.getEventById(eventId: eventId);
+
+    result.fold((exception) {
+      isLoading.value = false;
+      Get.showSnackbar(
+        GetSnackBar(
+          messageText: Text(
+            exception,
+            style: const TextStyle(color: Colors.black, fontSize: 14),
+          ),
+          backgroundColor: Colors.redAccent.withOpacity(.2),
+          duration: const Duration(seconds: 5),
+        ),
+      );
+    }, (right) {
+      print(isLoading.value);
+      isLoading.value = false;
+      print(isLoading.value);
+      selectedDay.value = right.date.day.toString();
+      selectedMonth.value = right.date.month.toString();
+      selectedYear.value = right.date.year.toString();
+      DateTime? date =
+          DateTime.tryParse("$selectedYear-$selectedMonth-$selectedDay");
+      titleController.text = right.title;
+      descriptionController.text = right.description;
+      priceController.text = right.price.toString();
+      date = right.date.toLocal();
+      capacityController.text = right.capacity.toString();
+      priceController.text = right.price.toString();
+      selectedTime2.value = date;
+
+      if (right.image != null && right.image!.isNotEmpty) {
+        imagePick.value = {
+          'type': 'image-url',
+          'image': right.image,
+        };
+      } else {
+        imagePick.value = {
+          'type': 'image-picker',
+          'image': null,
+        };
+      }
+    });
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    getEvent(eventId);
+  }
+
   @override
   void dispose() {
     super.dispose();
     titleController.dispose();
     descriptionController.dispose();
-    capacityController.dispose();
     priceController.dispose();
+    capacityController.dispose();
   }
 }

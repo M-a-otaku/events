@@ -1,4 +1,4 @@
-class EventsModel {
+class EventModel {
   final int id;
   final String title;
   final String description;
@@ -9,7 +9,7 @@ class EventsModel {
   final int? participants;
   final bool filled;
 
-  EventsModel({
+  EventModel({
     required this.id,
     required this.title,
     required this.description,
@@ -21,8 +21,8 @@ class EventsModel {
     required this.filled,
   });
 
-  factory EventsModel.fromJson(Map<String, dynamic> json) {
-    return EventsModel(
+  factory EventModel.fromJson(Map<String, dynamic> json) {
+    return EventModel(
       id: json['id'],
       title: json['title'],
       description: json['description'],

@@ -22,7 +22,36 @@ class UrlRepository {
 
   static Uri events = Uri.http(_baseUrl, _events);
 
-  static Uri myEvents (int userId)=>Uri.http( _baseUrl , _events);
+  static Uri getEventsByParameters({required String parameters}) {
+    return Uri.http(
+      'localhost:3000',
+      '$_events/$parameters',
+    );
+  }
+
+
+  static Uri getEventById({required String eventId}) {
+    return Uri.http(
+      'localhost:3000',
+      '$_events/$eventId',
+    );
+  }
+
+  static Uri getUserById({required int userId}) {
+    return Uri.http(
+      'localhost:3000',
+      '$_users/$userId',
+    );
+  }
+
+  static Uri updateBookmark({required int userId}) {
+    return Uri.http(
+      'localhost:3000', // این باید فقط 'localhost' باشد
+      '$_users/bookmark',
+    );
+  }
+
+  static Uri myEvents(int userId) => Uri.http(_baseUrl, _events);
 
   static Uri getEventsByUserId({required int userId}) {
     return Uri.parse('$_baseUrl$_events?userId=$userId');
@@ -39,8 +68,15 @@ class UrlRepository {
   }
 
   static Uri deleteEventById({required int eventId}) {
-    return Uri.parse('$_baseUrl$_events/$eventId');
+    return Uri.parse('http://$_baseUrl$_events/$eventId');
   }
+
+  // static Uri deleteEventById({required int eventId}) {
+  //   return Uri.http(
+  //     'localhost:3000',
+  //     '$_events/$eventId',
+  //   );
+  // }
 
   static Uri deleteEventById22({required int eventId}) =>
       Uri.http(_baseUrl, _events);

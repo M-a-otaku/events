@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import '../controllers/add_event_controller.dart';
 
-class AddEventView extends GetView<AddEventController> {
-  const AddEventView({super.key});
+import '../controllers/edit_event_controller.dart';
+
+class EditEventView extends GetView<EditEventController> {
+  const EditEventView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +20,7 @@ class AddEventView extends GetView<AddEventController> {
   }
 
   Widget _fab() {
-    return (controller.isLoading.value)
-        ? const FloatingActionButton(
-            onPressed: null,
-            child: CircularProgressIndicator(),
-          )
-        : FloatingActionButton(
+    return FloatingActionButton(
             onPressed: controller.onSubmit,
             child: const Icon(Icons.check),
           );
@@ -32,7 +28,7 @@ class AddEventView extends GetView<AddEventController> {
 
   AppBar _appBar() {
     return AppBar(
-      title: const Text("Add Event"),
+      title: const Text("Edit Event"),
       centerTitle: true,
       automaticallyImplyLeading: false,
     );

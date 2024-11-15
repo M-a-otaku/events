@@ -1,13 +1,16 @@
-
 import 'package:events/src/pages/EEvents/views/events_screen.dart';
 import 'package:events/src/pages/add_event/common/add_event_bindings.dart';
 import 'package:events/src/pages/add_event/views/add_event_view.dart';
+import 'package:events/src/pages/bookmark/common/bookmark_event_binding.dart';
+import 'package:events/src/pages/bookmark/views/bookmark_event_screen.dart';
 import 'package:events/src/pages/bottom_nav_bar/bindings/nav_bar.dart';
 import 'package:events/src/pages/bottom_nav_bar/views/bottom_nav_bar.dart';
+import 'package:events/src/pages/edit_event/common/edit_event_bindings.dart';
 import 'package:events/src/pages/my_events/common/my_events_bindings.dart';
 import 'package:events/src/pages/my_events/views/my_events_view.dart';
 
 import '../../pages/EEvents/Common/bindings/Event_bindings.dart';
+import '../../pages/edit_event/views/edit_event_view.dart';
 import '../../pages/events/common/events_bindings.dart';
 import '../../pages/events/views/events_view.dart';
 import '../../pages/login/commons/login_bindings.dart';
@@ -41,6 +44,10 @@ class RoutePages {
         page: () => const EventsView(),
         binding: EventsBindings()),
     GetPage(
+        name: RoutePaths.bookmark,
+        page: () => const BookmarkEventScreen(),
+        binding: BookmarkEventBinding()),
+    GetPage(
         name: RoutePaths.car,
         page: () => const EventsScreen(),
         binding: EventBindings()),
@@ -51,13 +58,16 @@ class RoutePages {
     GetPage(
         name: RoutePaths.myEvents,
         page: () => const MyEventsView(),
-        binding: MyEventsBindings()
-      ,children: [
-      GetPage(
-          name: RoutePaths.addEvents,
-          page: () => const AddEventView(),
-          binding: AddEventBindings()),
-    ]
-    )
+        binding: MyEventsBindings(),
+        children: [
+          GetPage(
+              name: RoutePaths.addEvents,
+              page: () => const AddEventView(),
+              binding: AddEventBindings()),
+          GetPage(
+              name: RoutePaths.editEvents,
+              page: () => const EditEventView(),
+              binding: EditEventBinding()),
+        ])
   ];
 }

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -57,7 +56,7 @@ class MyEventsController extends GetxController {
   }
 
   Future<void> toEditPage({required int eventId}) async {
-    isLoading.value = true;
+    // isLoading.value = true;
     int index = myEvents.indexWhere((event) => event.id == eventId);
     if (myEvents[index].participants != 0) {
       isLoading.value = false;
@@ -83,7 +82,6 @@ class MyEventsController extends GetxController {
       if(index != -1){
         myEvents[index]=myEvents[index].copyWith(
           date: newEvent.date,
-          time: newEvent.time,
           filled: newEvent.filled,
           participants: newEvent.participants,
           title: newEvent.title,

@@ -1,7 +1,7 @@
-class EventsUserDto {
+class BookmarkUserDto {
   List bookmark;
 
-  EventsUserDto({
+  BookmarkUserDto({
     required this.bookmark,
   });
 

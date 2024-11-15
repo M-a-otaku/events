@@ -1,3 +1,4 @@
+import 'package:events/src/pages/bookmark/controllers/bookmark_event_controller.dart';
 import 'package:events/src/pages/bottom_nav_bar/controller/nav_bar_controller.dart';
 import 'package:events/src/pages/events/controllers/events_controller.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,7 @@ class NavBarBindings extends Bindings{
     Get.lazyPut(()=> EventController());
     Get.lazyPut(()=> EventsController());
     Get.lazyPut(()=> MyEventsController());
+    Get.lazyPut(()=> BookmarkEventController());
   }
 
 

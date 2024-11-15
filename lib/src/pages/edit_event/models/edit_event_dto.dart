@@ -1,8 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class AddEventDto {
+class EditEventDto {
   final int userId;
   final String title;
   final String description;
@@ -10,11 +9,12 @@ class AddEventDto {
   final DateTime date;
   final int capacity;
   final int price;
-  int participants ;
-  final String? image;
-  bool filled ;
+  int participants;
 
-  AddEventDto({
+  final String? image;
+  bool filled;
+
+  EditEventDto({
     required this.userId,
     required this.filled,
     this.image,
@@ -27,7 +27,7 @@ class AddEventDto {
     required this.price,
   });
 
-Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "image": image,
         "userId": userId,
         "filled": filled,

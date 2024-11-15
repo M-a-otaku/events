@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/events_controller.dart';
-import 'widgets/events_widget.dart';
+import '../controllers/bookmark_event_controller.dart';
+import 'widgets/bookmark_event_widget.dart';
 
-class EventsView extends GetView<EventsController> {
-  const EventsView({super.key});
+class BookmarkEventScreen extends GetView<BookmarkEventController> {
+  const BookmarkEventScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,22 +35,17 @@ class EventsView extends GetView<EventsController> {
   Widget _retry() {
     return Center(
       child: IconButton(
-        onPressed: controller.getEvents,
+        onPressed: controller.getBookmarked,
         icon: const Icon(Icons.reset_tv),
         iconSize: 35,
       ),
     );
   }
 
-  AppBar _appBar() =>
-      AppBar(
+  AppBar _appBar() => AppBar(
           backgroundColor: Colors.grey,
           centerTitle: true,
-          title: Text("home"),
-          leading: IconButton(
-            icon: Icon(Icons.logout),
-            color: Colors.white, onPressed: controller.logout,
-          ),
+          title: Text("bookmark"),
           actions: const [
             Icon(
               Icons.menu,
@@ -61,22 +56,21 @@ class EventsView extends GetView<EventsController> {
             )
           ]);
 
-  Widget _success() =>
-      Padding(
+  Widget _success() => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
         child: Obx(
-              () =>
-              ListView.separated(
-                itemCount: controller.events.length,
-                itemBuilder: (_, index) =>
-                    EventsWidget(
-                        event: controller.events[index], onBookmark: () =>
-                        controller.toggleBookmark(controller.events[index].id),
-                      // onTap: () => controller.goToEvent(index)
-                      // onTap: () {},
-                    ),
-                separatorBuilder: (_, __) => const SizedBox(height: 12),
+          () => ListView.separated(
+            itemCount: controller.bookmarkedEvents.length,
+            itemBuilder: (_, index) => BookmarkEventWidget(
+              event: controller.bookmarkedEvents[index],
+              onBookmark: () => controller.onBookmark(
+                eventId: controller.bookmarkedEvents[index].id,
               ),
+              // onTap: () => controller.goToEvent(index)
+              // onTap: () {},
+            ),
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
+          ),
         ),
       );
 }

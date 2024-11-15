@@ -11,7 +11,6 @@ class EventsController extends GetxController {
   final EventsRepository _repository = EventsRepository();
   RxList<EventsModel> events = RxList();
   final RxList bookmarkedEvents = RxList();
-  var userId = 0.obs;
 
   RxBool isFilled = false.obs;
   RxBool isExpired = false.obs;
@@ -47,6 +46,55 @@ class EventsController extends GetxController {
     );
   }
 
+  Future<void> toggleBookmark(int eventId) async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    // بازیابی لیست بوک‌مارک‌ها از SharedPreferences
+    List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ?? [];
+
+    // بررسی اینکه آیا ایونت قبلاً بوک‌مارک شده است یا خیر
+    if (bookmarkedIds.contains(eventId.toString())) {
+      bookmarkedIds.remove(eventId.toString());  // اگر بوک‌مارک شده، آن را حذف کن
+    } else {
+      bookmarkedIds.add(eventId.toString());  // در غیر این صورت، آن را اضافه کن
+    }
+
+    // ذخیره‌سازی لیست بوک‌مارک‌ها در SharedPreferences
+    await preferences.setStringList('bookmarkedIds', bookmarkedIds);
+
+    final EventsUserDto dto = EventsUserDto(bookmark: bookmarkedIds);
+    final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
+    final result = await _repository.editBookmarked(dto: dto, userId: userId);
+
+    result.fold(
+          (exception) {
+        print(exception);
+        Get.showSnackbar(
+          GetSnackBar(
+            messageText: Text(
+              exception,
+              style: const TextStyle(color: Colors.black, fontSize: 14),
+            ),
+            backgroundColor: Colors.redAccent.withOpacity(.2),
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      },
+          (_) {
+        Get.showSnackbar(
+          GetSnackBar(
+            messageText: const Text(
+              "The event was bookmarked successfully",
+              style: TextStyle(color: Colors.black, fontSize: 14),
+            ),
+            backgroundColor: Colors.greenAccent.withOpacity(.2),
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> onRefresh() async {
     getEvents();
   }
@@ -59,20 +107,12 @@ class EventsController extends GetxController {
 
     getEvents();
   }
+
   Future<void> logout() async {
-    await Get.toNamed(
+    await Get.offAndToNamed(
       RouteNames.login,
     );
   }
-
-  // Future<void> onBookmarks() async {
-  //   await Get.toNamed(
-  //     RouteNames.bookmark,
-  //     parameters: {"userId": "$userId"},
-  //   );
-  //   // getUserById();
-  //   getEvents();
-  // }
 
   // Future<void> onBookmark(int eventId) async {
   //   (bookmarkedEvents.contains(eventId))
@@ -116,7 +156,7 @@ class EventsController extends GetxController {
 
   void _loadUserId() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    userId.value = preferences.getInt(LocalKeys.userId) ?? 0;
+    final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
   }
 
   @override
