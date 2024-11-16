@@ -45,7 +45,7 @@ class BookmarkEventScreen extends GetView<BookmarkEventController> {
   AppBar _appBar() => AppBar(
           backgroundColor: Colors.grey,
           centerTitle: true,
-          title: Text("bookmark"),
+          title: const Text("bookmark"),
           actions: const [
             Icon(
               Icons.menu,

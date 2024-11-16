@@ -6,6 +6,8 @@ import 'package:events/src/pages/bookmark/views/bookmark_event_screen.dart';
 import 'package:events/src/pages/bottom_nav_bar/bindings/nav_bar.dart';
 import 'package:events/src/pages/bottom_nav_bar/views/bottom_nav_bar.dart';
 import 'package:events/src/pages/edit_event/common/edit_event_bindings.dart';
+import 'package:events/src/pages/events_details/common/event_details_bindings.dart';
+import 'package:events/src/pages/events_details/views/event_details_view.dart';
 import 'package:events/src/pages/my_events/common/my_events_bindings.dart';
 import 'package:events/src/pages/my_events/views/my_events_view.dart';
 
@@ -42,7 +44,13 @@ class RoutePages {
     GetPage(
         name: RoutePaths.events,
         page: () => const EventsView(),
-        binding: EventsBindings()),
+        binding: EventsBindings(),
+        children: [
+          GetPage(
+              name: RoutePaths.detailsEvent,
+              page: () =>  const EventDetailsView(),
+              binding: EventDetailBindings())
+        ]),
     GetPage(
         name: RoutePaths.bookmark,
         page: () => const BookmarkEventScreen(),

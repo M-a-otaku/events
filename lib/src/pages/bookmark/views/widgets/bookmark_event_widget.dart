@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:events/src/pages/bookmark/controllers/bookmark_event_controller.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../models/event_model.dart';
 import 'package:flutter/material.dart';
 
-class BookmarkEventWidget extends StatelessWidget {
+class BookmarkEventWidget extends GetView<BookmarkEventController> {
   const BookmarkEventWidget({
     super.key,
     required this.event,
@@ -41,18 +43,18 @@ class BookmarkEventWidget extends StatelessWidget {
                     top: -20,
                     child: (event.image != null && event.image!.isNotEmpty)
                         ? ClipOval(
-                      child: Image.memory(
-                        base64Decode(event.image!),
-                        width: 80,
-                        height: 80,
-                        fit: BoxFit.cover,
-                      ),
-                    )
+                            child: Image.memory(
+                              base64Decode(event.image!),
+                              width: 80,
+                              height: 80,
+                              fit: BoxFit.cover,
+                            ),
+                          )
                         : const Icon(
-                      Icons.event,
-                      color: Colors.white,
-                      size: 80,
-                    ),
+                            Icons.event,
+                            color: Colors.white,
+                            size: 80,
+                          ),
                   ),
                   // Text information
                   Column(
@@ -62,39 +64,39 @@ class BookmarkEventWidget extends StatelessWidget {
                       Text(
                         "\$${event.price}",
                         style:
-                        const TextStyle(fontSize: 18, color: Colors.white),
+                            const TextStyle(fontSize: 18, color: Colors.white),
                       ),
                       Text(
                         "Title : ${event.title}",
                         style:
-                        const TextStyle(fontSize: 16, color: Colors.white),
+                            const TextStyle(fontSize: 16, color: Colors.white),
                       ),
                       Text(
                         "Description : ${event.description}",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style:
-                        const TextStyle(fontSize: 16, color: Colors.white),
+                            const TextStyle(fontSize: 16, color: Colors.white),
                       ),
                       Text(
                         ' ${DateFormat('yyyy-MM-dd').format(event.date)}  ${DateFormat('kk:mm').format(event.date)}',
                         style:
-                        const TextStyle(fontSize: 16, color: Colors.white),
+                            const TextStyle(fontSize: 16, color: Colors.white),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           (event.filled)
                               ? const Text(
-                            'This event Is Full',
-                            style: TextStyle(
-                                fontSize: 16, color: Colors.white),
-                          )
+                                  'This event Is Full',
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.white),
+                                )
                               : const Text(
-                            '',
-                            style: TextStyle(
-                                fontSize: 16, color: Colors.white),
-                          ),
+                                  '',
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.white),
+                                ),
                           const SizedBox(width: 8),
                           Text(
                             '${event.participants ?? 0} / ${event.capacity}',
@@ -116,21 +118,19 @@ class BookmarkEventWidget extends StatelessWidget {
             ),
           ),
         ),
-        // Obx(() => Padding(
-        //   padding: const EdgeInsets.all(2.0),
-        //   child: Align(
-        //     alignment: Alignment.centerRight,
-        //     child: IconButton(
-        //       icon: Icon(
-        //         (controller.bookmarkedEvents.contains(event))
-        //             ? Icons.bookmark
-        //             : Icons.bookmark_border,
-        //         color: Colors.blueAccent,
-        //       ),
-        //       onPressed: onBookmark,
-        //     ),
-        //   ),
-        // )),
+        Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+              icon: const Icon(
+                Icons.bookmark,
+                color: Colors.blueAccent,
+              ),
+              onPressed: onBookmark,
+            ),
+          ),
+        ),
       ],
     );
   }

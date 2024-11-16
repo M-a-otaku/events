@@ -18,15 +18,30 @@ class EventsController extends GetxController {
   RxBool isLimited = false.obs;
   RxBool isRetry = false.obs;
 
+
+  Future<void> goToEvent(int eventId) async {
+    await Get.toNamed(
+      RouteNames.detailsEvent,
+      parameters: {"eventId": "$eventId"},
+    );
+  }
+
+
   Future<void> getEvents() async {
     events.clear();
     isLoading.value = true;
     isRetry.value = false;
+
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ?? [];
+
+    print("Fetching events from the repository...");
     final result = await _repository.getEvents();
     result.fold(
-      (exception) {
+          (exception) {
         isLoading.value = false;
         isRetry.value = true;
+        print("Error fetching events: $exception");
         Get.showSnackbar(
           GetSnackBar(
             messageText: Text(
@@ -38,37 +53,46 @@ class EventsController extends GetxController {
           ),
         );
       },
-      (event) {
+          (eventList) {
         isLoading.value = false;
         isRetry.value = false;
-        events.value = event;
+        events.value = eventList;
+        print("Events loaded successfully. Total events: ${events.length}");
       },
     );
   }
-
   Future<void> toggleBookmark(int eventId) async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
 
     // بازیابی لیست بوک‌مارک‌ها از SharedPreferences
     List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ?? [];
+    print("Current bookmarkedIds from SharedPreferences: $bookmarkedIds");
 
-    // بررسی اینکه آیا ایونت قبلاً بوک‌مارک شده است یا خیر
     if (bookmarkedIds.contains(eventId.toString())) {
       bookmarkedIds.remove(eventId.toString());  // اگر بوک‌مارک شده، آن را حذف کن
+      print("Event $eventId removed from bookmarks.");
     } else {
       bookmarkedIds.add(eventId.toString());  // در غیر این صورت، آن را اضافه کن
+      print("Event $eventId added to bookmarks.");
     }
 
     // ذخیره‌سازی لیست بوک‌مارک‌ها در SharedPreferences
     await preferences.setStringList('bookmarkedIds', bookmarkedIds);
 
+    // به‌روزرسانی لیست محلی بوک‌مارک‌ها
+    bookmarkedEvents.clear();
+    bookmarkedEvents.addAll(bookmarkedIds.map(int.parse).toList());
+    print("Updated bookmarkedEvents list: $bookmarkedEvents");
+
+    // ارسال درخواست به سرور
     final EventsUserDto dto = EventsUserDto(bookmark: bookmarkedIds);
     final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
+    print("Sending updated bookmark list to the server for userId: $userId");
     final result = await _repository.editBookmarked(dto: dto, userId: userId);
 
     result.fold(
           (exception) {
-        print(exception);
+        print("Error updating bookmarks on the server: $exception");
         Get.showSnackbar(
           GetSnackBar(
             messageText: Text(
@@ -81,22 +105,11 @@ class EventsController extends GetxController {
         );
       },
           (_) {
-        Get.showSnackbar(
-          GetSnackBar(
-            messageText: const Text(
-              "The event was bookmarked successfully",
-              style: TextStyle(color: Colors.black, fontSize: 14),
-            ),
-            backgroundColor: Colors.greenAccent.withOpacity(.2),
-            duration: const Duration(seconds: 5),
-          ),
-        );
-      },
-    );
-  }
+        print("Bookmark update successful on the server.");
+        print("=--------------------------");
 
-  Future<void> onRefresh() async {
-    getEvents();
+          },
+    );
   }
 
   Future<void> onViewEvent(int eventId) async {
@@ -114,49 +127,14 @@ class EventsController extends GetxController {
     );
   }
 
-  // Future<void> onBookmark(int eventId) async {
-  //   (bookmarkedEvents.contains(eventId))
-  //       ? bookmarkedEvents.remove(eventId)
-  //       : bookmarkedEvents.add(eventId);
-  //
-  //   final EventsUserDto dto = EventsUserDto(bookmark: bookmarkedEvents);
-  //   final result = await _repository.editBookmarked(dto: dto, userId: userId);
-  //   result.fold(
-  //         (exception) {
-  //           Get.showSnackbar(
-  //             GetSnackBar(
-  //               messageText: Text(
-  //                 exception,
-  //                 style: const TextStyle(color: Colors.black, fontSize: 14),
-  //               ),
-  //               backgroundColor: Colors.redAccent.withOpacity(.2),
-  //               duration: const Duration(seconds: 5),
-  //             ),
-  //           );
-  //     },
-  //         (_) {
-  //           Get.showSnackbar(
-  //             GetSnackBar(
-  //               messageText: const Text(
-  //                 "the Event bookmarked successfully",
-  //                 style: TextStyle(color: Colors.black, fontSize: 14),
-  //               ),
-  //               backgroundColor: Colors.greenAccent.withOpacity(.2),
-  //               duration: const Duration(seconds: 5),
-  //             ),
-  //           );
-  //     },
-  //   );
-  // }
-
-  // Future<void> goToEvent(int index) async {
-  //   final EventsModel cat = Events[index];
-  //   Get.toNamed(RouteNames.title, parameters: {"categoryId": '${cat.id}'});
-  // }
+  Future<void> onRefresh() async {
+    getEvents();
+  }
 
   void _loadUserId() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
+    print("Loaded userId from SharedPreferences: $userId");
   }
 
   @override
@@ -164,5 +142,16 @@ class EventsController extends GetxController {
     super.onInit();
     getEvents();
     _loadUserId();
+    // بازیابی بوکمارک‌ها بعد از دریافت رویدادها
+    _loadBookmarkedEvents();
   }
+
+  void _loadBookmarkedEvents() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ?? [];
+    bookmarkedEvents.clear();
+    bookmarkedEvents.addAll(bookmarkedIds.map(int.parse).toList());
+    print("Bookmarked events loaded: $bookmarkedEvents");
+  }
+
 }

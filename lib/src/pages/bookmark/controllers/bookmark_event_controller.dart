@@ -74,14 +74,25 @@ class BookmarkEventController extends GetxController {
 
 
   Future<void> onBookmark({required int eventId}) async {
+    isLoading.value = true;
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ?? [];
 
     // چک کردن که آیا ایونت قبلاً بوک‌مارک شده یا خیر
     if (bookmarkedIds.contains(eventId.toString())) {
+      isLoading.value = false;
       bookmarkedIds.remove(eventId.toString());
-    } else {
-      bookmarkedIds.add(eventId.toString());
+      Get.showSnackbar(
+        GetSnackBar(
+          messageText: const Text(
+            "The bookmarked event was successfully deleted",
+            style: TextStyle(color: Colors.black, fontSize: 14),
+          ),
+          backgroundColor: Colors.greenAccent.withOpacity(.2),
+          duration: const Duration(seconds: 5),
+        ),
+      );
+
     }
 
     // ذخیره کردن لیست بوک‌مارک‌ها

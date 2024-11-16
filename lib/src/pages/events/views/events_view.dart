@@ -72,7 +72,7 @@ class EventsView extends GetView<EventsController> {
                     EventsWidget(
                         event: controller.events[index], onBookmark: () =>
                         controller.toggleBookmark(controller.events[index].id),
-                      // onTap: () => controller.goToEvent(index)
+                      onTap: () => controller.goToEvent(controller.events[index].id)
                       // onTap: () {},
                     ),
                 separatorBuilder: (_, __) => const SizedBox(height: 12),

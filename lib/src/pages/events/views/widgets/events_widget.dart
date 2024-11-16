@@ -12,9 +12,11 @@ class EventsWidget extends GetView<EventsController> {
     super.key,
     required this.event,
     required this.onBookmark,
-
+    required this.onTap,
   });
+
   final void Function() onBookmark;
+  final void Function() onTap;
 
   final EventsModel event;
 
@@ -26,7 +28,7 @@ class EventsWidget extends GetView<EventsController> {
         Expanded(
           child: InkWell(
             borderRadius: BorderRadius.circular(12),
-            // onTap: onTap,
+            onTap: onTap,
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
               padding: const EdgeInsets.all(16),
@@ -37,7 +39,6 @@ class EventsWidget extends GetView<EventsController> {
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  // Positioned image
                   Positioned(
                     right: 0,
                     top: -20,
@@ -56,7 +57,6 @@ class EventsWidget extends GetView<EventsController> {
                             size: 80,
                           ),
                   ),
-                  // Text information
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,12 +124,15 @@ class EventsWidget extends GetView<EventsController> {
                 alignment: Alignment.centerRight,
                 child: IconButton(
                   icon: Icon(
-                    (controller.bookmarkedEvents.contains(event))
+                    (controller.bookmarkedEvents.contains(event.id))
                         ? Icons.bookmark
                         : Icons.bookmark_border,
                     color: Colors.blueAccent,
                   ),
-                  onPressed: onBookmark,
+                  onPressed: () {
+                    print("Toggling bookmark for event: ${event.id}");
+                    controller.toggleBookmark(event.id);
+                  },
                 ),
               ),
             )),
