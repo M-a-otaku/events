@@ -11,6 +11,7 @@ class EventsController extends GetxController {
   final EventsRepository _repository = EventsRepository();
   RxList<EventsModel> events = RxList();
   final RxList bookmarkedEvents = RxList();
+  RxList<EventsModel> filteredEvents = <EventsModel>[].obs;
 
   RxBool isFilled = false.obs;
   RxBool isExpired = false.obs;
@@ -18,6 +19,15 @@ class EventsController extends GetxController {
   RxBool isLimited = false.obs;
   RxBool isRetry = false.obs;
 
+  void searchEvents(String query) {
+    if (query.isEmpty) {
+      filteredEvents.value = events;
+    } else {
+      filteredEvents.value = events.where((event) {
+        return event.title.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    }
+  }
 
   Future<void> goToEvent(int eventId) async {
     await Get.toNamed(
@@ -58,6 +68,7 @@ class EventsController extends GetxController {
         isLoading.value = false;
         isRetry.value = false;
         events.value = eventList;
+        filteredEvents.value = events;
         // print("Events loaded successfully. Total events: ${events.length}");
       },
     );

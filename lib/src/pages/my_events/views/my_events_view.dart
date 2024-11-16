@@ -57,14 +57,17 @@ class MyEventsView extends GetView<MyEventsController> {
           centerTitle: true,
           title: const Text("My Events"),
           backgroundColor: Colors.grey,
-          actions: const [
-            Icon(
-              Icons.menu,
-              color: Colors.white,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                showSearch(
+                  context: Get.context!,
+                  delegate: CustomSearchDelegate(),
+                );
+              },
             ),
-            SizedBox(
-              width: 20,
-            )
+            const SizedBox(width: 20),
           ]);
 
   Widget _fab() {
@@ -93,3 +96,69 @@ class MyEventsView extends GetView<MyEventsController> {
         ),
       );
 }
+
+
+class CustomSearchDelegate extends SearchDelegate {
+  final MyEventsController controller = Get.find();
+  bool isDescending = false;
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        onPressed: () {
+          query = '';
+          controller.searchEvents(query); // Reset the search when the query is cleared
+        },
+        icon: const Icon(Icons.clear),
+      ),
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        close(context, null);
+      },
+      icon: const Icon(Icons.arrow_back),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    controller.searchEvents(query); // Filter events as the user types
+    return _buildEventList();
+  }
+
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    controller.searchEvents(query); // Filter events as the user types
+    return _buildEventList();
+  }
+
+  Widget _buildEventList() {
+    return Obx(
+          () => ListView.builder(
+        itemCount: controller.filteredEvents.length,
+        itemBuilder: (context, index) {
+          final event = controller.filteredEvents[index];
+          return ListTile(
+            title: Text(event.title),
+            onTap: () {
+              // Handle event tap
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+//
+// void toggle() {
+//   isDescending = !isDescending;
+// }
+
+
+

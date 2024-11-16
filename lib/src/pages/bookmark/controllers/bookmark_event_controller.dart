@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../infrastructure/routes/route_names.dart';
-import '../../shared/local_storage_keys.dart';
-import '../models/bookmark_user_dto.dart';
 import '../models/event_model.dart';
 import '../repositories/bookmark_event_repository.dart';
 
 class BookmarkEventController extends GetxController {
   final _repository = BookmarkEventRepository();
   RxList<EventModel> bookmarkedEvents = RxList();
+  RxList<EventModel> filteredEvents = <EventModel>[].obs;
   List bookmarkedIds = [];
-  String params = '';
 
-  final searchController = TextEditingController();
 
   RxBool isLoading = false.obs;
   RxBool isRetry = false.obs;
-  RxBool isSearch = false.obs;
 
-  Rx<RangeValues> priceLimits = Rx(const RangeValues(0, 1));
-  double max = 1;
-  double min = 0;
+
+  void searchEvents(String query) {
+    if (query.isEmpty) {
+      filteredEvents.value = bookmarkedEvents;
+    } else {
+      filteredEvents.value = bookmarkedEvents.where((event) {
+        return event.title.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    }
+  }
 
   Future<void> onRefresh() async {
     getBookmarked();
@@ -31,7 +33,8 @@ class BookmarkEventController extends GetxController {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
 
     // بازیابی لیست بوک‌مارک‌ها از SharedPreferences
-    List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ?? [];
+    List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ??
+        [];
 
     // تبدیل لیست از String به int
     return bookmarkedIds.map((id) => int.parse(id)).toList();
@@ -41,8 +44,7 @@ class BookmarkEventController extends GetxController {
   Future<void> getBookmarked() async {
     final result = await _repository.getBookmarked(parameters: '');
     result.fold(
-      (exception) {
-        isSearch.value = false;
+          (exception) {
         isLoading.value = false;
         isRetry.value = true;
         Get.showSnackbar(
@@ -56,16 +58,18 @@ class BookmarkEventController extends GetxController {
           ),
         );
       },
-      (eventsList) {
+          (eventsList) {
         isLoading.value = false;
         bookmarkedEvents.value = eventsList;
+        filteredEvents.value = eventsList;
       },
     );
   }
 
   void initBookmarked() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ?? [];
+    List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ??
+        [];
     if (bookmarkedIds.isEmpty) {
       await preferences.setStringList('bookmarkedIds', []);
       print("Initialized empty bookmarkedIds");
@@ -76,7 +80,8 @@ class BookmarkEventController extends GetxController {
   Future<void> onBookmark({required int eventId}) async {
     isLoading.value = true;
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ?? [];
+    List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ??
+        [];
 
     // چک کردن که آیا ایونت قبلاً بوک‌مارک شده یا خیر
     if (bookmarkedIds.contains(eventId.toString())) {
@@ -92,13 +97,13 @@ class BookmarkEventController extends GetxController {
           duration: const Duration(seconds: 5),
         ),
       );
-
     }
 
     // ذخیره کردن لیست بوک‌مارک‌ها
-    bool isSaved = await preferences.setStringList('bookmarkedIds', bookmarkedIds);
+    bool isSaved = await preferences.setStringList(
+        'bookmarkedIds', bookmarkedIds);
     print("Bookmarked IDs after save: $bookmarkedIds");
-    print("Is saved: $isSaved");  // برای بررسی موفقیت‌آمیز بودن ذخیره‌سازی
+    print("Is saved: $isSaved"); // برای بررسی موفقیت‌آمیز بودن ذخیره‌سازی
 
     // آپدیت کردن لیست بوک‌مارک‌ها
     getBookmarked();
@@ -112,9 +117,4 @@ class BookmarkEventController extends GetxController {
     getBookmarkedEvents();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    searchController.dispose();
-  }
 }

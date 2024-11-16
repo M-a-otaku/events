@@ -11,6 +11,18 @@ class MyEventsController extends GetxController {
   RxList<MyEventsModel> myEvents = RxList();
   RxBool isLoading = false.obs;
   RxBool isRetry = false.obs;
+  RxList<MyEventsModel> filteredEvents = <MyEventsModel>[].obs;
+
+  void searchEvents(String query) {
+    if (query.isEmpty) {
+      filteredEvents.value = myEvents;
+    } else {
+      filteredEvents.value = myEvents.where((event) {
+        return event.title.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    }
+  }
+
 
   Future<void> getEvents() async {
     myEvents.clear();
@@ -39,6 +51,7 @@ class MyEventsController extends GetxController {
         isLoading.value = false;
         isRetry.value = false;
         myEvents.value = events;
+        filteredEvents.value =events;
       },
     );
   }
