@@ -49,6 +49,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.4+2"
+  custom_number_picker:
+    dependency: transitive
+    description:
+      path: "../custom_number_picker"
+      relative: true
+    source: path
+    version: "0.0.1"
   either_dart:
     dependency: transitive
     description:

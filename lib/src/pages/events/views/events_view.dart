@@ -42,14 +42,14 @@ class EventsView extends GetView<EventsController> {
     );
   }
 
-  AppBar _appBar() =>
-      AppBar(
+  AppBar _appBar() => AppBar(
           backgroundColor: Colors.grey,
           centerTitle: true,
           title: Text("home"),
           leading: IconButton(
             icon: Icon(Icons.logout),
-            color: Colors.white, onPressed: controller.logout,
+            color: Colors.white,
+            onPressed: controller.logout,
           ),
           actions: const [
             Icon(
@@ -61,22 +61,22 @@ class EventsView extends GetView<EventsController> {
             )
           ]);
 
-  Widget _success() =>
-      Padding(
+  Widget _success() => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
         child: Obx(
-              () =>
-              ListView.separated(
-                itemCount: controller.events.length,
-                itemBuilder: (_, index) =>
-                    EventsWidget(
-                        event: controller.events[index], onBookmark: () =>
-                        controller.toggleBookmark(controller.events[index].id),
-                      onTap: () => controller.goToEvent(controller.events[index].id)
-                      // onTap: () {},
-                    ),
-                separatorBuilder: (_, __) => const SizedBox(height: 12),
-              ),
+          () => ListView.separated(
+            itemCount: controller.events.length,
+            itemBuilder: (_, index) => EventsWidget(
+                event: controller.events[index],
+                onBookmark: () =>
+                    controller.toggleBookmark(controller.events[index].id),
+                onTap: (controller.events[index].filled)
+                    ? controller.filledEvent
+                    : () => controller.goToEvent(controller.events[index].id)
+                // onTap: () {},
+                ),
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
+          ),
         ),
       );
 }

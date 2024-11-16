@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:custom_number_picker/custom_number_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -11,74 +11,6 @@ import '../models/event_details_model.dart';
 class EventDetailsView extends GetView<EventDetailsController> {
   const EventDetailsView({super.key});
 
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       floatingActionButton: _fab(),
-//       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-//       appBar: _appBar(),
-//       body: Obx(() => _body(context)),
-//     );
-//   }
-//
-//   Widget _fab() {
-//     return (controller.isLoading.value)
-//         ? const FloatingActionButton(
-//             onPressed: null,
-//             child: CircularProgressIndicator(),
-//           )
-//         : FloatingActionButton(
-//             onPressed: controller.onSubmit,
-//             child: const Icon(Icons.check),
-//           );
-//   }
-//
-//   AppBar _appBar() {
-//     return AppBar(
-//       title: const Text("Add Event"),
-//       centerTitle: true,
-//       automaticallyImplyLeading: false,
-//     );
-//   }
-//
-//   Widget _body(context) {
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(horizontal: 24.0),
-//       child: SingleChildScrollView(
-//         padding: EdgeInsets.symmetric(vertical: 36),
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Obx(() {
-//               if (controller.events.value?.image != null) {
-//                 return Image.memory(
-//                   base64Decode(controller.imageBase64.value!),
-//                   width: 333,
-//                   height: 333,
-//                 );
-//               } else {
-//                 const SizedBox(height: 32);
-//                 return const Text("No image selected");
-//               }
-//             }),
-//
-//             ElevatedButton(
-//               onPressed: () {
-//                 controller.chooseTime();
-//               },
-//               child: const Text('Enter To Buy Ticket'),
-//             ),
-//             const SizedBox(height: 16),
-//             // _datePicker(context)
-//             // Obx(() => _register()),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-//
-// }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +24,7 @@ class EventDetailsView extends GetView<EventDetailsController> {
             width: MediaQuery.of(context).size.width,
             fit: BoxFit.cover,
           ),
-          carDetailAppbar(context),
+          eventDetailAppbar(context),
           Positioned(
             left: 10,
             right: 10,
@@ -109,7 +41,7 @@ class EventDetailsView extends GetView<EventDetailsController> {
                   child: Obx(
                     () => Column(
                       children: [
-                        cardInformation(),
+                        eventInformation(),
                         const Divider(height: 15, color: Colors.white70),
                         Row(
                           children: [
@@ -130,7 +62,7 @@ class EventDetailsView extends GetView<EventDetailsController> {
                             Expanded(
                               child: Column(
                                 children: [
-                                  const Row(
+                                  Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
@@ -139,35 +71,20 @@ class EventDetailsView extends GetView<EventDetailsController> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "title",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18),
+                                            "Title : ${controller.event.value.title}",
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 22,
+                                              color: Colors.white,
+                                            ),
                                           ),
                                           Text(
-                                            "LIcense: NWR 369852",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 12),
-                                          ),
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "369",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20,
-                                                color: Colors.white),
-                                          ),
-                                          Text(
-                                            "Ride",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14),
+                                            "description : ${controller.event.value.description}",
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12,
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -179,8 +96,10 @@ class EventDetailsView extends GetView<EventDetailsController> {
                                       Text(
                                         "5.0",
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                       SizedBox(width: 6),
                                       Icon(Icons.star,
@@ -200,36 +119,8 @@ class EventDetailsView extends GetView<EventDetailsController> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 10, horizontal: 20),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          color: Colors.blueAccent,
-                                        ),
-                                        child: const Text(
-                                          "Call",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 10, horizontal: 20),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          color: Colors.blueAccent,
-                                        ),
-                                        child: const Text(
-                                          "Book Now",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white),
-                                        ),
-                                      )
+                                      bookNow(context),
+                                      submit(),
                                     ],
                                   )
                                 ],
@@ -260,8 +151,43 @@ class EventDetailsView extends GetView<EventDetailsController> {
   //     ),
   //   ),
   // ),
+  Widget submit() {
+    return InkWell(
+      onTap: () => controller.onSubmit(),
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.blueAccent,
+        ),
+        child: const Text(
+          "Submit",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+      ),
+    );
+  }
 
-  Column cardInformation() {
+  Widget bookNow(context) {
+    return InkWell(
+      onTap: () => controller.bookNow(context),
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.blueAccent,
+        ),
+        child: const Text(
+          "Book Now",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Column eventInformation() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -293,15 +219,7 @@ class EventDetailsView extends GetView<EventDetailsController> {
             ),
             Text(
               ' ${DateFormat('yyyy-MM-dd').format(controller.event.value.date)} '
-                  ' ${DateFormat('kk:mm').format(controller.event.value.date)}',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 25,
-                color: Colors.white,
-              ),
-            ),
-            Text(
-              "\$${controller.event.value.description.toString() ?? 'ناموجود'}",
+              ' ${DateFormat('kk:mm').format(controller.event.value.date)}',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 25,
@@ -314,7 +232,7 @@ class EventDetailsView extends GetView<EventDetailsController> {
     );
   }
 
-  SafeArea carDetailAppbar(BuildContext context) {
+  SafeArea eventDetailAppbar(BuildContext context) {
     return SafeArea(
         child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

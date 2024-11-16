@@ -28,6 +28,7 @@ class EventsController extends GetxController {
 
 
   Future<void> getEvents() async {
+    // onRefresh();
     events.clear();
     isLoading.value = true;
     isRetry.value = false;
@@ -57,7 +58,7 @@ class EventsController extends GetxController {
         isLoading.value = false;
         isRetry.value = false;
         events.value = eventList;
-        print("Events loaded successfully. Total events: ${events.length}");
+        // print("Events loaded successfully. Total events: ${events.length}");
       },
     );
   }
@@ -129,6 +130,19 @@ class EventsController extends GetxController {
 
   Future<void> onRefresh() async {
     getEvents();
+  }
+
+  Future<void> filledEvent() async {
+    Get.showSnackbar(
+      GetSnackBar(
+        messageText: const Text(
+          "Event is Full you Can't Buy",
+          style: TextStyle(color: Colors.black, fontSize: 14),
+        ),
+        backgroundColor: Colors.redAccent.withOpacity(.2),
+        duration: const Duration(seconds: 5),
+      ),
+    );
   }
 
   void _loadUserId() async {
