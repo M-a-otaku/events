@@ -11,11 +11,9 @@ class EventDetailsController extends GetxController {
 
   EventDetailsController({required this.eventId});
 
-  Rxn<EventDetailsModel> events = Rxn();
   RxBool isLoading = false.obs;
   RxBool isRetry = false.obs;
   var _selectedNumber = 0;
-
   final EventDetailsRepository _repository = EventDetailsRepository();
 
   Rx<EventDetailsModel> event = Rx(EventDetailsModel(
@@ -32,11 +30,7 @@ class EventDetailsController extends GetxController {
   ));
 
   void bookNow(BuildContext context) {
-    print("Current Participants: ${event.value.participants}");
-    print("Selected Number: $_selectedNumber");
-
     showDialog(
-
       context: context,
       builder: (_) => AlertDialog(
         title: const Text("Select a Number"),
@@ -59,12 +53,14 @@ class EventDetailsController extends GetxController {
         ],
       ),
     );
-    print("Current Participants22222222: ${event.value.participants}");
-    print("Selected Number2222222222222222222: $_selectedNumber");
+
 
 
   }
 
+  Future<void> onRefresh() async {
+    getEventById();
+  }
 
   Future<void> getEventById() async {
     isLoading.value = true;
@@ -86,39 +82,18 @@ class EventDetailsController extends GetxController {
           ),
         );
       },
-          (eventss) {
+          (events) {
         isLoading.value = false;
-        event.value = eventss;
-        events.value = eventss;
-
-        // پرینت مقادیر دریافتی از سرور
-        print("Received Event Details: ${eventss.participants}");
-        print("Received Capacity: ${eventss.capacity}");
-
-        // بررسی مقدار اولیه participants
-        print("Initial Participants: ${event.value.participants}");
+        event.value = events;
       },
     );
   }
 
   Future<void> onSubmit() async {
     isLoading.value = true;
-
-    // چاپ مقادیر فعلی
-    print("Current Participants: ${event.value.participants}");
-    print("Selected Number: $_selectedNumber");
-
-    // محاسبه تعداد کل شرکت‌کنندگان با اضافه کردن مقدار انتخاب شده
     int updatedParticipants = (event.value.participants ?? 0) + _selectedNumber;
-
-    // چاپ مقدار جدید participants پس از اضافه کردن
-    print("Updated Participants: $updatedParticipants");
-
-    // بررسی اگر ظرفیت پر شده باشد
     bool fill = updatedParticipants >= event.value.capacity;
 
-    // چاپ وضعیت پر بودن رویداد
-    print("Event Filled: $fill");
 
     final EventDetailsDto dto = EventDetailsDto(
       participants: updatedParticipants,
@@ -129,7 +104,6 @@ class EventDetailsController extends GetxController {
     result?.fold(
           (exception) {
         isLoading.value = false;
-        print("Error: $exception");
         Get.showSnackbar(
           GetSnackBar(
             messageText: Text(
@@ -142,12 +116,8 @@ class EventDetailsController extends GetxController {
         );
       },
           (event) {
-        // چاپ مقدار نهایی event پس از بروزرسانی
-        print("Updated Event: $event");
         event["participants"] = updatedParticipants;
         event["filled"] = fill;
-        print("Final Participants: ${event["participants"]}");
-        print("Final Filled: ${event["filled"]}");
         isLoading.value = false;
         Get.back(result: event);
       },

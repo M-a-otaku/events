@@ -1,8 +1,8 @@
-import 'package:events/src/pages/events/models/events_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/events_controller.dart';
 import 'widgets/events_widget.dart';
+import 'widgets/filter_page.dart';
 
 class EventsView extends GetView<EventsController> {
   const EventsView({super.key});
@@ -10,7 +10,7 @@ class EventsView extends GetView<EventsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.grey[300],
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
       appBar: _appBar(),
       body: RefreshIndicator(
@@ -23,6 +23,19 @@ class EventsView extends GetView<EventsController> {
       return _loading();
     } else if (controller.isRetry.value) {
       return _retry();
+    } else if (controller.events.isEmpty) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Center(
+            child: Text(
+              "There is no event available ",
+              style: TextStyle(fontSize: 16, color: Colors.black),
+            ),
+          ),
+          _retry()
+        ],
+      );
     }
     return _success();
   }
@@ -36,6 +49,9 @@ class EventsView extends GetView<EventsController> {
   Widget _retry() {
     return Center(
       child: IconButton(
+        tooltip: "press to refresh",
+        hoverColor: Colors.blueAccent,
+        highlightColor: Colors.white,
         onPressed: controller.getEvents,
         icon: const Icon(Icons.reset_tv),
         iconSize: 35,
@@ -46,20 +62,37 @@ class EventsView extends GetView<EventsController> {
   AppBar _appBar() => AppBar(
           backgroundColor: Colors.grey,
           centerTitle: true,
-          title: Text("home"),
+          title: const Text("home"),
           leading: IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
+            hoverColor: Colors.blueAccent,
+            tooltip: "Press To Logout",
             color: Colors.white,
             onPressed: controller.logout,
           ),
           actions: [
             IconButton(
               icon: const Icon(Icons.search),
+              hoverColor: Colors.blueAccent,
+              tooltip: "Search button",
+              color: Colors.white,
               onPressed: () {
                 showSearch(
                   context: Get.context!,
                   delegate: CustomSearchDelegate(),
                 );
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              hoverColor: Colors.blueAccent,
+              tooltip: "filter button",
+              color: Colors.white,
+              onPressed: () {
+                Navigator.push(
+                  Get.context!,
+                  MaterialPageRoute(
+                      builder: (_) => FilterPage()),  );
               },
             ),
             const SizedBox(width: 20),
@@ -74,10 +107,11 @@ class EventsView extends GetView<EventsController> {
                 event: controller.events[index],
                 onBookmark: () =>
                     controller.toggleBookmark(controller.events[index].id),
-                onTap: (controller.events[index].filled)
+                onTap: (controller.events[index].filled ||
+                        controller.events[index].date.isBefore(DateTime.now()))
                     ? controller.filledEvent
                     : () => controller.goToEvent(controller.events[index].id)
-                // onTap: () {},
+
                 ),
             separatorBuilder: (_, __) => const SizedBox(height: 12),
           ),
@@ -95,7 +129,8 @@ class CustomSearchDelegate extends SearchDelegate {
       IconButton(
         onPressed: () {
           query = '';
-          controller.searchEvents(query); // Reset the search when the query is cleared
+          controller.searchEvents(
+              query);
         },
         icon: const Icon(Icons.clear),
       ),
@@ -114,27 +149,26 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    controller.searchEvents(query); // Filter events as the user types
+    controller.searchEvents(query);
     return _buildEventList();
   }
 
-
   @override
   Widget buildSuggestions(BuildContext context) {
-    controller.searchEvents(query); // Filter events as the user types
+    controller.searchEvents(query);
     return _buildEventList();
   }
 
   Widget _buildEventList() {
     return Obx(
-          () => ListView.builder(
+      () => ListView.builder(
         itemCount: controller.filteredEvents.length,
         itemBuilder: (context, index) {
           final event = controller.filteredEvents[index];
           return ListTile(
             title: Text(event.title),
+            subtitle: Text(event.description),
             onTap: () {
-              // Handle event tap
             },
           );
         },
@@ -142,9 +176,4 @@ class CustomSearchDelegate extends SearchDelegate {
     );
   }
 }
-  //
-  // void toggle() {
-  //   isDescending = !isDescending;
-  // }
-
 

@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:either_dart/either.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../../infrastructure/commons/url_repository.dart';
 import '../models/add_event_dto.dart';
@@ -23,7 +21,6 @@ class AddEventRepository {
       }
       return const Left('Error');
     } catch (e) {
-      print(e.toString());
       return Left(e.toString());
     }
   }

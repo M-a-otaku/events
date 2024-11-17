@@ -46,7 +46,7 @@ class UrlRepository {
 
   static Uri updateBookmark({required int userId}) {
     return Uri.http(
-      'localhost:3000', // این باید فقط 'localhost' باشد
+      'localhost:3000',
       '$_users/bookmark',
     );
   }

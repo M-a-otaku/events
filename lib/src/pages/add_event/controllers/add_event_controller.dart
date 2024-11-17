@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -52,13 +51,11 @@ class AddEventController extends GetxController {
   }
 
   Future<void> chooseTime() async {
-    // تبدیل DateTime به TimeOfDay
     TimeOfDay initialTimeFromServer = TimeOfDay(
       hour: selectedTime2.value.hour,
       minute: selectedTime2.value.minute,
     );
 
-    // نمایش TimePicker با مقدار زمان از سرور
     TimeOfDay? pickedTime = await showTimePicker(
       context: Get.context!,
       initialTime: initialTimeFromServer,
@@ -78,14 +75,11 @@ class AddEventController extends GetxController {
     );
 
     if (pickedTime != null) {
-      // به‌روزرسانی selectedTime2 با زمان جدید
       selectedTime2.value = selectedTime2.value.copyWith(
         hour: pickedTime.hour,
         minute: pickedTime.minute,
       );
 
-      print(pickedTime);
-      print(selectedTime2.value);
     }
   }
 
@@ -113,13 +107,11 @@ class AddEventController extends GetxController {
         int.parse(selectedYear.value),
         int.parse(selectedMonth.value),
         int.parse(selectedDay.value),
-        selectedTime2.value.hour, // اضافه کردن ساعت
-        selectedTime2.value.minute, // اضافه کردن دقیقه
+        selectedTime2.value.hour,
+        selectedTime2.value.minute,
       );
 
-      // if (date.isBefore(DateTime.now().add(const Duration(days: 1)))) {
-      //   return null;
-      // }
+
 
       if (date.isBefore(DateTime.now())) {
         return null;
@@ -175,7 +167,6 @@ class AddEventController extends GetxController {
     }
     isLoading.value = true;
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    print("${preferences.getInt(LocalKeys.userId) ?? -1}");
     final int price = int.parse(priceController.text);
     final int capacity = int.parse(capacityController.text);
     final AddEventDto dto = AddEventDto(
@@ -183,7 +174,6 @@ class AddEventController extends GetxController {
       image: imageBase64.value,
       description: descriptionController.text,
       date: date ,
-      // time: DateTime.now().copyWith(hour: selectedTime.value.hour , minute: selectedTime.value.minute) ,
       capacity: capacity,
       price: price,
       userId: preferences.getInt(LocalKeys.userId) ?? -1,

@@ -138,8 +138,7 @@ class AddEventView extends GetView<AddEventController> {
                       )),
                 ],
               ),
-              // _datePicker(context)
-              // Obx(() => _register()),
+
             ],
           ),
         ),
@@ -151,9 +150,6 @@ class AddEventView extends GetView<AddEventController> {
     return TextFormField(
       maxLength: 20,
       readOnly: (controller.isLoading.value ? true : false),
-      // inputFormatters: [
-      //   FilteringTextInputFormatter.deny(RegExp(r'\s')),
-      // ],
       controller: controller.titleController,
       autofocus: true,
       textInputAction: TextInputAction.next,
@@ -176,9 +172,6 @@ class AddEventView extends GetView<AddEventController> {
     return TextFormField(
       maxLength: 50,
       readOnly: (controller.isLoading.value ? true : false),
-      // inputFormatters: [
-      //   FilteringTextInputFormatter.deny(RegExp(r'\s')),
-      // ],
       controller: controller.descriptionController,
       autofocus: true,
       textInputAction: TextInputAction.next,

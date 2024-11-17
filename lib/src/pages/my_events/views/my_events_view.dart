@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../events/views/widgets/filter_page.dart';
 import '../controllers/my_events_controller.dart';
 import 'widgets/my_events_widget.dart';
 
@@ -9,12 +10,8 @@ class MyEventsView extends GetView<MyEventsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.grey[300],
       floatingActionButton: _fab(),
-      // floatingActionButton: Hero(
-      //   tag: Obx(() => _fab()),
-      //   child: Obx(() => _fab()),
-      // ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: _appBar(),
       body: RefreshIndicator(
@@ -28,11 +25,17 @@ class MyEventsView extends GetView<MyEventsController> {
     } else if (controller.isRetry.value) {
       return _retry();
     } else if (controller.myEvents.isEmpty) {
-      return const Center(
-        child: Text(
-          "list is empty",
-          style: TextStyle(fontSize: 16, color: Colors.black),
-        ),
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Center(
+            child: Text(
+              "MyEvents is empty",
+              style: TextStyle(fontSize: 16, color: Colors.black),
+            ),
+          ),
+          _retry()
+        ],
       );
     }
     return _success();
@@ -47,6 +50,9 @@ class MyEventsView extends GetView<MyEventsController> {
   Widget _retry() {
     return Center(
       child: IconButton(
+        tooltip: "press to refresh",
+        hoverColor: Colors.blueAccent,
+        highlightColor: Colors.white ,
         onPressed: controller.getEvents,
         icon: const Icon(Icons.change_circle),
       ),
@@ -57,18 +63,33 @@ class MyEventsView extends GetView<MyEventsController> {
           centerTitle: true,
           title: const Text("My Events"),
           backgroundColor: Colors.grey,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                showSearch(
-                  context: Get.context!,
-                  delegate: CustomSearchDelegate(),
-                );
-              },
-            ),
-            const SizedBox(width: 20),
-          ]);
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.search),
+          hoverColor: Colors.blueAccent,
+          tooltip: "Search button",
+          color: Colors.white,
+          onPressed: () {
+            showSearch(
+              context: Get.context!,
+              delegate: CustomSearchDelegate(),
+            );
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.filter_list),
+          hoverColor: Colors.blueAccent,
+          tooltip: "filter button",
+          color: Colors.white,
+          onPressed: () {
+            Navigator.push(
+              Get.context!,
+              MaterialPageRoute(builder: (_) => FilterPage()),
+            );
+          },
+        ),
+        const SizedBox(width: 20),
+      ]);
 
   Widget _fab() {
     return FloatingActionButton(
@@ -108,7 +129,7 @@ class CustomSearchDelegate extends SearchDelegate {
       IconButton(
         onPressed: () {
           query = '';
-          controller.searchEvents(query); // Reset the search when the query is cleared
+          controller.searchEvents(query);
         },
         icon: const Icon(Icons.clear),
       ),
@@ -127,14 +148,14 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    controller.searchEvents(query); // Filter events as the user types
+    controller.searchEvents(query);
     return _buildEventList();
   }
 
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    controller.searchEvents(query); // Filter events as the user types
+    controller.searchEvents(query);
     return _buildEventList();
   }
 
@@ -147,7 +168,7 @@ class CustomSearchDelegate extends SearchDelegate {
           return ListTile(
             title: Text(event.title),
             onTap: () {
-              // Handle event tap
+
             },
           );
         },
@@ -155,10 +176,7 @@ class CustomSearchDelegate extends SearchDelegate {
     );
   }
 }
-//
-// void toggle() {
-//   isDescending = !isDescending;
-// }
+
 
 
 

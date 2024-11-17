@@ -1,8 +1,7 @@
-import 'package:events/src/pages/EEvents/views/events_screen.dart';
-import 'package:events/src/pages/bookmark/views/bookmark_event_screen.dart';
-import 'package:events/src/pages/bottom_nav_bar/controller/nav_bar_controller.dart';
-import 'package:events/src/pages/events/views/events_view.dart';
-import 'package:events/src/pages/my_events/views/my_events_view.dart';
+import '../../bookmark/views/bookmark_event_screen.dart';
+import '../controller/nav_bar_controller.dart';
+import '../../events/views/events_view.dart';
+import '../../my_events/views/my_events_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

@@ -4,7 +4,6 @@ class AddEventsModel {
   final String title;
   final String description;
   final DateTime date;
-  // final DateTime time;
   final int capacity;
   final double price;
   int? participants = 0;
@@ -19,7 +18,6 @@ class AddEventsModel {
     required this.title,
     required this.filled,
     required this.description,
-    // required this.time,
     required this.date,
     required this.capacity,
     required this.price,
@@ -31,7 +29,6 @@ class AddEventsModel {
       title: json["title"],
       description: json["description"],
       date: DateTime.tryParse(json['date']) ?? DateTime.now(),
-      // time:  DateTime.tryParse(json['time']) ?? DateTime.now(),
       capacity: json["capacity"],
       price: json["price"],
       id: json["id"],

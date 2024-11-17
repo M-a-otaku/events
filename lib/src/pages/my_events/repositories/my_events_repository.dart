@@ -13,7 +13,6 @@ class MyEventsRepository {
       final SharedPreferences preferences =
           await SharedPreferences.getInstance();
       final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
-      print(userId.toString());
       List<MyEventsModel> events = [];
       if (userId == -1) {
         return const Right([]);
@@ -21,7 +20,6 @@ class MyEventsRepository {
       final url = UrlRepository.myEvents(userId);
       http.Response response = await http.get(url);
       List<dynamic> result = json.decode(response.body);
-      print(url);
 
       for (Map<String, dynamic> event in result) {
         if (event["userId"] == userId) {

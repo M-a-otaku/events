@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:either_dart/either.dart';
-import 'package:events/src/pages/edit_event/models/edit_events_model.dart';
-import 'package:get/get.dart';
+import '../models/edit_events_model.dart';
 import 'package:http/http.dart' as http;
 import '../../../infrastructure/commons/url_repository.dart';
 import '../models/edit_event_dto.dart';

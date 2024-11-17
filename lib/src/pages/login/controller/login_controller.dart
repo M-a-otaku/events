@@ -1,9 +1,8 @@
-import 'package:events/src/pages/login/repositories/login_repository.dart';
+import '../repositories/login_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../infrastructure/routes/route_names.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../shared/local_storage_keys.dart';
 
 class LoginController extends GetxController {
@@ -50,7 +49,7 @@ class LoginController extends GetxController {
     if (!(formKey.currentState?.validate() ?? false)) return;
     isLoading.value = true;
     final result = await _repository.login(
-      username: usernameController.text,
+      username: usernameController.text.toLowerCase(),
       password: passwordController.text,
     );
     result?.fold(

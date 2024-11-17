@@ -17,8 +17,15 @@ class RegisterController extends GetxController {
   final String femaleUserGender = 'female';
 
   RxBool isPasswordVisible = true.obs;
-  RxBool isrepeatPasswordVisible = true.obs;
+  RxBool isRepeatPasswordVisible = true.obs;
   RxBool isLoading = false.obs;
+
+  final FocusNode firstnameFocus = FocusNode();
+  final FocusNode lastnameFocus = FocusNode();
+  final FocusNode usernameFocus = FocusNode();
+  final FocusNode passwordFocus = FocusNode();
+  final FocusNode repeatPasswordFocus = FocusNode();
+
 
   void changeGender(String gender) {
     _maleUserGender = gender;
@@ -68,7 +75,7 @@ class RegisterController extends GetxController {
     isLoading.value = true;
 
     final RegisterDto dto = RegisterDto(
-      username: usernameController.text,
+      username: usernameController.text.toLowerCase(),
       password: passwordController.text,
       gender: _maleUserGender,
       firstname: firstnameController.text,
@@ -104,7 +111,7 @@ class RegisterController extends GetxController {
   }
 
   void onPressedRepeat() {
-    isrepeatPasswordVisible.value = !isrepeatPasswordVisible.value;
+    isRepeatPasswordVisible.value = !isRepeatPasswordVisible.value;
     update();
   }
 

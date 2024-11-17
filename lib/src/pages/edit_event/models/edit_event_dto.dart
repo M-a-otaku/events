@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class EditEventDto {
   final int userId;
@@ -10,7 +8,6 @@ class EditEventDto {
   final int capacity;
   final int price;
   int participants;
-
   final String? image;
   bool filled;
 

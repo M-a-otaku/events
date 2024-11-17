@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../events/views/widgets/filter_page.dart';
 import '../controllers/bookmark_event_controller.dart';
 import 'widgets/bookmark_event_widget.dart';
 
@@ -9,7 +10,7 @@ class BookmarkEventScreen extends GetView<BookmarkEventController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.grey[300],
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
       appBar: _appBar(),
       body: RefreshIndicator(
@@ -22,6 +23,19 @@ class BookmarkEventScreen extends GetView<BookmarkEventController> {
       return _loading();
     } else if (controller.isRetry.value) {
       return _retry();
+    } else if (controller.bookmarkedEvents.isEmpty) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Center(
+            child: Text(
+              "No Events Bookmarked ",
+              style: TextStyle(fontSize: 16, color: Colors.black),
+            ),
+          ),
+          _retry()
+        ],
+      );
     }
     return _success();
   }
@@ -35,8 +49,11 @@ class BookmarkEventScreen extends GetView<BookmarkEventController> {
   Widget _retry() {
     return Center(
       child: IconButton(
+        tooltip: "press to refresh",
+        hoverColor: Colors.blueAccent,
+        highlightColor: Colors.white ,
         onPressed: controller.getBookmarked,
-        icon: const Icon(Icons.reset_tv),
+        icon: const Icon(Icons.refresh),
         iconSize: 35,
       ),
     );
@@ -49,10 +66,25 @@ class BookmarkEventScreen extends GetView<BookmarkEventController> {
       actions: [
         IconButton(
           icon: const Icon(Icons.search),
+          hoverColor: Colors.blueAccent,
+          tooltip: "Search button",
+          color: Colors.white,
           onPressed: () {
             showSearch(
               context: Get.context!,
               delegate: CustomSearchDelegate(),
+            );
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.filter_list),
+          hoverColor: Colors.blueAccent,
+          tooltip: "filter button",
+          color: Colors.white,
+          onPressed: () {
+            Navigator.push(
+              Get.context!,
+              MaterialPageRoute(builder: (_) => FilterPage()),
             );
           },
         ),
@@ -68,9 +100,10 @@ class BookmarkEventScreen extends GetView<BookmarkEventController> {
               event: controller.bookmarkedEvents[index],
               onBookmark: () => controller.onBookmark(
                 eventId: controller.bookmarkedEvents[index].id,
-              ),
-              // onTap: () => controller.goToEvent(index)
-              // onTap: () {},
+              ), onTap: (controller.bookmarkedEvents[index].filled ||
+                controller.bookmarkedEvents[index].date.isBefore(DateTime.now()))
+                ? controller.filledEvent
+                : () => controller.goToEvent(controller.bookmarkedEvents[index].id),
             ),
             separatorBuilder: (_, __) => const SizedBox(height: 12),
           ),
@@ -89,7 +122,7 @@ class CustomSearchDelegate extends SearchDelegate {
       IconButton(
         onPressed: () {
           query = '';
-          controller.searchEvents(query); // Reset the search when the query is cleared
+          controller.searchEvents(query);
         },
         icon: const Icon(Icons.clear),
       ),
@@ -108,14 +141,14 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    controller.searchEvents(query); // Filter events as the user types
+    controller.searchEvents(query);
     return _buildEventList();
   }
 
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    controller.searchEvents(query); // Filter events as the user types
+    controller.searchEvents(query);
     return _buildEventList();
   }
 
@@ -128,7 +161,6 @@ class CustomSearchDelegate extends SearchDelegate {
           return ListTile(
             title: Text(event.title),
             onTap: () {
-              // Handle event tap
             },
           );
         },
@@ -136,10 +168,6 @@ class CustomSearchDelegate extends SearchDelegate {
     );
   }
 }
-//
-// void toggle() {
-//   isDescending = !isDescending;
-// }
 
 
 

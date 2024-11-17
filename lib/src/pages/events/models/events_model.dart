@@ -4,7 +4,7 @@ class EventsModel {
   final String description;
   final DateTime date;
   final int capacity;
-  final double price;
+  final int price;
   final String? image;
   final int? participants;
   final bool filled;
@@ -26,9 +26,9 @@ class EventsModel {
       id: json['id'],
       title: json['title'],
       description: json['description'],
-      date: DateTime.parse(json['date']),
+      date: DateTime.tryParse(json['date'])?.toLocal() ?? DateTime.now(),
       capacity: json['capacity'],
-      price: json['price'].toDouble(),
+      price: json['price'],
       image: json['image'],
       participants: json['participants'],
       filled: json['filled'],

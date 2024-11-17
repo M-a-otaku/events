@@ -1,12 +1,8 @@
 import 'dart:convert';
-import 'package:custom_number_picker/custom_number_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../controllers/event_details_controller.dart';
-import '../models/event_details_model.dart';
 
 class EventDetailsView extends GetView<EventDetailsController> {
   const EventDetailsView({super.key});
@@ -14,10 +10,48 @@ class EventDetailsView extends GetView<EventDetailsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: RefreshIndicator(
+            onRefresh: controller.onRefresh, child: Obx(() => _body(context))),
+      ),
+    );
+  }
+
+
+
+  Widget _body(context) {
+    if (controller.isLoading.value) {
+      return _loading();
+    } else if (controller.isRetry.value) {
+      return _retry();
+    }
+    return _success(context);
+  }
+
+  Widget _retry() {
+    return Center(
+      child: IconButton(
+        tooltip: "press to refresh",
+        hoverColor: Colors.blueAccent,
+        highlightColor: Colors.white,
+        onPressed: controller.getEventById,
+        icon: const Icon(Icons.change_circle),
+      ),
+    );
+  }
+
+  Widget _loading() {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _success(context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Stack(
         children: [
-          Text("suiiiiiiiiii"),
-          // for image
           Image.asset(
             "Images/map.png",
             height: MediaQuery.of(context).size.height,
@@ -43,28 +77,36 @@ class EventDetailsView extends GetView<EventDetailsController> {
                       children: [
                         eventInformation(),
                         const Divider(height: 15, color: Colors.white70),
-                        Row(
-                          children: [
-                            (controller.event.value.image != null &&
-                                    controller.event.value.image!.isNotEmpty)
-                                ? ClipOval(
-                                    child: Image.memory(
-                                      base64Decode(
-                                          controller.event.value.image!),
-                                      width: 150,
-                                      height: 150,
-                                      fit: BoxFit.cover,
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              (controller.event.value.image != null &&
+                                      controller.event.value.image!.isNotEmpty)
+                                  ? Hero(
+                                      tag:
+                                          'event_${controller.event.value.id}_${UniqueKey()}',
+                                      child: ClipOval(
+                                        child: Image.memory(
+                                          base64Decode(
+                                              controller.event.value.image!),
+                                          width: 100,
+                                          height: 100,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    )
+                                  : Hero(
+                                      tag:
+                                          'event_${controller.event.value.id}_${UniqueKey()}',
+                                      child: const Icon(Icons.event,
+                                          color: Colors.white, size: 100),
                                     ),
-                                  )
-                                : const Icon(Icons.event,
-                                    color: Colors.white, size: 150),
-                            const SizedBox(width: 15),
-                            Expanded(
-                              child: Column(
+                              Column(
                                 children: [
                                   Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Column(
                                         crossAxisAlignment:
@@ -115,19 +157,22 @@ class EventDetailsView extends GetView<EventDetailsController> {
                                     ],
                                   ),
                                   const SizedBox(height: 12),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      bookNow(context),
-                                      submit(),
-                                    ],
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 20.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        bookNow(context),
+                                        submit(),
+                                      ],
+                                    ),
                                   )
                                 ],
-                              ),
-                            )
-                          ],
-                        )
+                              )
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -140,22 +185,12 @@ class EventDetailsView extends GetView<EventDetailsController> {
     );
   }
 
-  // for car image
-  // Positioned(
-  //   right: 60,
-  //   child: Hero(
-  //     tag: car.image,
-  //     child: Image.asset(
-  //       car.image,
-  //       height: 115,
-  //     ),
-  //   ),
-  // ),
   Widget submit() {
     return InkWell(
       onTap: () => controller.onSubmit(),
       borderRadius: BorderRadius.circular(20),
       child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -174,6 +209,7 @@ class EventDetailsView extends GetView<EventDetailsController> {
       onTap: () => controller.bookNow(context),
       borderRadius: BorderRadius.circular(20),
       child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -189,15 +225,33 @@ class EventDetailsView extends GetView<EventDetailsController> {
 
   Column eventInformation() {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "\$${controller.event.value.price.toString() ?? 'ناموجود'}",
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 25,
-            color: Colors.white,
-          ),
+        Row(
+          children: [
+            Text(
+              "\$${controller.event.value.price.toString() ?? 'ناموجود'}",
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+                color: Colors.white,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 45.0),
+              child: Text(
+                ' ${DateFormat('yyyy-MM-dd').format(controller.event.value.date)} ',
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  color: Colors.white,
+                ),
+              ),
+            )
+          ],
         ),
         const Text(
           "price",
@@ -210,16 +264,7 @@ class EventDetailsView extends GetView<EventDetailsController> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Capacity : ${controller.event.value.capacity.toString() ?? 'ناموجود'}",
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 25,
-                color: Colors.white,
-              ),
-            ),
-            Text(
-              ' ${DateFormat('yyyy-MM-dd').format(controller.event.value.date)} '
-              ' ${DateFormat('kk:mm').format(controller.event.value.date)}',
+              "Capacity: ${controller.event.value.capacity - controller.event.value.participants!}",
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 25,

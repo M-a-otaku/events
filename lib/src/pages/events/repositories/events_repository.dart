@@ -6,7 +6,6 @@ import '../../../infrastructure/commons/url_repository.dart';
 import '../../shared/local_storage_keys.dart';
 import '../models/events_model.dart';
 import '../models/events_user_dto.dart';
-import '../models/user_model.dart';
 
 class EventsRepository {
   Future<Either<String, List<EventsModel>>> getEvents() async {
@@ -29,29 +28,6 @@ class EventsRepository {
       return Left(e.toString());
     }
   }
-
-  // Future<Either<String, void>> editBookmarked({
-  //   required EventsUserDto dto,
-  //   required int userId,
-  // }) async {
-  //   try {
-  //     final url = UrlRepository.updateBookmark(userId: userId);
-  //     print(url);
-  //     final response = await http.patch(
-  //       url,
-  //       body: json.encode(dto.toJson()),
-  //       headers: {"Content-Type": "application/json"},
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //       return const Right(true);
-  //     } else {
-  //       return const Left("Failed to update bookmark");
-  //     }
-  //   } catch (e) {
-  //     return Left(e.toString());
-  //   }
-  // }
 
   Future<Either<String, bool>> editBookmarked({
     required EventsUserDto dto,

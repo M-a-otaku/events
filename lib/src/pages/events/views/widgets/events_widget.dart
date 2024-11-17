@@ -1,9 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../../controllers/events_controller.dart';
 import '../../models/events_model.dart';
 
@@ -43,18 +41,24 @@ class EventsWidget extends GetView<EventsController> {
                     right: 0,
                     top: -20,
                     child: (event.image != null && event.image!.isNotEmpty)
-                        ? ClipOval(
-                            child: Image.memory(
-                              base64Decode(event.image!),
-                              width: 80,
-                              height: 80,
-                              fit: BoxFit.cover,
+                        ? Hero(
+                      tag: 'event_${event.id}_${UniqueKey()}',
+                            child: ClipOval(
+                              child: Image.memory(
+                                base64Decode(event.image!),
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           )
-                        : const Icon(
-                            Icons.event,
-                            color: Colors.white,
-                            size: 80,
+                        : Hero(
+                      tag: 'event_${event.id}_${UniqueKey()}',
+                            child: const Icon(
+                              Icons.event,
+                              color: Colors.white,
+                              size: 60,
+                            ),
                           ),
                   ),
                   Column(

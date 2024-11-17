@@ -1,4 +1,3 @@
-import 'events_model.dart';
 
 class UserModel {
   String firstName;

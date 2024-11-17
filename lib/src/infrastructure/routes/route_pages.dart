@@ -1,18 +1,15 @@
-import 'package:events/src/pages/EEvents/views/events_screen.dart';
-import 'package:events/src/pages/add_event/common/add_event_bindings.dart';
-import 'package:events/src/pages/add_event/views/add_event_view.dart';
-import 'package:events/src/pages/bookmark/common/bookmark_event_binding.dart';
-import 'package:events/src/pages/bookmark/views/bookmark_event_screen.dart';
-import 'package:events/src/pages/bottom_nav_bar/bindings/nav_bar.dart';
-import 'package:events/src/pages/bottom_nav_bar/views/bottom_nav_bar.dart';
-import 'package:events/src/pages/edit_event/common/edit_event_bindings.dart';
-import 'package:events/src/pages/events_details/common/event_details_bindings.dart';
-import 'package:events/src/pages/events_details/views/event_details_view.dart';
-import 'package:events/src/pages/my_events/common/my_events_bindings.dart';
-import 'package:events/src/pages/my_events/views/my_events_view.dart';
-
-import '../../pages/EEvents/Common/bindings/Event_bindings.dart';
+import '../../pages/add_event/common/add_event_bindings.dart';
+import '../../pages/add_event/views/add_event_view.dart';
+import '../../pages/bookmark/common/bookmark_event_binding.dart';
+import '../../pages/bookmark/views/bookmark_event_screen.dart';
+import '../../pages/bottom_nav_bar/bindings/nav_bar.dart';
+import '../../pages/bottom_nav_bar/views/bottom_nav_bar.dart';
+import '../../pages/edit_event/common/edit_event_bindings.dart';
+import '../../pages/my_events/common/my_events_bindings.dart';
+import '../../pages/my_events/views/my_events_view.dart';
 import '../../pages/edit_event/views/edit_event_view.dart';
+import '../../pages/event_details/common/event_details_bindings.dart';
+import '../../pages/event_details/views/event_details_view.dart';
 import '../../pages/events/common/events_bindings.dart';
 import '../../pages/events/views/events_view.dart';
 import '../../pages/login/commons/login_bindings.dart';
@@ -55,10 +52,6 @@ class RoutePages {
         name: RoutePaths.bookmark,
         page: () => const BookmarkEventScreen(),
         binding: BookmarkEventBinding()),
-    GetPage(
-        name: RoutePaths.car,
-        page: () => const EventsScreen(),
-        binding: EventBindings()),
     GetPage(
         name: RoutePaths.home,
         page: () => const BottomNavBar(),

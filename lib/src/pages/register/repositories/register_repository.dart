@@ -10,14 +10,12 @@ class RegisterRepository {
     try {
       final url = UrlRepository.register;
 
-      // check if user already exist
       final http.Response check = await http.get(url);
       final List<dynamic> checkResponse = json.decode(check.body);
-      if (checkResponse.any((user) => user["name"] == dto.username)) {
+      if (checkResponse.any((user) => user["username"] == dto.username)) {
         return Left('User ${dto.username} is Already Exist, try to login');
       }
 
-      // create a user in data-base
       final Map<String, dynamic> body = dto.toJson();
       final http.Response response = await http.post(url, body: body);
 

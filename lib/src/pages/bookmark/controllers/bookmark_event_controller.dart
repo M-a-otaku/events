@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../events.dart';
 import '../models/event_model.dart';
 import '../repositories/bookmark_event_repository.dart';
 
@@ -25,6 +26,26 @@ class BookmarkEventController extends GetxController {
     }
   }
 
+  Future<void> goToEvent(int eventId) async {
+    await Get.toNamed(
+      RouteNames.detailsEvent,
+      parameters: {"eventId": "$eventId"},
+    );
+  }
+
+  Future<void> filledEvent() async {
+    Get.showSnackbar(
+      GetSnackBar(
+        messageText: const Text(
+          "you Can't Buy a Event that is Full or Expired",
+          style: TextStyle(color: Colors.black, fontSize: 14),
+        ),
+        backgroundColor: Colors.redAccent.withOpacity(.2),
+        duration: const Duration(seconds: 5),
+      ),
+    );
+  }
+
   Future<void> onRefresh() async {
     getBookmarked();
   }
@@ -32,16 +53,15 @@ class BookmarkEventController extends GetxController {
   Future<List<int>> getBookmarkedEvents() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    // بازیابی لیست بوک‌مارک‌ها از SharedPreferences
     List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ??
         [];
 
-    // تبدیل لیست از String به int
     return bookmarkedIds.map((id) => int.parse(id)).toList();
   }
 
 
   Future<void> getBookmarked() async {
+    isLoading.value = true;
     final result = await _repository.getBookmarked(parameters: '');
     result.fold(
           (exception) {
@@ -72,7 +92,6 @@ class BookmarkEventController extends GetxController {
         [];
     if (bookmarkedIds.isEmpty) {
       await preferences.setStringList('bookmarkedIds', []);
-      print("Initialized empty bookmarkedIds");
     }
   }
 
@@ -83,7 +102,6 @@ class BookmarkEventController extends GetxController {
     List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ??
         [];
 
-    // چک کردن که آیا ایونت قبلاً بوک‌مارک شده یا خیر
     if (bookmarkedIds.contains(eventId.toString())) {
       isLoading.value = false;
       bookmarkedIds.remove(eventId.toString());
@@ -99,13 +117,8 @@ class BookmarkEventController extends GetxController {
       );
     }
 
-    // ذخیره کردن لیست بوک‌مارک‌ها
     bool isSaved = await preferences.setStringList(
         'bookmarkedIds', bookmarkedIds);
-    print("Bookmarked IDs after save: $bookmarkedIds");
-    print("Is saved: $isSaved"); // برای بررسی موفقیت‌آمیز بودن ذخیره‌سازی
-
-    // آپدیت کردن لیست بوک‌مارک‌ها
     getBookmarked();
   }
 

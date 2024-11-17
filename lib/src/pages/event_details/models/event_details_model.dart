@@ -4,7 +4,6 @@ class EventDetailsModel {
   final String title;
   final String description;
   final DateTime date;
-  // final DateTime time;
   final int capacity;
   final double price;
   int? participants = 0;
@@ -19,7 +18,6 @@ class EventDetailsModel {
     required this.title,
     required this.filled,
     required this.description,
-    // required this.time,
     required this.date,
     required this.capacity,
     required this.price,

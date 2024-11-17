@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class EditEventsModel {
   final int id;
@@ -33,7 +31,7 @@ class EditEventsModel {
       image: json["image"],
       title: json["title"],
       description: json["description"],
-      date: DateTime.tryParse(json['date']) ?? DateTime.now(),
+      date: DateTime.tryParse(json['date'])?.toLocal() ?? DateTime.now(),
       // /time: DateTime.tryParse(json['time']) ?? DateTime.now(),
       capacity: json["capacity"],
       price: json["price"],

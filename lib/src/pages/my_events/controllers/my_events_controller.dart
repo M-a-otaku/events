@@ -30,7 +30,6 @@ class MyEventsController extends GetxController {
     isRetry.value = false;
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
-    print("_______$userId");
     final result = await _repository.getMyEvents(userId: userId);
     result.fold(
       (exception) {
@@ -63,13 +62,11 @@ class MyEventsController extends GetxController {
   Future<void> addEvent() async {
     final result = await Get.toNamed(RouteNames.addEvents);
     if (result != null) {
-      print(result["time"]);
       myEvents.add(MyEventsModel.fromJson(json: result));
     }
   }
 
   Future<void> toEditPage({required int eventId}) async {
-    // isLoading.value = true;
     int index = myEvents.indexWhere((event) => event.id == eventId);
     if (myEvents[index].participants != 0) {
       isLoading.value = false;

@@ -1,10 +1,7 @@
 import 'dart:convert';
-import 'dart:typed_data';
-
-import 'package:events/src/pages/bookmark/controllers/bookmark_event_controller.dart';
+import '../../controllers/bookmark_event_controller.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../../models/event_model.dart';
 import 'package:flutter/material.dart';
 
@@ -13,10 +10,12 @@ class BookmarkEventWidget extends GetView<BookmarkEventController> {
     super.key,
     required this.event,
     required this.onBookmark,
+    required this.onTap,
   });
 
   final EventModel event;
   final void Function() onBookmark;
+  final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,7 @@ class BookmarkEventWidget extends GetView<BookmarkEventController> {
         Expanded(
           child: InkWell(
             borderRadius: BorderRadius.circular(12),
-            // onTap: onTap,
+            onTap: onTap,
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
               padding: const EdgeInsets.all(16),
@@ -37,26 +36,30 @@ class BookmarkEventWidget extends GetView<BookmarkEventController> {
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  // Positioned image
                   Positioned(
                     right: 0,
                     top: -20,
                     child: (event.image != null && event.image!.isNotEmpty)
-                        ? ClipOval(
-                            child: Image.memory(
-                              base64Decode(event.image!),
-                              width: 80,
-                              height: 80,
-                              fit: BoxFit.cover,
+                        ? Hero(
+                      tag: 'event_${event.id}_${UniqueKey()}',
+                            child: ClipOval(
+                              child: Image.memory(
+                                base64Decode(event.image!),
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           )
-                        : const Icon(
-                            Icons.event,
-                            color: Colors.white,
-                            size: 80,
+                        : Hero(
+                      tag: 'event_${event.id}_${UniqueKey()}',
+                            child: const Icon(
+                              Icons.event,
+                              color: Colors.white,
+                              size: 60,
+                            ),
                           ),
                   ),
-                  // Text information
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,

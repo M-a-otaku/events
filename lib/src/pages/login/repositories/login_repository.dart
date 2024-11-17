@@ -31,7 +31,6 @@ class LoginRepository {
         if (user["username"] != null && user["username"] == username) {
           if (user["password"] != null && user["password"] == password) {
             if (user["id"] != null) {
-              print(user["id"]);
               return Right(user["id"]);
             } else {
               return const Left('User ID not found');
@@ -44,7 +43,6 @@ class LoginRepository {
 
       return const Left('User not found');
     } catch (e) {
-      print(e.toString());
       return Left(e.toString());
     }
   }

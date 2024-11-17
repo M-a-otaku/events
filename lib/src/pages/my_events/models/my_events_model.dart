@@ -19,7 +19,6 @@ class MyEventsModel {
     required this.title,
     required this.filled,
     required this.description,
-    // required this.time,
     required this.date,
     required this.capacity,
     required this.price,
@@ -31,7 +30,6 @@ class MyEventsModel {
       title: json["title"],
       description: json["description"],
       date: DateTime.tryParse(json['date'])?.toLocal() ?? DateTime.now(),
-      // time: DateTime.tryParse(json['time'])?.toLocal() ?? DateTime.now(),
       capacity: json["capacity"],
       price: json["price"],
       id: json["id"],
@@ -45,7 +43,6 @@ class MyEventsModel {
     String? image,
     String? title,
     String? description,
-    // DateTime? time,
     DateTime? date,
     int? capacity,
     int? price,
@@ -64,7 +61,6 @@ class MyEventsModel {
         userId: userId ?? this.userId,
         participants: participants ?? this.participants,
         filled: filled ?? this.filled,
-        // time: time ?? this.time,
         date: date ?? this.date,
       );
 

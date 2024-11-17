@@ -1,6 +1,5 @@
-import 'package:events/src/pages/register/views/widgets/register_widgets.dart';
+import 'widgets/register_widgets.dart';
 import 'package:flutter/services.dart';
-
 import '../controllers/register_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,13 +42,14 @@ class RegisterView extends GetView<RegisterController> {
               ),
             ),
             const SizedBox(height: 16),
-            _body(),
+            _body(context),
           ],
         ),
       ),
     );
   }
-  Widget _icon(){
+
+  Widget _icon() {
     return Container(
       margin: EdgeInsets.only(bottom: 20, top: 20),
       decoration: const BoxDecoration(
@@ -63,7 +63,7 @@ class RegisterView extends GetView<RegisterController> {
     );
   }
 
-  Widget _body() {
+  Widget _body(context) {
     return Form(
       key: controller.formKey,
       child: Padding(
@@ -71,13 +71,13 @@ class RegisterView extends GetView<RegisterController> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _firstname(),
+            _firstname(context),
             const SizedBox(height: 16),
-            _lastname(),
+            _lastname(context),
             const SizedBox(height: 16),
-            _username(),
+            _username(context),
             const SizedBox(height: 16),
-            _password(),
+            _password(context),
             const SizedBox(height: 16),
             _repeatPassword(),
             const SizedBox(height: 16),
@@ -163,17 +163,17 @@ class RegisterView extends GetView<RegisterController> {
         ),
       );
 
-  Widget _firstname() {
+  Widget _firstname(context) {
     return Obx(() => TextFormField(
           maxLength: 20,
           controller: controller.firstnameController,
-          autofocus: true,
+          focusNode: controller.firstnameFocus,
+          onFieldSubmitted: (_) {
+            FocusScope.of(context).requestFocus(controller.lastnameFocus);
+          },
           textInputAction: TextInputAction.next,
           validator: controller.validate,
           readOnly: (controller.isLoading.value ? true : false),
-          inputFormatters: [
-            FilteringTextInputFormatter.deny(RegExp(r'\s')),
-          ],
           decoration: InputDecoration(
             counter: const Offstage(),
             labelText: "Firstname",
@@ -184,17 +184,17 @@ class RegisterView extends GetView<RegisterController> {
         ));
   }
 
-  Widget _lastname() {
+  Widget _lastname(context) {
     return Obx(() => TextFormField(
           maxLength: 20,
           controller: controller.lastnameController,
-          autofocus: true,
+          focusNode: controller.lastnameFocus,
+          onFieldSubmitted: (_) {
+            FocusScope.of(context).requestFocus(controller.usernameFocus);
+          },
           textInputAction: TextInputAction.next,
           validator: controller.validate,
           readOnly: (controller.isLoading.value ? true : false),
-          inputFormatters: [
-            FilteringTextInputFormatter.deny(RegExp(r'\s')),
-          ],
           decoration: InputDecoration(
             counter: const Offstage(),
             labelText: "Firstname",
@@ -205,11 +205,15 @@ class RegisterView extends GetView<RegisterController> {
         ));
   }
 
-  Widget _username() {
+  Widget _username(context) {
     return Obx(
       () => TextFormField(
         maxLength: 20,
         controller: controller.usernameController,
+        focusNode: controller.usernameFocus,
+        onFieldSubmitted: (_) {
+          FocusScope.of(context).requestFocus(controller.passwordFocus);
+        },
         textInputAction: TextInputAction.next,
         validator: controller.validateUsername,
         readOnly: (controller.isLoading.value ? true : false),
@@ -227,12 +231,16 @@ class RegisterView extends GetView<RegisterController> {
     );
   }
 
-  Widget _password() {
+  Widget _password(context) {
     return Obx(
       () => TextFormField(
         maxLength: 20,
         controller: controller.passwordController,
         validator: controller.validatePassword,
+        focusNode: controller.passwordFocus,
+        onFieldSubmitted: (_) {
+          FocusScope.of(context).requestFocus(controller.repeatPasswordFocus);
+        },
         textInputAction: TextInputAction.next,
         obscureText: controller.isPasswordVisible.value,
         readOnly: (controller.isLoading.value ? true : false),
@@ -261,8 +269,9 @@ class RegisterView extends GetView<RegisterController> {
         maxLength: 20,
         controller: controller.repeatPassController,
         validator: controller.validatePassword,
+        focusNode: controller.repeatPasswordFocus,
         textInputAction: TextInputAction.next,
-        obscureText: controller.isrepeatPasswordVisible.value,
+        obscureText: controller.isRepeatPasswordVisible.value,
         readOnly: (controller.isLoading.value ? true : false),
         inputFormatters: [
           FilteringTextInputFormatter.deny(RegExp(r'\s')),
@@ -271,7 +280,7 @@ class RegisterView extends GetView<RegisterController> {
           counter: const Offstage(),
           suffixIcon: IconButton(
               onPressed: controller.onPressedRepeat,
-              icon: Icon(controller.isrepeatPasswordVisible.value
+              icon: Icon(controller.isRepeatPasswordVisible.value
                   ? Icons.visibility
                   : Icons.visibility_off_outlined)),
           labelText: "repeat password",

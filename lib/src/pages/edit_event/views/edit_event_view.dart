@@ -1,9 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-
 import '../controllers/edit_event_controller.dart';
 
 class EditEventView extends GetView<EditEventController> {

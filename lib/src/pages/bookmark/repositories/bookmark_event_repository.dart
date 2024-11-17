@@ -6,7 +6,6 @@ import '../../shared/local_storage_keys.dart';
 import '../models/bookmark_user_dto.dart';
 import 'package:http/http.dart' as http;
 import '../models/event_model.dart';
-import '../models/user_model.dart';
 
 class BookmarkEventRepository {
   Future<Either<String, List<EventModel>>> getBookmarked({
@@ -21,9 +20,7 @@ class BookmarkEventRepository {
         return const Right([]);
       }
 
-      // بارگذاری bookMarkedIds از SharedPreferences
       List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ?? [];
-      print("Loaded Bookmarked IDs: $bookmarkedIds");
 
       final url = UrlRepository.getEventsByParameters(parameters: parameters);
       final response = await http.get(url);
@@ -69,26 +66,4 @@ class BookmarkEventRepository {
     }
   }
 
-// Future<Either<String, List<EventModel>>> searchByParameters({
-//   required String title,
-//   required String params,
-// }) async {
-//   try {
-//     List<EventModel> searchedEvents = [];
-//     final url = UrlRepository.searchEventByParameters(
-//       title: title,
-//       params: params,
-//     );
-//     final response = await http.get(url);
-//     final List<dynamic> result = json.decode(response.body);
-//     for (Map<String, dynamic> event in result) {
-//       searchedEvents.add(EventModel.fromJason(event));
-//     }
-//     return Right(searchedEvents);
-//   } catch (e) {
-//     return const Left(
-//       LocaleKeys.event_managment_app_bookmark_page_somthing_went_wrong,
-//     );
-//   }
-// }
 }

@@ -13,11 +13,27 @@ class EventsController extends GetxController {
   final RxList bookmarkedEvents = RxList();
   RxList<EventsModel> filteredEvents = <EventsModel>[].obs;
 
-  RxBool isFilled = false.obs;
-  RxBool isExpired = false.obs;
   RxBool isLoading = false.obs;
-  RxBool isLimited = false.obs;
   RxBool isRetry = false.obs;
+
+  String selectedTitleFilter = '';
+  String selectedDateFilter = '';
+  String selectedCapacityFilter = '';
+  bool isFilledFilter = false;
+
+  void filterEvents() {
+    filteredEvents.value = events.where((event) {
+      bool matchesTitle =
+          event.title.toLowerCase().contains(selectedTitleFilter.toLowerCase());
+      bool matchesDate =
+          event.date.toIso8601String().contains(selectedDateFilter);
+      bool matchesCapacity =
+          event.capacity.toString().contains(selectedCapacityFilter);
+      bool matchesFilled = (isFilledFilter) ? event.filled : true;
+
+      return matchesTitle && matchesDate && matchesCapacity && matchesFilled;
+    }).toList();
+  }
 
   void searchEvents(String query) {
     if (query.isEmpty) {
@@ -38,21 +54,19 @@ class EventsController extends GetxController {
 
 
   Future<void> getEvents() async {
-    // onRefresh();
     events.clear();
     isLoading.value = true;
     isRetry.value = false;
 
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ?? [];
+    List<String> bookmarkedIds =
+        preferences.getStringList('bookmarkedIds') ?? [];
 
-    print("Fetching events from the repository...");
     final result = await _repository.getEvents();
     result.fold(
-          (exception) {
+      (exception) {
         isLoading.value = false;
         isRetry.value = true;
-        print("Error fetching events: $exception");
         Get.showSnackbar(
           GetSnackBar(
             messageText: Text(
@@ -64,7 +78,7 @@ class EventsController extends GetxController {
           ),
         );
       },
-          (eventList) {
+      (eventList) {
         isLoading.value = false;
         isRetry.value = false;
         events.value = eventList;
@@ -73,38 +87,31 @@ class EventsController extends GetxController {
       },
     );
   }
+
   Future<void> toggleBookmark(int eventId) async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    // بازیابی لیست بوک‌مارک‌ها از SharedPreferences
-    List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ?? [];
-    print("Current bookmarkedIds from SharedPreferences: $bookmarkedIds");
+    List<String> bookmarkedIds =
+        preferences.getStringList('bookmarkedIds') ?? [];
 
     if (bookmarkedIds.contains(eventId.toString())) {
-      bookmarkedIds.remove(eventId.toString());  // اگر بوک‌مارک شده، آن را حذف کن
-      print("Event $eventId removed from bookmarks.");
+      bookmarkedIds
+          .remove(eventId.toString());
     } else {
-      bookmarkedIds.add(eventId.toString());  // در غیر این صورت، آن را اضافه کن
-      print("Event $eventId added to bookmarks.");
+      bookmarkedIds.add(eventId.toString());
     }
 
-    // ذخیره‌سازی لیست بوک‌مارک‌ها در SharedPreferences
     await preferences.setStringList('bookmarkedIds', bookmarkedIds);
 
-    // به‌روزرسانی لیست محلی بوک‌مارک‌ها
     bookmarkedEvents.clear();
     bookmarkedEvents.addAll(bookmarkedIds.map(int.parse).toList());
-    print("Updated bookmarkedEvents list: $bookmarkedEvents");
 
-    // ارسال درخواست به سرور
     final EventsUserDto dto = EventsUserDto(bookmark: bookmarkedIds);
     final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
-    print("Sending updated bookmark list to the server for userId: $userId");
     final result = await _repository.editBookmarked(dto: dto, userId: userId);
 
     result.fold(
-          (exception) {
-        print("Error updating bookmarks on the server: $exception");
+      (exception) {
         Get.showSnackbar(
           GetSnackBar(
             messageText: Text(
@@ -116,15 +123,12 @@ class EventsController extends GetxController {
           ),
         );
       },
-          (_) {
-        print("Bookmark update successful on the server.");
-        print("=--------------------------");
-
-          },
+      (_) {
+      },
     );
   }
 
-  Future<void> onViewEvent(int eventId) async {
+  Future<void> toDetailsEvent(int eventId) async {
     await Get.toNamed(
       RouteNames.detailsEvent,
       parameters: {"eventId": "$eventId"},
@@ -147,7 +151,7 @@ class EventsController extends GetxController {
     Get.showSnackbar(
       GetSnackBar(
         messageText: const Text(
-          "Event is Full you Can't Buy",
+          "you Can't Buy a Event that is Full or Expired",
           style: TextStyle(color: Colors.black, fontSize: 14),
         ),
         backgroundColor: Colors.redAccent.withOpacity(.2),
@@ -167,16 +171,14 @@ class EventsController extends GetxController {
     super.onInit();
     getEvents();
     _loadUserId();
-    // بازیابی بوکمارک‌ها بعد از دریافت رویدادها
     _loadBookmarkedEvents();
   }
 
   void _loadBookmarkedEvents() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ?? [];
+    List<String> bookmarkedIds =
+        preferences.getStringList('bookmarkedIds') ?? [];
     bookmarkedEvents.clear();
     bookmarkedEvents.addAll(bookmarkedIds.map(int.parse).toList());
-    print("Bookmarked events loaded: $bookmarkedEvents");
   }
-
 }

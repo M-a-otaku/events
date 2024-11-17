@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:either_dart/either.dart';
 import 'package:http/http.dart' as http;
 import '../../../infrastructure/commons/url_repository.dart';
@@ -27,9 +26,7 @@ class EventDetailsRepository {
       final Map<String, dynamic> result = json.decode(response.body);
       return Right(result);
 
-      return const Left('Error');
     } catch (e) {
-      print(e.toString());
       return Left(e.toString());
     }
   }
@@ -40,12 +37,10 @@ class EventDetailsRepository {
     try {
       final url = UrlRepository.getEventById(eventId: eventId);
       final response = await http.get(url);
-      print(url);
 
       final Map<String, dynamic> event = json.decode(response.body);
       return Right(EventDetailsModel.fromJson(json: event));
     } catch (e) {
-      print("Error: $e");
       return Left(e.toString());
     }
   }

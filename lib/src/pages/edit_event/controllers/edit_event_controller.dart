@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,8 +34,8 @@ class EditEventController extends GetxController {
   final days =
       List<String>.generate(31, (i) => (i + 1).toString().padLeft(2, '0'));
 
-  String formattedDate = DateFormat('yyyy-MM-dd    kk-mm')
-      .format(DateTime.now());
+  String formattedDate =
+      DateFormat('yyyy-MM-dd    kk-mm').format(DateTime.now());
 
   final ImagePicker _picker = ImagePicker();
   var imageBase64 = Rx<String?>(null);
@@ -57,13 +56,11 @@ class EditEventController extends GetxController {
   }
 
   Future<void> chooseTime() async {
-    // تبدیل DateTime به TimeOfDay
     TimeOfDay initialTimeFromServer = TimeOfDay(
       hour: selectedTime2.value.hour,
       minute: selectedTime2.value.minute,
     );
 
-    // نمایش TimePicker با مقدار زمان از سرور
     TimeOfDay? pickedTime = await showTimePicker(
       context: Get.context!,
       initialTime: initialTimeFromServer,
@@ -83,14 +80,12 @@ class EditEventController extends GetxController {
     );
 
     if (pickedTime != null) {
-      // به‌روزرسانی selectedTime2 با زمان جدید
       selectedTime2.value = selectedTime2.value.copyWith(
         hour: pickedTime.hour,
         minute: pickedTime.minute,
       );
 
-      print(pickedTime);
-      print(selectedTime2.value);
+
     }
   }
 
@@ -170,7 +165,7 @@ class EditEventController extends GetxController {
   Future<void> onSubmit() async {
     isLoading.value = true;
     if (!(formKey.currentState?.validate() ?? false)) return;
-     DateTime? date = selectedDate;
+    DateTime? date = selectedDate;
     if (date == null) {
       isLoading.value = false;
       Get.showSnackbar(GetSnackBar(
@@ -185,12 +180,12 @@ class EditEventController extends GetxController {
     final result = await _repository.editEvent(
         eventId: eventId,
         dto: EditEventDto(
+          image: imageBase64.value,
             userId: preferences.getInt(LocalKeys.userId) ?? -1,
             filled: false,
             title: titleController.text,
             description: descriptionController.text,
             date: date,
-            // time: DateTime.now(),
             capacity: capacity,
             participants: 0,
             price: price));
@@ -247,18 +242,18 @@ class EditEventController extends GetxController {
       capacityController.text = right.capacity.toString();
       priceController.text = right.price.toString();
       selectedTime2.value = date;
-
-      if (right.image != null && right.image!.isNotEmpty) {
-        imagePick.value = {
-          'type': 'image-url',
-          'image': right.image,
-        };
-      } else {
-        imagePick.value = {
-          'type': 'image-picker',
-          'image': null,
-        };
-      }
+      imageBase64.value = right.image;
+      // if (right.image != null && right.image!.isNotEmpty) {
+      //   imagePick.value = {
+      //     'type': 'image-url',
+      //     'image': right.image,
+      //   };
+      // } else {
+      //   imagePick.value = {
+      //     'type': 'image-picker',
+      //     'image': null,
+      //   };
+      // }
     });
   }
 

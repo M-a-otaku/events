@@ -36,7 +36,6 @@ class MyEventsWidget extends GetView<MyEventsController> {
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  // Positioned image
                   Positioned(
                     right: 0,
                     top: -20,
@@ -44,18 +43,17 @@ class MyEventsWidget extends GetView<MyEventsController> {
                         ? ClipOval(
                             child: Image.memory(
                               base64Decode(myEvent.image!),
-                              width: 80,
-                              height: 80,
+                              width: 60,
+                              height: 60,
                               fit: BoxFit.cover,
                             ),
                           )
                         : const Icon(
                             Icons.event,
                             color: Colors.white,
-                            size: 80,
+                            size: 60,
                           ),
                   ),
-                  // Text information
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,7 +75,7 @@ class MyEventsWidget extends GetView<MyEventsController> {
                         style:
                             const TextStyle(fontSize: 16, color: Colors.white),
                       ),
-                      
+
                       Text(
                         ' ${DateFormat('yyyy-MM-dd').format(myEvent.date)}  ${DateFormat('kk:mm').format(myEvent.date)}',
                         style:
