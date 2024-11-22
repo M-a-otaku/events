@@ -17,6 +17,8 @@ class AddEventController extends GetxController {
   final capacityController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  RxBool isRetry = false.obs;
+
 
   var selectedYear = DateTime.now().year.toString().obs;
   var selectedMonth = DateTime.now().month.toString().obs;

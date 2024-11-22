@@ -14,7 +14,8 @@ class AddEventView extends GetView<AddEventController> {
       floatingActionButton: _fab(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: _appBar(),
-      body: Obx(() => _body(context)),
+      body:
+          Obx(() => _body(context)),
     );
   }
 
@@ -39,6 +40,20 @@ class AddEventView extends GetView<AddEventController> {
   }
 
   Widget _body(context) {
+    if (controller.isLoading.value) {
+      return _loading();
+    }
+    return _success(context);
+  }
+
+  Widget _loading() {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+
+  Widget _success(context) {
     return Form(
       key: controller.formKey,
       child: Padding(
@@ -192,7 +207,7 @@ class AddEventView extends GetView<AddEventController> {
 
   Widget _price() {
     return TextFormField(
-      maxLength: 6,
+      maxLength: 4,
       keyboardType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,

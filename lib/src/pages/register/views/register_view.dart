@@ -11,40 +11,55 @@ class RegisterView extends GetView<RegisterController> {
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: _appBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(bottom: 50),
-              width: double.infinity,
-              height: 150,
-              decoration: const BoxDecoration(
-                  color: Colors.blueAccent,
-                  borderRadius: BorderRadius.only(
-                      bottomRight: Radius.elliptical(70, 70))),
-              child: Hero(tag: _icon(), child: _icon()),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Welcome",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(bottom: 50),
+                  width: double.infinity,
+                  height: 150,
+                  decoration: const BoxDecoration(
+                      color: Colors.blueAccent,
+                      borderRadius: BorderRadius.only(
+                          bottomRight: Radius.elliptical(70, 70))),
+                  child: Hero(tag: _icon(), child: _icon()),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Welcome",
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "Please Enter Your Information.",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
                   ),
-                  Text(
-                    "Please Enter Your Information.",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 16),
+                _body(context),
+              ],
             ),
-            const SizedBox(height: 16),
-            _body(context),
-          ],
-        ),
+          ),
+          Obx(
+            () => controller.isLoading.value
+                ? Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : const SizedBox.shrink(),
+          )
+        ],
       ),
     );
   }
@@ -92,7 +107,6 @@ class RegisterView extends GetView<RegisterController> {
               child: _or(),
             ),
             const SizedBox(height: 16),
-            // Obx(() => _login()),
             Hero(
               tag: Obx(() => _login()),
               child: Obx(() => _login()),

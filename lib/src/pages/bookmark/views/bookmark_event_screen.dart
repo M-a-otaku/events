@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../events/views/widgets/filter_page.dart';
 import '../controllers/bookmark_event_controller.dart';
 import 'widgets/bookmark_event_widget.dart';
 
@@ -73,18 +72,6 @@ class BookmarkEventScreen extends GetView<BookmarkEventController> {
             showSearch(
               context: Get.context!,
               delegate: CustomSearchDelegate(),
-            );
-          },
-        ),
-        IconButton(
-          icon: const Icon(Icons.filter_list),
-          hoverColor: Colors.blueAccent,
-          tooltip: "filter button",
-          color: Colors.white,
-          onPressed: () {
-            Navigator.push(
-              Get.context!,
-              MaterialPageRoute(builder: (_) => FilterPage()),
             );
           },
         ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../events/views/widgets/filter_page.dart';
+
 import '../controllers/my_events_controller.dart';
 import 'widgets/my_events_widget.dart';
 
@@ -52,7 +52,7 @@ class MyEventsView extends GetView<MyEventsController> {
       child: IconButton(
         tooltip: "press to refresh",
         hoverColor: Colors.blueAccent,
-        highlightColor: Colors.white ,
+        highlightColor: Colors.white,
         onPressed: controller.getEvents,
         icon: const Icon(Icons.change_circle),
       ),
@@ -63,33 +63,21 @@ class MyEventsView extends GetView<MyEventsController> {
           centerTitle: true,
           title: const Text("My Events"),
           backgroundColor: Colors.grey,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.search),
-          hoverColor: Colors.blueAccent,
-          tooltip: "Search button",
-          color: Colors.white,
-          onPressed: () {
-            showSearch(
-              context: Get.context!,
-              delegate: CustomSearchDelegate(),
-            );
-          },
-        ),
-        IconButton(
-          icon: const Icon(Icons.filter_list),
-          hoverColor: Colors.blueAccent,
-          tooltip: "filter button",
-          color: Colors.white,
-          onPressed: () {
-            Navigator.push(
-              Get.context!,
-              MaterialPageRoute(builder: (_) => FilterPage()),
-            );
-          },
-        ),
-        const SizedBox(width: 20),
-      ]);
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              hoverColor: Colors.blueAccent,
+              tooltip: "Search button",
+              color: Colors.white,
+              onPressed: () {
+                showSearch(
+                  context: Get.context!,
+                  delegate: CustomSearchDelegate(),
+                );
+              },
+            ),
+            const SizedBox(width: 20),
+          ]);
 
   Widget _fab() {
     return FloatingActionButton(
@@ -109,15 +97,16 @@ class MyEventsView extends GetView<MyEventsController> {
               myEvent: controller.myEvents[index],
               removeEvent: () => controller.removeEvent(
                   eventId: controller.myEvents[index].id),
-              onTap: () =>
-                  controller.toEditPage(eventId: controller.myEvents[index].id),
+              onTap: (controller.isRemoving.value)
+                  ? null
+                  : () => controller.toEditPage(
+                      eventId: controller.myEvents[index].id),
             ),
             separatorBuilder: (_, __) => const SizedBox(height: 12),
           ),
         ),
       );
 }
-
 
 class CustomSearchDelegate extends SearchDelegate {
   final MyEventsController controller = Get.find();
@@ -152,7 +141,6 @@ class CustomSearchDelegate extends SearchDelegate {
     return _buildEventList();
   }
 
-
   @override
   Widget buildSuggestions(BuildContext context) {
     controller.searchEvents(query);
@@ -161,22 +149,16 @@ class CustomSearchDelegate extends SearchDelegate {
 
   Widget _buildEventList() {
     return Obx(
-          () => ListView.builder(
+      () => ListView.builder(
         itemCount: controller.filteredEvents.length,
         itemBuilder: (context, index) {
           final event = controller.filteredEvents[index];
           return ListTile(
             title: Text(event.title),
-            onTap: () {
-
-            },
+            onTap: () {},
           );
         },
       ),
     );
   }
 }
-
-
-
-

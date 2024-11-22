@@ -33,6 +33,21 @@ class EditEventView extends GetView<EditEventController> {
   }
 
   Widget _body(context) {
+    if (controller.isLoading.value) {
+      return _loading();
+    }
+    return _success(context);
+  }
+
+  Widget _loading() {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+
+
+  Widget _success(context) {
     return Form(
       key: controller.formKey,
       child: Padding(
@@ -193,7 +208,8 @@ class EditEventView extends GetView<EditEventController> {
 
   Widget _price() {
     return TextFormField(
-      maxLength: 6,
+      maxLength: 4,
+      // readOnly:
       keyboardType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,

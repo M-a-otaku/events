@@ -10,17 +10,14 @@ class EventDetailsView extends GetView<EventDetailsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: RefreshIndicator(
-            onRefresh: controller.onRefresh, child: Obx(() => _body(context))),
+      body: RefreshIndicator(
+        onRefresh: controller.onRefresh,
+        child: Obx(() => _body(context)),
       ),
     );
   }
 
-
-
-  Widget _body(context) {
+  Widget _body(BuildContext context) {
     if (controller.isLoading.value) {
       return _loading();
     } else if (controller.isRetry.value) {
@@ -32,11 +29,9 @@ class EventDetailsView extends GetView<EventDetailsController> {
   Widget _retry() {
     return Center(
       child: IconButton(
-        tooltip: "press to refresh",
-        hoverColor: Colors.blueAccent,
-        highlightColor: Colors.white,
+        tooltip: "Press to refresh",
         onPressed: controller.getEventById,
-        icon: const Icon(Icons.change_circle),
+        icon: const Icon(Icons.refresh, color: Colors.blueAccent, size: 30),
       ),
     );
   }
@@ -47,268 +42,123 @@ class EventDetailsView extends GetView<EventDetailsController> {
     );
   }
 
-  Widget _success(context) {
+  Widget _success(BuildContext context) {
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Image.asset(
-            "Images/map.png",
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            fit: BoxFit.cover,
+          // Event image or default icon
+          Hero(
+            tag: 'event_${controller.event.value.id}_${UniqueKey()}',
+            child: (controller.event.value.image != null &&
+                controller.event.value.image!.isNotEmpty)
+                ? Image.memory(
+              base64Decode(controller.event.value.image!),
+              height: 250,
+              fit: BoxFit.cover,
+            )
+                : Container(
+              height: 250,
+              color: Colors.grey.shade300,
+              child: const Icon(Icons.event, size: 100, color: Colors.white),
+            ),
           ),
-          eventDetailAppbar(context),
-          Positioned(
-            left: 10,
-            right: 10,
-            bottom: 25,
-            child: Stack(
+
+          // Event information
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(15),
-                  margin: const EdgeInsets.only(top: 45),
-                  decoration: BoxDecoration(
-                    color: Colors.black45,
-                    borderRadius: BorderRadius.circular(20),
+                // Title and description
+                Text(
+                  controller.event.value.title ?? "Event Title",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: Colors.black87,
                   ),
-                  child: Obx(
-                    () => Column(
-                      children: [
-                        eventInformation(),
-                        const Divider(height: 15, color: Colors.white70),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              (controller.event.value.image != null &&
-                                      controller.event.value.image!.isNotEmpty)
-                                  ? Hero(
-                                      tag:
-                                          'event_${controller.event.value.id}_${UniqueKey()}',
-                                      child: ClipOval(
-                                        child: Image.memory(
-                                          base64Decode(
-                                              controller.event.value.image!),
-                                          width: 100,
-                                          height: 100,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    )
-                                  : Hero(
-                                      tag:
-                                          'event_${controller.event.value.id}_${UniqueKey()}',
-                                      child: const Icon(Icons.event,
-                                          color: Colors.white, size: 100),
-                                    ),
-                              Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Title : ${controller.event.value.title}",
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 22,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Text(
-                                            "description : ${controller.event.value.description}",
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 12),
-                                  const Row(
-                                    children: [
-                                      Text(
-                                        "5.0",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      SizedBox(width: 6),
-                                      Icon(Icons.star,
-                                          color: Colors.white, size: 16),
-                                      Icon(Icons.star,
-                                          color: Colors.white, size: 16),
-                                      Icon(Icons.star,
-                                          color: Colors.white, size: 16),
-                                      Icon(Icons.star,
-                                          color: Colors.white, size: 16),
-                                      Icon(Icons.star,
-                                          color: Colors.white, size: 16)
-                                    ],
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 20.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        bookNow(context),
-                                        submit(),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  controller.event.value.description ?? "Event description",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black54,
+                  ),
+                ),
+                const Divider(height: 20, color: Colors.grey),
+
+                // Price and date
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "\$${controller.event.value.price.toString() ?? 'N/A'}",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.black87,
+                      ),
                     ),
+                    Text(
+                      DateFormat('yyyy-MM-dd')
+                          .format(controller.event.value.date),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+
+                // Capacity
+                Text(
+                  "Remaining Capacity  :  ${controller.event.value.capacity - (controller.event.value.participants ?? 0)}",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.black87,
                   ),
+                ),
+                const SizedBox(height: 20),
+
+                // Book Now and Submit buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    bookNow(context),
+                    submit(),
+                  ],
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
   Widget submit() {
-    return InkWell(
-      onTap: () => controller.onSubmit(),
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+    return ElevatedButton(
+      onPressed: controller.onSubmit,
+      style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.blueAccent,
-        ),
-        child: const Text(
-          "Submit",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
+      child: const Text("Submit"),
     );
   }
 
-  Widget bookNow(context) {
-    return InkWell(
-      onTap: () => controller.bookNow(context),
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+  Widget bookNow(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () => controller.bookNow(context),
+      style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.blueAccent,
-        ),
-        child: const Text(
-          "Book Now",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
+      child: const Text("Book Now"),
     );
-  }
-
-  Column eventInformation() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              "\$${controller.event.value.price.toString() ?? 'ناموجود'}",
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 25,
-                color: Colors.white,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 45.0),
-              child: Text(
-                ' ${DateFormat('yyyy-MM-dd').format(controller.event.value.date)} ',
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                  color: Colors.white,
-                ),
-              ),
-            )
-          ],
-        ),
-        const Text(
-          "price",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(
-          height: 15,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Capacity: ${controller.event.value.capacity - controller.event.value.participants!}",
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 25,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  SafeArea eventDetailAppbar(BuildContext context) {
-    return SafeArea(
-        child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white,
-          ),
-        ),
-        const Text(
-          "event Detail",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 25,
-            color: Colors.white,
-          ),
-        ),
-        IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.menu,
-            color: Colors.white,
-          ),
-        ),
-      ],
-    ));
   }
 }

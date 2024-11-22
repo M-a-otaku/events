@@ -15,6 +15,7 @@ class LoginController extends GetxController {
   RxBool isPasswordVisible = true.obs;
   RxBool rememberMe = false.obs;
 
+
   void changeRemember(bool? val) {
     rememberMe.value = !rememberMe.value;
   }

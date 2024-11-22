@@ -18,14 +18,19 @@ class UrlRepository {
   static Uri userByUsername({required String username}) {
     return Uri.parse('http://$_baseUrl$_users?username=$username');
   }
-
+  static Uri searchEvent ({String? title, String? parameters}) {
+    if (title == null && parameters == null) {
+      return Uri.parse('$_baseUrl$_events');
+    }
+    return Uri.parse('$_baseUrl$_events/?title_like=$title${parameters ?? ''}');
+  }
 
   static Uri events = Uri.http(_baseUrl, _events);
 
   static Uri getEventsByParameters({required String parameters}) {
     return Uri.http(
       'localhost:3000',
-      '$_events/$parameters',
+      '$_events',
     );
   }
 

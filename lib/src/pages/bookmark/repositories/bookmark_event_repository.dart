@@ -14,13 +14,15 @@ class BookmarkEventRepository {
     try {
       List<EventModel> bookmarkedEvents = [];
       final SharedPreferences preferences = await SharedPreferences.getInstance();
-      final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
 
+      final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
       if (userId == -1) {
         return const Right([]);
       }
 
-      List<String> bookmarkedIds = preferences.getStringList('bookmarkedIds') ?? [];
+      String key = 'bookmarkedIds_$userId';
+      List<String> bookmarkedIds = preferences.getStringList(key) ?? [];
+      print(bookmarkedIds);
 
       final url = UrlRepository.getEventsByParameters(parameters: parameters);
       final response = await http.get(url);
@@ -28,37 +30,40 @@ class BookmarkEventRepository {
       if (response.statusCode == 200) {
         final List<dynamic> result = json.decode(response.body);
 
+        // تطبیق داده‌های سرور با IDهای بوکمارک‌شده
         for (Map<String, dynamic> event in result) {
           final eventModel = EventModel.fromJson(event);
 
+          // بررسی تطابق بین Bookmark و Event
           if (bookmarkedIds.contains(eventModel.id.toString())) {
             bookmarkedEvents.add(eventModel);
           }
         }
 
-        return Right(bookmarkedEvents);
+        return Right(bookmarkedEvents); // لیست رویدادهای بوکمارک‌شده
       } else {
-        return Left("Failed to load events");
+        return Left("Failed to load events"); // خطا در دریافت داده‌ها
       }
     } catch (e) {
-      return Left(e.toString());
+      return Left(e.toString()); // مدیریت استثناها
     }
   }
 
-  Future<Either<String, bool>> editBookmarks({
-    required int userId,
-    required BookmarkUserDto dto,
-  }) async {
+  Future<Either<String, bool>> editBookmarked({required BookmarkUserDto dto, required int userId,}) async {
     try {
       final url = UrlRepository.getUserById(userId: userId);
       final response = await http.patch(
         url,
         body: json.encode(dto.toJson()),
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          'Content-type': 'application/json',
+          'Accept': 'application/json',
+        },
       );
-
       if (response.statusCode != 200) {
-        return Left("nooooooooooo");
+        return const Left(
+          'Cant add this event to bookmarks',
+        );
       }
       return const Right(true);
     } catch (e) {

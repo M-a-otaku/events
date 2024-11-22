@@ -1,7 +1,10 @@
+import 'dart:async';
+import 'package:events/src/pages/bookmark/controllers/bookmark_event_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../infrastructure/routes/route_names.dart';
+import '../../bottom_nav_bar/controller/nav_bar_controller.dart';
 import '../../shared/local_storage_keys.dart';
 import '../models/events_model.dart';
 import '../models/events_user_dto.dart';
@@ -10,60 +13,78 @@ import '../repositories/events_repository.dart';
 class EventsController extends GetxController {
   final EventsRepository _repository = EventsRepository();
   RxList<EventsModel> events = RxList();
-  final RxList bookmarkedEvents = RxList();
+  RxList<int> bookmarkedEvents = <int>[].obs;
+  final RxMap<int, bool> isEventRefreshing = <int, bool>{}.obs;
   RxList<EventsModel> filteredEvents = <EventsModel>[].obs;
 
   RxBool isLoading = false.obs;
   RxBool isRetry = false.obs;
-
+  var query = ''.obs;
   String selectedTitleFilter = '';
   String selectedDateFilter = '';
   String selectedCapacityFilter = '';
   bool isFilledFilter = false;
 
-  void filterEvents() {
-    filteredEvents.value = events.where((event) {
-      bool matchesTitle =
-          event.title.toLowerCase().contains(selectedTitleFilter.toLowerCase());
-      bool matchesDate =
-          event.date.toIso8601String().contains(selectedDateFilter);
-      bool matchesCapacity =
-          event.capacity.toString().contains(selectedCapacityFilter);
-      bool matchesFilled = (isFilledFilter) ? event.filled : true;
+  RxBool isBookmarked = false.obs;
+  bool filterFutureEvents = false;
+  bool filterWithCapacity = false;
+  String? sortOrder;
+  double savedMinPrice = 0; // ذخیره مقدار انتخاب‌شده
+  double savedMaxPrice = 9999;
 
-      return matchesTitle && matchesDate && matchesCapacity && matchesFilled;
-    }).toList();
-  }
-
-  void searchEvents(String query) {
-    if (query.isEmpty) {
-      filteredEvents.value = events;
-    } else {
-      filteredEvents.value = events.where((event) {
-        return event.title.toLowerCase().contains(query.toLowerCase());
-      }).toList();
-    }
-  }
 
   Future<void> goToEvent(int eventId) async {
     await Get.toNamed(
       RouteNames.detailsEvent,
       parameters: {"eventId": "$eventId"},
     );
+    getEvents();
   }
 
+  Map<String, String> _buildQueryParameters(
+      {bool? ascending,
+      bool? onlyFuture,
+      bool? withCapacity,
+      int? minPrice,
+      int? maxPrice,
+      String? searchQuery}) {
+    final today = DateTime.now().toIso8601String();
+    return {
+      if (ascending != null) '_sort': 'date',
+      if (ascending == true) '_order': 'asc',
+      if (ascending == false) '_order': 'desc',
+      if (onlyFuture == true) 'date_gte': today,
+      if (withCapacity != null && withCapacity == true) 'filled': false.toString(),
+      if (minPrice != null) 'price_gte': minPrice.toString(),
+      if (maxPrice != null) 'price_lte': maxPrice.toString(),
+      if (searchQuery != null) 'title_like': query.value,
+    };
+  }
 
-  Future<void> getEvents() async {
+  Future<void> getEvents(
+      {bool? ascending,
+      bool? onlyFuture,
+      bool? withCapacity,
+      int? minPrice,
+      int? maxPrice}) async {
     events.clear();
     isLoading.value = true;
     isRetry.value = false;
+    _loadBookmarkedEvents();
 
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
-    List<String> bookmarkedIds =
-        preferences.getStringList('bookmarkedIds') ?? [];
+    final queryParameters = _buildQueryParameters(
+        ascending: ascending,
+        onlyFuture: onlyFuture,
+        withCapacity: withCapacity,
+        minPrice: minPrice,
+        maxPrice: maxPrice,
+        searchQuery: query.value);
 
-    final result = await _repository.getEvents();
-    result.fold(
+    print('capacity $withCapacity');
+
+   final result = await _repository.fetchEvents( queryParameters: queryParameters);
+
+    result?.fold(
       (exception) {
         isLoading.value = false;
         isRetry.value = true;
@@ -82,48 +103,70 @@ class EventsController extends GetxController {
         isLoading.value = false;
         isRetry.value = false;
         events.value = eventList;
-        filteredEvents.value = events;
-        // print("Events loaded successfully. Total events: ${events.length}");
+        filteredEvents.value = eventList;
       },
     );
   }
 
-  Future<void> toggleBookmark(int eventId) async {
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
+  void updateSearchQuery(String newQuery) {
+    query.value = newQuery;
+    getEvents(); // پس از تغییر جستجو ایونت‌ها فیلتر شوند
+  }
 
-    List<String> bookmarkedIds =
-        preferences.getStringList('bookmarkedIds') ?? [];
+  Future<void> toggleBookmark(int eventId) async {
+    isEventRefreshing[eventId] = true;
+    isBookmarked.value = true;
+
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
+
+    if (userId == -1) {
+      Get.showSnackbar(
+        GetSnackBar(
+          message: "User not logged in",
+          backgroundColor: Colors.redAccent.withOpacity(0.2),
+          duration: const Duration(seconds: 5),
+        ),
+      );
+      return;
+    }
+
+    final String key = 'bookmarkedIds_$userId';
+    List<String> bookmarkedIds = preferences.getStringList(key) ?? [];
 
     if (bookmarkedIds.contains(eventId.toString())) {
-      bookmarkedIds
-          .remove(eventId.toString());
+      bookmarkedIds.remove(eventId.toString());
     } else {
       bookmarkedIds.add(eventId.toString());
     }
 
-    await preferences.setStringList('bookmarkedIds', bookmarkedIds);
+    await preferences.setStringList(key, bookmarkedIds);
 
     bookmarkedEvents.clear();
     bookmarkedEvents.addAll(bookmarkedIds.map(int.parse).toList());
 
     final EventsUserDto dto = EventsUserDto(bookmark: bookmarkedIds);
-    final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
     final result = await _repository.editBookmarked(dto: dto, userId: userId);
 
     result.fold(
-      (exception) {
+          (exception) {
+        isEventRefreshing[eventId] = false;
+        isBookmarked.value = false;
         Get.showSnackbar(
           GetSnackBar(
             messageText: Text(
               exception,
               style: const TextStyle(color: Colors.black, fontSize: 14),
             ),
-            backgroundColor: Colors.redAccent.withOpacity(.2),
+            backgroundColor: Colors.redAccent.withOpacity(0.2),
             duration: const Duration(seconds: 5),
           ),
         );
       },
-      (_) {
+          (_) {
+        print("Updated bookmarked events: $bookmarkedIds");
+        isEventRefreshing[eventId] = false;
+        isBookmarked.value = false;
       },
     );
   }
@@ -133,14 +176,15 @@ class EventsController extends GetxController {
       RouteNames.detailsEvent,
       parameters: {"eventId": "$eventId"},
     );
-
     getEvents();
   }
 
   Future<void> logout() async {
-    await Get.offAndToNamed(
-      RouteNames.login,
-    );
+    Get.delete<NavBarController>(force: true);
+    Get.delete<EventsController>(force: true);
+    Get.delete<BookmarkEventController>(force: true);
+
+    await Get.offAllNamed(RouteNames.login);
   }
 
   Future<void> onRefresh() async {
@@ -166,6 +210,151 @@ class EventsController extends GetxController {
     print("Loaded userId from SharedPreferences: $userId");
   }
 
+
+
+
+  void showSortAndFilterDialog(
+      BuildContext context, {
+        required bool initialFilterFutureEvents,
+        required bool initialFilterWithCapacity,
+        String? initialSortOrder,
+        double initialMinPrice = 0,
+        double initialMaxPrice = 9999,
+      }) {
+    RangeValues priceRange = RangeValues(savedMinPrice, savedMaxPrice);
+
+    bool isLoading = false;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text("Sort and Filter Events"),
+              content: isLoading
+                  ? const SizedBox(
+                height: 80,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              )
+                  : SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "Price Range",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    RangeSlider(
+                      values: priceRange,
+                      min: 0,
+                      max: 9999,
+                      divisions: 100,
+                      labels: RangeLabels(
+                        priceRange.start.toStringAsFixed(0),
+                        priceRange.end.toStringAsFixed(0),
+                      ),
+                      onChanged: (values) {
+                        setState(() {
+                          priceRange = values;
+                        });
+                      },
+                    ),
+                    Text(
+                      "Min: ${priceRange.start.toStringAsFixed(0)} - Max: ${priceRange.end.toStringAsFixed(0)}",
+                    ),
+                    CheckboxListTile(
+                      title: const Text("Only Future Events"),
+                      value: filterFutureEvents,
+                      onChanged: (value) {
+                        setState(() {
+                          filterFutureEvents = value!;
+                        });
+                      },
+                    ),
+                    CheckboxListTile(
+                      title: const Text("Only Events With Capacity"),
+                      value: filterWithCapacity,
+                      onChanged: (value) {
+                        setState(() {
+                          filterWithCapacity = value!;
+                        });
+                      },
+                    ),
+                    DropdownButton<String>(
+                      value: sortOrder,
+                      hint: const Text("Sort by Time (Optional)"),
+                      items: [
+                        DropdownMenuItem(
+                          value: "Ascending",
+                          child: const Text("Ascending (Newest First)"),
+                        ),
+                        DropdownMenuItem(
+                          value: "Descending",
+                          child: const Text("Descending (Oldest First)"),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          sortOrder = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              actions: isLoading
+                  ? []
+                  : [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("Cancel"),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
+
+                    await getEvents(
+                      ascending: sortOrder == "Ascending"
+                          ? true
+                          : sortOrder == "Descending"
+                          ? false
+                          : null,
+                      onlyFuture: filterFutureEvents,
+                      withCapacity: filterWithCapacity,
+                      minPrice: priceRange.start.toInt(),
+                      maxPrice: priceRange.end.toInt(),
+                    );
+
+                    // ذخیره مقادیر انتخاب‌شده
+                    savedMinPrice = priceRange.start;
+                    savedMaxPrice = priceRange.end;
+
+                    Navigator.pop(context, {
+                      'filterFutureEvents': filterFutureEvents,
+                      'filterWithCapacity': filterWithCapacity,
+                      'sortOrder': sortOrder,
+                      'minPrice': priceRange.start.toInt(),
+                      'maxPrice': priceRange.end.toInt(),
+                    });
+                  },
+                  child: const Text("Apply"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+
+
+
   @override
   void onInit() {
     super.onInit();
@@ -176,9 +365,26 @@ class EventsController extends GetxController {
 
   void _loadBookmarkedEvents() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    List<String> bookmarkedIds =
-        preferences.getStringList('bookmarkedIds') ?? [];
-    bookmarkedEvents.clear();
-    bookmarkedEvents.addAll(bookmarkedIds.map(int.parse).toList());
+    final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
+
+    if (userId == -1) {
+      bookmarkedEvents.clear();
+      return;
+    }
+
+    String key = 'bookmarkedIds_$userId';
+    List<String> bookmarkedIds = preferences.getStringList(key) ?? [];
+
+    if (bookmarkedIds.isNotEmpty) {
+      bookmarkedEvents.value = bookmarkedIds.map(int.parse).toList();
+    } else {
+      bookmarkedEvents.clear();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
+

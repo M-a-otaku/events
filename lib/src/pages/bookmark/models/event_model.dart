@@ -48,4 +48,9 @@ class EventModel {
       'filled': filled,
     };
   }
+
+  @override
+  String toString() {
+    return "title : $title ,id : $id , $description , $date , $capacity , $price , $image , $participants";
+  }
 }

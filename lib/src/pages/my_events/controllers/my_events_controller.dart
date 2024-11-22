@@ -11,7 +11,9 @@ class MyEventsController extends GetxController {
   RxList<MyEventsModel> myEvents = RxList();
   RxBool isLoading = false.obs;
   RxBool isRetry = false.obs;
+  RxBool isRemoving = false.obs;
   RxList<MyEventsModel> filteredEvents = <MyEventsModel>[].obs;
+  final RxMap<int, bool> isEventRemoving = <int, bool>{}.obs;
 
   void searchEvents(String query) {
     if (query.isEmpty) {
@@ -22,7 +24,6 @@ class MyEventsController extends GetxController {
       }).toList();
     }
   }
-
 
   Future<void> getEvents() async {
     myEvents.clear();
@@ -50,7 +51,7 @@ class MyEventsController extends GetxController {
         isLoading.value = false;
         isRetry.value = false;
         myEvents.value = events;
-        filteredEvents.value =events;
+        filteredEvents.value = events;
       },
     );
   }
@@ -89,8 +90,8 @@ class MyEventsController extends GetxController {
     );
     if (result != null) {
       MyEventsModel newEvent = MyEventsModel.fromJson(json: result);
-      if(index != -1){
-        myEvents[index]=myEvents[index].copyWith(
+      if (index != -1) {
+        myEvents[index] = myEvents[index].copyWith(
           date: newEvent.date,
           filled: newEvent.filled,
           participants: newEvent.participants,
@@ -103,52 +104,53 @@ class MyEventsController extends GetxController {
           capacity: newEvent.capacity,
         );
       }
-
     }
   }
 
   Future<void> removeEvent({required int eventId}) async {
-    isLoading.value = true;
+    isEventRemoving[eventId] = true;
+
     int index = myEvents.indexWhere((event) => event.id == eventId);
-    if (myEvents[index].participants != 0) {
-      isLoading.value = false;
+    if (index == -1 || myEvents[index].participants != 0) {
+      isEventRemoving[eventId] = false;
       Get.showSnackbar(
         GetSnackBar(
           messageText: const Text(
-            "You Can't Delete Events When they're not empty",
+            "You can't delete events that aren't empty",
             style: TextStyle(color: Colors.black, fontSize: 14),
           ),
-          backgroundColor: Colors.redAccent.withOpacity(.2),
+          backgroundColor: Colors.redAccent.withOpacity(0.2),
           duration: const Duration(seconds: 5),
         ),
       );
       return;
     }
+
     final result = await _repository.deleteEventById(eventId: eventId);
     result.fold(
-      (exception) {
-        isLoading.value = false;
+          (exception) {
+        isEventRemoving[eventId] = false;
         Get.showSnackbar(
           GetSnackBar(
             messageText: Text(
               exception,
               style: const TextStyle(color: Colors.black, fontSize: 14),
             ),
-            backgroundColor: Colors.redAccent.withOpacity(.2),
+            backgroundColor: Colors.redAccent.withOpacity(0.2),
             duration: const Duration(seconds: 5),
           ),
         );
       },
-      (_) {
-        isLoading.value = false;
+          (_) {
         myEvents.removeAt(index);
+        isEventRemoving[eventId] = false;
         Get.showSnackbar(
           GetSnackBar(
             messageText: const Text(
               "Event deleted successfully",
               style: TextStyle(color: Colors.black, fontSize: 14),
             ),
-            backgroundColor: Colors.greenAccent.withOpacity(.2),
+            backgroundColor: Colors.greenAccent.withOpacity(0.2),
             duration: const Duration(seconds: 5),
           ),
         );
