@@ -27,7 +27,7 @@ class UrlRepository {
 
   static Uri events = Uri.http(_baseUrl, _events);
 
-  static Uri getEventsByParameters({required String parameters}) {
+  static Uri getEventsByParameters({required String queryParameters}) {
     return Uri.http(
       'localhost:3000',
       '$_events',
@@ -48,6 +48,12 @@ class UrlRepository {
       '$_users/$userId',
     );
   }
+  static Uri getBookmarkedEvents({required int userId}) {
+    return Uri.http(
+      'localhost:3000',
+      '$_users/{$userId}/bookmark',
+    );
+  }
 
   static Uri updateBookmark({required int userId}) {
     return Uri.http(
@@ -56,7 +62,12 @@ class UrlRepository {
     );
   }
 
-  static Uri myEvents(int userId) => Uri.http(_baseUrl, _events);
+  static Uri myEvents(int userId) {
+    return Uri.http(
+      'localhost:3000',
+      '$_events/$userId',
+    );
+  }
 
   static Uri getEventsByUserId({required int userId}) {
     return Uri.parse('$_baseUrl$_events?userId=$userId');

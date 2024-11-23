@@ -24,12 +24,12 @@ class BookmarkEventWidget extends GetView<BookmarkEventController> {
       children: [
         Expanded(
           child: Obx(
-                () => InkWell(
+            () => InkWell(
               borderRadius: BorderRadius.circular(12),
               onTap: (controller.isBookmarked.value) ? null : onTap,
               child: Container(
                 margin:
-                const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
@@ -43,24 +43,24 @@ class BookmarkEventWidget extends GetView<BookmarkEventController> {
                       top: -20,
                       child: (event.image != null && event.image!.isNotEmpty)
                           ? Hero(
-                        tag: 'event_${event.id}_${UniqueKey()}',
-                        child: ClipOval(
-                          child: Image.memory(
-                            base64Decode(event.image!),
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      )
+                              tag: 'event_${event.id}_${UniqueKey()}',
+                              child: ClipOval(
+                                child: Image.memory(
+                                  base64Decode(event.image!),
+                                  width: 60,
+                                  height: 60,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            )
                           : Hero(
-                        tag: 'event_${event.id}_${UniqueKey()}',
-                        child: const Icon(
-                          Icons.event,
-                          color: Colors.white,
-                          size: 60,
-                        ),
-                      ),
+                              tag: 'event_${event.id}_${UniqueKey()}',
+                              child: const Icon(
+                                Icons.event,
+                                color: Colors.white,
+                                size: 60,
+                              ),
+                            ),
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -93,15 +93,15 @@ class BookmarkEventWidget extends GetView<BookmarkEventController> {
                           children: [
                             (event.filled)
                                 ? const Text(
-                              'This event Is Full',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.white),
-                            )
+                                    'This event Is Full',
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white),
+                                  )
                                 : const Text(
-                              '',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.white),
-                            ),
+                                    '',
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white),
+                                  ),
                             const SizedBox(width: 8),
                             Text(
                               '${event.participants ?? 0} / ${event.capacity}',
@@ -124,20 +124,19 @@ class BookmarkEventWidget extends GetView<BookmarkEventController> {
             ),
           ),
         ),
-        Obx(
-                () => Padding(
+        Obx(() => Padding(
               padding: const EdgeInsets.all(2.0),
               child: Align(
                 alignment: Alignment.centerRight,
                 child: IconButton(
                   icon: (controller.isEventRefreshing[event.id] ?? false)
                       ? const CircularProgressIndicator()
-                      : const Icon(Icons.bookmark, color: Colors.blueAccent) ,
+                      : const Icon(Icons.bookmark, color: Colors.blueAccent),
                   onPressed: (controller.isEventRefreshing[event.id] ?? false)
                       ? null
                       : () {
-                    controller.onBookmark( eventId: event.id);
-                  },
+                          controller.onBookmark(eventId: event.id);
+                        },
                   mouseCursor: (controller.isEventRefreshing[event.id] ?? false)
                       ? SystemMouseCursors.progress
                       : SystemMouseCursors.click,

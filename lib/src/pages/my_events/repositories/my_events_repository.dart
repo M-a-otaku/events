@@ -7,29 +7,28 @@ import '../../shared/local_storage_keys.dart';
 import '../models/my_events_model.dart';
 
 class MyEventsRepository {
-  Future<Either<String, List<MyEventsModel>>> getMyEvents(
-      {required int userId}) async {
+  Future<Either<String, List<MyEventsModel>>?> fetchMyEvents({
+    required Map<String, dynamic> queryParameters,
+  }) async {
     try {
-      final SharedPreferences preferences =
-          await SharedPreferences.getInstance();
-      final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
-      List<MyEventsModel> events = [];
-      if (userId == -1) {
-        return const Right([]);
-      }
-      final url = UrlRepository.myEvents(userId);
-      http.Response response = await http.get(url);
-      List<dynamic> result = json.decode(response.body);
+      // List<EventsModel> events = [];
+      final response = await http.get(
+        Uri.parse('http://localhost:3000/events')
+            .replace(queryParameters: queryParameters),
+      );
 
-      for (Map<String, dynamic> event in result) {
-        if (event["userId"] == userId) {
-          events.add((MyEventsModel.fromJson(json: event)));
-        }
-      }
-      return Right(events);
-    } catch (e) {
+      if (response.statusCode == 200) {
+        final fetchedEvents = (jsonDecode(response.body) as List)
+            .map((e) => MyEventsModel.fromJson(json: e))
+            .toList();
+
+
+        return Right(fetchedEvents);
+      } } catch (e) {
+      print('Error: $e');
       return Left(e.toString());
     }
+    return null;
   }
 
   Future<Either<String, bool>> deleteEventById({required int eventId}) async {

@@ -118,7 +118,8 @@ class MyEventsWidget extends GetView<MyEventsController> {
             child: Align(
               alignment: Alignment.centerRight,
               child: IconButton(
-                onPressed: ((controller.isEventRemoving[myEvent.id] ?? false) || myEvent.participants != 0)
+                onPressed: ((controller.isEventRemoving[myEvent.id] ?? false) ||
+                    (myEvent.participants != 0 && myEvent.date.isAfter(DateTime.now())))
                     ? null
                     : removeEvent,
                 icon: (controller.isEventRemoving[myEvent.id] ?? false)
@@ -127,7 +128,7 @@ class MyEventsWidget extends GetView<MyEventsController> {
                   Icons.delete_forever_outlined,
                   color: Colors.redAccent,
                 ),
-                mouseCursor: (myEvent.participants != 0)
+                mouseCursor: (myEvent.participants != 0 && myEvent.date.isAfter(DateTime.now()))
                     ? SystemMouseCursors.forbidden
                     : (controller.isEventRemoving[myEvent.id] ?? false)
                     ? SystemMouseCursors.progress
@@ -135,7 +136,8 @@ class MyEventsWidget extends GetView<MyEventsController> {
               ),
             ),
           ),
-        ),
+        )
+,
       ],
     );
   }

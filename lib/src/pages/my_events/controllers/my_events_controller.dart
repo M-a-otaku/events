@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,25 +16,234 @@ class MyEventsController extends GetxController {
   RxBool isRemoving = false.obs;
   RxList<MyEventsModel> filteredEvents = <MyEventsModel>[].obs;
   final RxMap<int, bool> isEventRemoving = <int, bool>{}.obs;
+  var query = ''.obs;
 
-  void searchEvents(String query) {
-    if (query.isEmpty) {
-      filteredEvents.value = myEvents;
-    } else {
-      filteredEvents.value = myEvents.where((event) {
-        return event.title.toLowerCase().contains(query.toLowerCase());
-      }).toList();
-    }
+  bool filterFutureEvents = false;
+  bool filterWithCapacity = false;
+  String? sortOrder;
+  double savedMinPrice = 0;
+  double savedMaxPrice = 9999;
+  Timer? _debounce;
+
+
+  void updateSearchQuery(String searchQuery) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(seconds: 1), () {
+      isLoading.value = true;
+      query.value = searchQuery;
+      getEvents();
+      // performSearch(searchQuery);
+    });
   }
 
-  Future<void> getEvents() async {
+
+  Map<String, String> _buildQueryParameters({
+    bool? ascending,
+    bool? onlyFuture,
+    bool? withCapacity,
+    int? minPrice,
+    int? maxPrice,
+    String? searchQuery,
+    int? userId,
+  }) {
+    final today = DateTime.now().toIso8601String();
+    return {
+      if (ascending != null) '_sort': 'date',
+      if (ascending == true) '_order': 'asc',
+      if (ascending == false) '_order': 'desc',
+      if (onlyFuture == true) 'date_gte': today,
+      if (withCapacity != null && withCapacity == true)
+        'filled': false.toString(),
+      if (minPrice != null) 'price_gte': minPrice.toString(),
+      if (maxPrice != null) 'price_lte': maxPrice.toString(),
+      if (searchQuery != null) 'title_like': query.value,
+      if (userId != null) 'userId': userId.toString(),
+    };
+  }
+
+
+
+  void showSortAndFilterDialog(
+    BuildContext context, {
+    required bool initialFilterFutureEvents,
+    required bool initialFilterWithCapacity,
+    String? initialSortOrder,
+    double initialMinPrice = 0,
+    double initialMaxPrice = 9999,
+  }) {
+    RangeValues priceRange = RangeValues(savedMinPrice, savedMaxPrice);
+
+    bool isLoading = false;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text("Sort and Filter Events"),
+              content: isLoading
+                  ? const SizedBox(
+                      height: 80,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  : SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            "Price Range",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          RangeSlider(
+                            values: priceRange,
+                            min: 0,
+                            max: 9999,
+                            divisions: 100,
+                            labels: RangeLabels(
+                              priceRange.start.toStringAsFixed(0),
+                              priceRange.end.toStringAsFixed(0),
+                            ),
+                            onChanged: (values) {
+                              setState(() {
+                                priceRange = values;
+                              });
+                            },
+                          ),
+                          Text(
+                            "Min: ${priceRange.start.toStringAsFixed(0)} - Max: ${priceRange.end.toStringAsFixed(0)}",
+                          ),
+                          CheckboxListTile(
+                            title: const Text("Only Future Events"),
+                            value: filterFutureEvents,
+                            onChanged: (value) {
+                              setState(() {
+                                filterFutureEvents = value!;
+                              });
+                            },
+                          ),
+                          CheckboxListTile(
+                            title: const Text("Only Events With Capacity"),
+                            value: filterWithCapacity,
+                            onChanged: (value) {
+                              setState(() {
+                                filterWithCapacity = value!;
+                              });
+                            },
+                          ),
+                          DropdownButton<String>(
+                            value: sortOrder,
+                            hint: const Text("Sort by Time (Optional)"),
+                            items: const [
+                              DropdownMenuItem(
+                                value: "Ascending",
+                                child: Text("Ascending (Newest First)"),
+                              ),
+                              DropdownMenuItem(
+                                value: "Descending",
+                                child: Text("Descending (Oldest First)"),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                sortOrder = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+              actions: isLoading
+                  ? []
+                  : [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text("Cancel"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            priceRange = RangeValues(0, 9999);
+                            filterFutureEvents = false;
+                            filterWithCapacity = false;
+                            sortOrder = null;
+                          });
+                          getEvents();
+                          Navigator.pop(context, {
+                            'filterFutureEvents': false,
+                            'filterWithCapacity': false,
+                            'sortOrder': null,
+                            'minPrice': 0,
+                            'maxPrice': 9999,
+                          });
+                        },
+                        child: const Text("Reset"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          await getEvents(
+                            ascending: sortOrder == "Ascending"
+                                ? true
+                                : sortOrder == "Descending"
+                                    ? false
+                                    : null,
+                            onlyFuture: filterFutureEvents,
+                            withCapacity: filterWithCapacity,
+                            minPrice: priceRange.start.toInt(),
+                            maxPrice: priceRange.end.toInt(),
+                          );
+
+                          savedMinPrice = priceRange.start;
+                          savedMaxPrice = priceRange.end;
+
+                          Navigator.pop(context, {
+                            'filterFutureEvents': filterFutureEvents,
+                            'filterWithCapacity': filterWithCapacity,
+                            'sortOrder': sortOrder,
+                            'minPrice': priceRange.start.toInt(),
+                            'maxPrice': priceRange.end.toInt(),
+                          });
+                        },
+                        child: const Text("Apply"),
+                      ),
+                    ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> getEvents(
+      {bool? ascending,
+      bool? onlyFuture,
+      bool? withCapacity,
+      int? minPrice,
+      int? maxPrice}) async {
     myEvents.clear();
     isLoading.value = true;
     isRetry.value = false;
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
-    final result = await _repository.getMyEvents(userId: userId);
-    result.fold(
+
+    final queryParameters = _buildQueryParameters(
+        ascending: ascending,
+        onlyFuture: onlyFuture,
+        withCapacity: withCapacity,
+        minPrice: minPrice,
+        maxPrice: maxPrice,
+        searchQuery: query.value,
+        userId: userId);
+
+    final result =
+        await _repository.fetchMyEvents(queryParameters: queryParameters);
+    result?.fold(
       (exception) {
         isLoading.value = false;
         isRetry.value = true;
@@ -69,21 +280,6 @@ class MyEventsController extends GetxController {
 
   Future<void> toEditPage({required int eventId}) async {
     int index = myEvents.indexWhere((event) => event.id == eventId);
-    if (myEvents[index].participants != 0) {
-      isLoading.value = false;
-      Get.showSnackbar(
-        GetSnackBar(
-          messageText: const Text(
-            "You Can't edit Events When they're not empty",
-            style: TextStyle(color: Colors.black, fontSize: 14),
-          ),
-          backgroundColor: Colors.redAccent.withOpacity(.2),
-          duration: const Duration(seconds: 5),
-        ),
-      );
-      return;
-    }
-
     final result = await Get.toNamed(
       RouteNames.editEvents,
       parameters: {"id": "$eventId"},
@@ -105,30 +301,16 @@ class MyEventsController extends GetxController {
         );
       }
     }
+    getEvents();
   }
 
   Future<void> removeEvent({required int eventId}) async {
     isEventRemoving[eventId] = true;
 
     int index = myEvents.indexWhere((event) => event.id == eventId);
-    if (index == -1 || myEvents[index].participants != 0) {
-      isEventRemoving[eventId] = false;
-      Get.showSnackbar(
-        GetSnackBar(
-          messageText: const Text(
-            "You can't delete events that aren't empty",
-            style: TextStyle(color: Colors.black, fontSize: 14),
-          ),
-          backgroundColor: Colors.redAccent.withOpacity(0.2),
-          duration: const Duration(seconds: 5),
-        ),
-      );
-      return;
-    }
-
     final result = await _repository.deleteEventById(eventId: eventId);
     result.fold(
-          (exception) {
+      (exception) {
         isEventRemoving[eventId] = false;
         Get.showSnackbar(
           GetSnackBar(
@@ -141,7 +323,7 @@ class MyEventsController extends GetxController {
           ),
         );
       },
-          (_) {
+      (_) {
         myEvents.removeAt(index);
         isEventRemoving[eventId] = false;
         Get.showSnackbar(

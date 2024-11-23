@@ -15,36 +15,15 @@ class MyEventsView extends GetView<MyEventsController> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: _appBar(),
       body: RefreshIndicator(
-          onRefresh: controller.onRefresh, child: Obx(() => _body())),
+          onRefresh: controller.onRefresh, child: Obx(() => _body(context))),
     );
   }
 
-  Widget _body() {
-    if (controller.isLoading.value) {
-      return _loading();
-    } else if (controller.isRetry.value) {
+  Widget _body(context) {
+    if (controller.isRetry.value) {
       return _retry();
-    } else if (controller.myEvents.isEmpty) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Center(
-            child: Text(
-              "MyEvents is empty",
-              style: TextStyle(fontSize: 16, color: Colors.black),
-            ),
-          ),
-          _retry()
-        ],
-      );
     }
-    return _success();
-  }
-
-  Widget _loading() {
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
+    return _success(context);
   }
 
   Widget _retry() {
@@ -60,24 +39,10 @@ class MyEventsView extends GetView<MyEventsController> {
   }
 
   AppBar _appBar() => AppBar(
-          centerTitle: true,
-          title: const Text("My Events"),
-          backgroundColor: Colors.grey,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search),
-              hoverColor: Colors.blueAccent,
-              tooltip: "Search button",
-              color: Colors.white,
-              onPressed: () {
-                showSearch(
-                  context: Get.context!,
-                  delegate: CustomSearchDelegate(),
-                );
-              },
-            ),
-            const SizedBox(width: 20),
-          ]);
+        centerTitle: true,
+        title: const Text("My Events"),
+        backgroundColor: Colors.grey,
+      );
 
   Widget _fab() {
     return FloatingActionButton(
@@ -88,77 +53,67 @@ class MyEventsView extends GetView<MyEventsController> {
     );
   }
 
-  Widget _success() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-        child: Obx(
-          () => ListView.separated(
-            itemCount: controller.myEvents.length,
-            itemBuilder: (_, index) => MyEventsWidget(
-              myEvent: controller.myEvents[index],
-              removeEvent: () => controller.removeEvent(
-                  eventId: controller.myEvents[index].id),
-              onTap: (controller.isRemoving.value)
-                  ? null
-                  : () => controller.toEditPage(
-                      eventId: controller.myEvents[index].id),
+  Widget _success(context) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+    child: Obx(() => Stack(
+      children: [
+        Column(
+          children: [
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.filter_alt),
+                  tooltip: "Sort and Filter",
+                  onPressed: () {
+                    controller.showSortAndFilterDialog(
+                      context,
+                      initialFilterFutureEvents:
+                      controller.filterFutureEvents,
+                      initialFilterWithCapacity:
+                      controller.filterWithCapacity,
+                      initialMaxPrice: controller.savedMaxPrice,
+                      initialMinPrice: controller.savedMinPrice,
+                      initialSortOrder: controller.sortOrder,
+                    );
+                  },
+                ),
+                Expanded(
+                  child: TextField(
+                    onChanged: (searchQuery) {
+                      controller.updateSearchQuery(searchQuery);
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Search by title',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
-          ),
+            const SizedBox(height: 12),
+            Expanded(
+              child: ListView.separated(
+                itemCount: controller.myEvents.length,
+                itemBuilder: (_, index) => MyEventsWidget(
+                  myEvent: controller.myEvents[index],
+                  removeEvent: () => controller.removeEvent(
+                      eventId: controller.myEvents[index].id),
+                  onTap: (controller.isRemoving.value)
+                      ? null
+                      : () => controller.toEditPage(
+                      eventId: controller.myEvents[index].id),
+                ),
+                separatorBuilder: (_, __) => const SizedBox(height: 12),
+              ),
+            ),
+          ],
         ),
-      );
-}
-
-class CustomSearchDelegate extends SearchDelegate {
-  final MyEventsController controller = Get.find();
-  bool isDescending = false;
-
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return [
-      IconButton(
-        onPressed: () {
-          query = '';
-          controller.searchEvents(query);
-        },
-        icon: const Icon(Icons.clear),
-      ),
-    ];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        close(context, null);
-      },
-      icon: const Icon(Icons.arrow_back),
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    controller.searchEvents(query);
-    return _buildEventList();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    controller.searchEvents(query);
-    return _buildEventList();
-  }
-
-  Widget _buildEventList() {
-    return Obx(
-      () => ListView.builder(
-        itemCount: controller.filteredEvents.length,
-        itemBuilder: (context, index) {
-          final event = controller.filteredEvents[index];
-          return ListTile(
-            title: Text(event.title),
-            onTap: () {},
-          );
-        },
-      ),
-    );
-  }
+        if (controller.isLoading.value)
+          const Center(
+            child: CircularProgressIndicator(),
+          ),
+      ],
+    )),
+  );
 }

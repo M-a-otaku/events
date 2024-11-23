@@ -33,6 +33,19 @@ class EventsController extends GetxController {
   double savedMaxPrice = 9999;
 
 
+  Timer? _debounce;
+  void updateSearchQuery(String searchQuery) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(seconds: 1), () {
+      isLoading.value = true;
+      query.value = searchQuery;
+      getEvents();
+      // performSearch(searchQuery);
+    });
+  }
+
+
+
   Future<void> goToEvent(int eventId) async {
     await Get.toNamed(
       RouteNames.detailsEvent,
@@ -54,7 +67,8 @@ class EventsController extends GetxController {
       if (ascending == true) '_order': 'asc',
       if (ascending == false) '_order': 'desc',
       if (onlyFuture == true) 'date_gte': today,
-      if (withCapacity != null && withCapacity == true) 'filled': false.toString(),
+      if (withCapacity != null && withCapacity == true)
+        'filled': false.toString(),
       if (minPrice != null) 'price_gte': minPrice.toString(),
       if (maxPrice != null) 'price_lte': maxPrice.toString(),
       if (searchQuery != null) 'title_like': query.value,
@@ -82,7 +96,8 @@ class EventsController extends GetxController {
 
     print('capacity $withCapacity');
 
-   final result = await _repository.fetchEvents( queryParameters: queryParameters);
+    final result =
+        await _repository.fetchEvents(queryParameters: queryParameters);
 
     result?.fold(
       (exception) {
@@ -108,10 +123,6 @@ class EventsController extends GetxController {
     );
   }
 
-  void updateSearchQuery(String newQuery) {
-    query.value = newQuery;
-    getEvents(); // پس از تغییر جستجو ایونت‌ها فیلتر شوند
-  }
 
   Future<void> toggleBookmark(int eventId) async {
     isEventRefreshing[eventId] = true;
@@ -149,7 +160,7 @@ class EventsController extends GetxController {
     final result = await _repository.editBookmarked(dto: dto, userId: userId);
 
     result.fold(
-          (exception) {
+      (exception) {
         isEventRefreshing[eventId] = false;
         isBookmarked.value = false;
         Get.showSnackbar(
@@ -163,7 +174,7 @@ class EventsController extends GetxController {
           ),
         );
       },
-          (_) {
+      (_) {
         print("Updated bookmarked events: $bookmarkedIds");
         isEventRefreshing[eventId] = false;
         isBookmarked.value = false;
@@ -210,17 +221,14 @@ class EventsController extends GetxController {
     print("Loaded userId from SharedPreferences: $userId");
   }
 
-
-
-
   void showSortAndFilterDialog(
-      BuildContext context, {
-        required bool initialFilterFutureEvents,
-        required bool initialFilterWithCapacity,
-        String? initialSortOrder,
-        double initialMinPrice = 0,
-        double initialMaxPrice = 9999,
-      }) {
+    BuildContext context, {
+    required bool initialFilterFutureEvents,
+    required bool initialFilterWithCapacity,
+    String? initialSortOrder,
+    double initialMinPrice = 0,
+    double initialMaxPrice = 9999,
+  }) {
     RangeValues priceRange = RangeValues(savedMinPrice, savedMaxPrice);
 
     bool isLoading = false;
@@ -234,126 +242,142 @@ class EventsController extends GetxController {
               title: const Text("Sort and Filter Events"),
               content: isLoading
                   ? const SizedBox(
-                height: 80,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              )
-                  : SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      "Price Range",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    RangeSlider(
-                      values: priceRange,
-                      min: 0,
-                      max: 9999,
-                      divisions: 100,
-                      labels: RangeLabels(
-                        priceRange.start.toStringAsFixed(0),
-                        priceRange.end.toStringAsFixed(0),
+                      height: 80,
+                      child: Center(
+                        child: CircularProgressIndicator(),
                       ),
-                      onChanged: (values) {
-                        setState(() {
-                          priceRange = values;
-                        });
-                      },
+                    )
+                  : SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            "Price Range",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          RangeSlider(
+                            values: priceRange,
+                            min: 0,
+                            max: 9999,
+                            divisions: 100,
+                            labels: RangeLabels(
+                              priceRange.start.toStringAsFixed(0),
+                              priceRange.end.toStringAsFixed(0),
+                            ),
+                            onChanged: (values) {
+                              setState(() {
+                                priceRange = values;
+                              });
+                            },
+                          ),
+                          Text(
+                            "Min: ${priceRange.start.toStringAsFixed(0)} - Max: ${priceRange.end.toStringAsFixed(0)}",
+                          ),
+                          CheckboxListTile(
+                            title: const Text("Only Future Events"),
+                            value: filterFutureEvents,
+                            onChanged: (value) {
+                              setState(() {
+                                filterFutureEvents = value!;
+                              });
+                            },
+                          ),
+                          CheckboxListTile(
+                            title: const Text("Only Events With Capacity"),
+                            value: filterWithCapacity,
+                            onChanged: (value) {
+                              setState(() {
+                                filterWithCapacity = value!;
+                              });
+                            },
+                          ),
+                          DropdownButton<String>(
+                            value: sortOrder,
+                            hint: const Text("Sort by Time (Optional)"),
+                            items: [
+                              DropdownMenuItem(
+                                value: "Ascending",
+                                child: const Text("Ascending (Newest First)"),
+                              ),
+                              DropdownMenuItem(
+                                value: "Descending",
+                                child: const Text("Descending (Oldest First)"),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                sortOrder = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                    Text(
-                      "Min: ${priceRange.start.toStringAsFixed(0)} - Max: ${priceRange.end.toStringAsFixed(0)}",
-                    ),
-                    CheckboxListTile(
-                      title: const Text("Only Future Events"),
-                      value: filterFutureEvents,
-                      onChanged: (value) {
-                        setState(() {
-                          filterFutureEvents = value!;
-                        });
-                      },
-                    ),
-                    CheckboxListTile(
-                      title: const Text("Only Events With Capacity"),
-                      value: filterWithCapacity,
-                      onChanged: (value) {
-                        setState(() {
-                          filterWithCapacity = value!;
-                        });
-                      },
-                    ),
-                    DropdownButton<String>(
-                      value: sortOrder,
-                      hint: const Text("Sort by Time (Optional)"),
-                      items: [
-                        DropdownMenuItem(
-                          value: "Ascending",
-                          child: const Text("Ascending (Newest First)"),
-                        ),
-                        DropdownMenuItem(
-                          value: "Descending",
-                          child: const Text("Descending (Oldest First)"),
-                        ),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          sortOrder = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
               actions: isLoading
                   ? []
                   : [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("Cancel"),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    setState(() {
-                      isLoading = true;
-                    });
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text("Cancel"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            priceRange = RangeValues(0, 9999);
+                            filterFutureEvents = false;
+                            filterWithCapacity = false;
+                            sortOrder = null;
+                          });
+                          getEvents();
+                          Navigator.pop(context, {
+                            'filterFutureEvents': false,
+                            'filterWithCapacity': false,
+                            'sortOrder': null,
+                            'minPrice': 0,
+                            'maxPrice': 9999,
+                          });
+                        },
+                        child: const Text("Reset"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
 
-                    await getEvents(
-                      ascending: sortOrder == "Ascending"
-                          ? true
-                          : sortOrder == "Descending"
-                          ? false
-                          : null,
-                      onlyFuture: filterFutureEvents,
-                      withCapacity: filterWithCapacity,
-                      minPrice: priceRange.start.toInt(),
-                      maxPrice: priceRange.end.toInt(),
-                    );
+                          await getEvents(
+                            ascending: sortOrder == "Ascending"
+                                ? true
+                                : sortOrder == "Descending"
+                                    ? false
+                                    : null,
+                            onlyFuture: filterFutureEvents,
+                            withCapacity: filterWithCapacity,
+                            minPrice: priceRange.start.toInt(),
+                            maxPrice: priceRange.end.toInt(),
+                          );
 
-                    // ذخیره مقادیر انتخاب‌شده
-                    savedMinPrice = priceRange.start;
-                    savedMaxPrice = priceRange.end;
+                          // ذخیره مقادیر انتخاب‌شده
+                          savedMinPrice = priceRange.start;
+                          savedMaxPrice = priceRange.end;
 
-                    Navigator.pop(context, {
-                      'filterFutureEvents': filterFutureEvents,
-                      'filterWithCapacity': filterWithCapacity,
-                      'sortOrder': sortOrder,
-                      'minPrice': priceRange.start.toInt(),
-                      'maxPrice': priceRange.end.toInt(),
-                    });
-                  },
-                  child: const Text("Apply"),
-                ),
-              ],
+                          Navigator.pop(context, {
+                            'filterFutureEvents': filterFutureEvents,
+                            'filterWithCapacity': filterWithCapacity,
+                            'sortOrder': sortOrder,
+                            'minPrice': priceRange.start.toInt(),
+                            'maxPrice': priceRange.end.toInt(),
+                          });
+                        },
+                        child: const Text("Apply"),
+                      ),
+                    ],
             );
           },
         );
       },
     );
   }
-
-
-
 
   @override
   void onInit() {
@@ -387,4 +411,3 @@ class EventsController extends GetxController {
     super.dispose();
   }
 }
-

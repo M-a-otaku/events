@@ -24,6 +24,9 @@ class EditEventController extends GetxController {
   final dateController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
+  final RxBool filled = false.obs;
+   RxInt participants = 0.obs;
+
   var selectedYear = ''.obs;
   var selectedMonth = ''.obs;
   var selectedDay = ''.obs;
@@ -45,6 +48,11 @@ class EditEventController extends GetxController {
 
   @override
   void onClose() {}
+
+  void updateFilledStatus() {
+    filled.value = participants.value >= int.parse(capacityController.text);
+  }
+
 
   Future<void> pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -162,6 +170,17 @@ class EditEventController extends GetxController {
     }
   }
 
+  void showSnackbar(String message) {
+    Get.snackbar(
+      "Action Not Allowed",
+      message,
+      snackPosition: SnackPosition.BOTTOM,
+      // backgroundColor: Colors.red,
+      colorText: Colors.black,
+    );
+  }
+
+
   Future<void> onSubmit() async {
     isLoading.value = true;
     if (!(formKey.currentState?.validate() ?? false)) return;
@@ -177,17 +196,18 @@ class EditEventController extends GetxController {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     final int price = int.parse(priceController.text);
     final int capacity = int.parse(capacityController.text);
+    updateFilledStatus();
     final result = await _repository.editEvent(
         eventId: eventId,
         dto: EditEventDto(
           image: imageBase64.value,
             userId: preferences.getInt(LocalKeys.userId) ?? -1,
-            filled: false,
+            filled: filled.value,
             title: titleController.text,
             description: descriptionController.text,
             date: date,
             capacity: capacity,
-            participants: 0,
+            participants: participants.value,
             price: price));
     result?.fold(
       (exception) {
@@ -239,21 +259,12 @@ class EditEventController extends GetxController {
       descriptionController.text = right.description;
       priceController.text = right.price.toString();
       date = right.date.toLocal();
-      capacityController.text = right.capacity.toString();
       priceController.text = right.price.toString();
       selectedTime2.value = date;
       imageBase64.value = right.image;
-      // if (right.image != null && right.image!.isNotEmpty) {
-      //   imagePick.value = {
-      //     'type': 'image-url',
-      //     'image': right.image,
-      //   };
-      // } else {
-      //   imagePick.value = {
-      //     'type': 'image-picker',
-      //     'image': null,
-      //   };
-      // }
+      capacityController.text = right.capacity.toString();
+      participants.value = right.participants ?? 0;
+      updateFilledStatus();
     });
   }
 

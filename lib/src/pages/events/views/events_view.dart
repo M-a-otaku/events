@@ -23,26 +23,9 @@ class EventsView extends GetView<EventsController> {
   }
 
   Widget _body(context) {
-    // if (controller.isLoading.value) {
-    //   return _loading();
-    // } else
     if (controller.isRetry.value) {
       return _retry();
     }
-    // else if (controller.events.isEmpty) {
-    // return Column(
-    //   mainAxisAlignment: MainAxisAlignment.center,
-    //   children: [
-    //     const Center(
-    //       child: Text(
-    //         "There is no event available ",
-    //         style: TextStyle(fontSize: 16, color: Colors.black),
-    //       ),
-    //     ),
-    //     _retry()
-    //   ],
-    // );
-    // }
     return _success(context);
   }
 
@@ -73,9 +56,12 @@ class EventsView extends GetView<EventsController> {
       );
 
   Widget _success(context) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-        child: Obx(
-          () => Column(
+    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+    child: Obx(
+          () => Stack(
+        children: [
+          // محتوای اصلی صفحه
+          Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
@@ -84,14 +70,16 @@ class EventsView extends GetView<EventsController> {
                     icon: const Icon(Icons.filter_alt),
                     tooltip: "Sort and Filter",
                     onPressed: () {
-                      controller.showSortAndFilterDialog(context,
-                          initialFilterFutureEvents:
-                              controller.filterFutureEvents,
-                          initialFilterWithCapacity:
-                              controller.filterWithCapacity,
-                          initialMaxPrice: controller.savedMaxPrice,
-                          initialMinPrice: controller.savedMinPrice,
-                          initialSortOrder: controller.sortOrder);
+                      controller.showSortAndFilterDialog(
+                        context,
+                        initialFilterFutureEvents:
+                        controller.filterFutureEvents,
+                        initialFilterWithCapacity:
+                        controller.filterWithCapacity,
+                        initialMaxPrice: controller.savedMaxPrice,
+                        initialMinPrice: controller.savedMinPrice,
+                        initialSortOrder: controller.sortOrder,
+                      );
                     },
                   ),
                   Expanded(
@@ -108,34 +96,35 @@ class EventsView extends GetView<EventsController> {
                   ),
                 ],
               ),
-              (controller.isLoading.value)
-                  ? const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CircularProgressIndicator(),
-                      ],
-                    )
-                  : const SizedBox(height: 12),
+              const SizedBox(height: 12),
               Expanded(
                 child: ListView.separated(
                   itemCount: controller.events.length,
                   itemBuilder: (_, index) => EventsWidget(
                     event: controller.events[index],
-                    onBookmark: () =>
-                        controller.toggleBookmark(controller.events[index].id),
+                    onBookmark: () => controller.toggleBookmark(
+                      controller.events[index].id,
+                    ),
                     onTap: (controller.events[index].filled ||
-                            controller.events[index].date
-                                .isBefore(DateTime.now()))
+                        controller.events[index].date
+                            .isBefore(DateTime.now()))
                         ? controller.filledEvent
-                        : () =>
-                            controller.goToEvent(controller.events[index].id),
+                        : () => controller.goToEvent(
+                      controller.events[index].id,
+                    ),
                   ),
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
                 ),
               ),
             ],
           ),
-        ),
-      );
+          // نمایش لودینگ در مرکز صفحه
+          if (controller.isLoading.value)
+            const Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
+      ),
+    ),
+  );
 }

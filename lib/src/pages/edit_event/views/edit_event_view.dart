@@ -19,9 +19,9 @@ class EditEventView extends GetView<EditEventController> {
 
   Widget _fab() {
     return FloatingActionButton(
-            onPressed: controller.onSubmit,
-            child: const Icon(Icons.check),
-          );
+      onPressed: controller.onSubmit,
+      child: const Icon(Icons.check),
+    );
   }
 
   AppBar _appBar() {
@@ -44,8 +44,6 @@ class EditEventView extends GetView<EditEventController> {
       child: CircularProgressIndicator(),
     );
   }
-
-
 
   Widget _success(context) {
     return Form(
@@ -88,10 +86,16 @@ class EditEventView extends GetView<EditEventController> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  controller.chooseTime();
+                  if (controller.participants.value > 0) {
+                    controller.showSnackbar(
+                        "Time cannot be changed because participants > 0");
+                  } else {
+                    controller.chooseTime();
+                  }
                 },
                 child: const Text('Select Time'),
               ),
+
               const SizedBox(height: 16),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -110,8 +114,13 @@ class EditEventView extends GetView<EditEventController> {
                             child: Text(year),
                           );
                         }).toList(),
-                        onChanged: (value) =>
-                            controller.selectedYear.value = value ?? '',
+                        onChanged: controller.participants.value == 0
+                            ? (value) =>
+                                controller.selectedYear.value = value ?? ''
+                            : (value) {
+                                controller.showSnackbar(
+                                    "date cannot be changed because participants > 0");
+                              },
                       )),
                   Obx(() => DropdownButton<String>(
                         padding: const EdgeInsets.symmetric(
@@ -126,8 +135,13 @@ class EditEventView extends GetView<EditEventController> {
                             child: Text(month),
                           );
                         }).toList(),
-                        onChanged: (value) =>
-                            controller.selectedMonth.value = value ?? '',
+                        onChanged: controller.participants.value == 0
+                            ? (value) =>
+                                controller.selectedMonth.value = value ?? ''
+                            : (value) {
+                                controller.showSnackbar(
+                                    "date cannot be changed because participants > 0");
+                              },
                       )),
                   Obx(() => DropdownButton<String>(
                         padding: const EdgeInsets.symmetric(
@@ -142,8 +156,13 @@ class EditEventView extends GetView<EditEventController> {
                             child: Text(day),
                           );
                         }).toList(),
-                        onChanged: (value) =>
-                            controller.selectedDay.value = value ?? '',
+                        onChanged: controller.participants.value == 0
+                            ? (value) =>
+                                controller.selectedDay.value = value ?? ''
+                            : (value) {
+                          controller.showSnackbar(
+                              "date cannot be changed because participants > 0");
+                              },
                       )),
                 ],
               ),
@@ -160,9 +179,6 @@ class EditEventView extends GetView<EditEventController> {
     return TextFormField(
       maxLength: 20,
       readOnly: (controller.isLoading.value ? true : false),
-      // inputFormatters: [
-      //   FilteringTextInputFormatter.deny(RegExp(r'\s')),
-      // ],
       controller: controller.titleController,
       autofocus: true,
       textInputAction: TextInputAction.next,
@@ -211,6 +227,13 @@ class EditEventView extends GetView<EditEventController> {
       maxLength: 4,
       // readOnly:
       keyboardType: TextInputType.number,
+      readOnly: controller.participants.value > 0,
+      onTap: () {
+        if (controller.participants.value > 0) {
+          controller
+              .showSnackbar("Price cannot be changed because participants > 0");
+        }
+      },
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
@@ -231,6 +254,13 @@ class EditEventView extends GetView<EditEventController> {
     return TextFormField(
       maxLength: 6,
       keyboardType: TextInputType.number,
+      readOnly: controller.participants.value > 0,
+      onTap: () {
+        if (controller.participants.value > 0) {
+          controller.showSnackbar(
+              "Capacity cannot be changed because participants > 0");
+        }
+      },
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
@@ -245,24 +275,6 @@ class EditEventView extends GetView<EditEventController> {
           borderRadius: BorderRadius.circular(12),
         ),
       ),
-    );
-  }
-
-  Widget _datePicker(context) {
-    return TextField(
-      controller: controller.dateController,
-      decoration: const InputDecoration(
-        labelText: 'DATE',
-        filled: true,
-        prefixIcon: Icon(Icons.calendar_today),
-        enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
-        focusedBorder:
-            OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
-      ),
-      readOnly: true,
-      onTap: () {
-        controller.selectDate(context);
-      },
     );
   }
 

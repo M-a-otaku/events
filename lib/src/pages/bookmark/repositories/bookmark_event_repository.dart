@@ -9,45 +9,73 @@ import '../models/event_model.dart';
 
 class BookmarkEventRepository {
   Future<Either<String, List<EventModel>>> getBookmarked({
-    required String parameters,
+    required Map<String, dynamic> queryParameters , required int userId,
   }) async {
     try {
       List<EventModel> bookmarkedEvents = [];
+
       final SharedPreferences preferences = await SharedPreferences.getInstance();
-
-      final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
-      if (userId == -1) {
-        return const Right([]);
-      }
-
       String key = 'bookmarkedIds_$userId';
       List<String> bookmarkedIds = preferences.getStringList(key) ?? [];
-      print(bookmarkedIds);
 
-      final url = UrlRepository.getEventsByParameters(parameters: parameters);
-      final response = await http.get(url);
+      final response = await http.get(
+        Uri.parse('http://localhost:3000/events')
+            .replace(queryParameters: queryParameters),
+      );
 
       if (response.statusCode == 200) {
         final List<dynamic> result = json.decode(response.body);
 
-        // تطبیق داده‌های سرور با IDهای بوکمارک‌شده
         for (Map<String, dynamic> event in result) {
           final eventModel = EventModel.fromJson(event);
 
-          // بررسی تطابق بین Bookmark و Event
           if (bookmarkedIds.contains(eventModel.id.toString())) {
             bookmarkedEvents.add(eventModel);
           }
         }
 
-        return Right(bookmarkedEvents); // لیست رویدادهای بوکمارک‌شده
+        return Right(bookmarkedEvents);
       } else {
-        return Left("Failed to load events"); // خطا در دریافت داده‌ها
+        return const Left("Failed to load events");
       }
     } catch (e) {
-      return Left(e.toString()); // مدیریت استثناها
+      return Left(e.toString());
     }
   }
+
+
+  Future<Either<String, List<EventModel>>> getBookmarkedEvents() async {
+    try {
+      // دسترسی به userId از SharedPreferences
+      final SharedPreferences preferences = await SharedPreferences.getInstance();
+      final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
+
+      if (userId == -1) {
+        return const Right([]); // اگر userId نامعتبر بود
+      }
+
+      // ساخت URL برای دریافت bookmarked-events
+      final url = Uri.http(
+        'localhost:3000',
+        'users/$userId/bookmark',
+      );
+
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> result = jsonDecode(response.body);
+        final List<EventModel> events =
+        result.map((event) => EventModel.fromJson(event)).toList();
+
+        return Right(events);
+      } else {
+        return Left("Failed to load bookmarked events: ${response.statusCode}");
+      }
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
 
   Future<Either<String, bool>> editBookmarked({required BookmarkUserDto dto, required int userId,}) async {
     try {

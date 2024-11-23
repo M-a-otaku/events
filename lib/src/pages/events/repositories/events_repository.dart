@@ -13,7 +13,7 @@ class EventsRepository {
     required Map<String, dynamic> queryParameters,
   }) async {
     try {
-     // List<EventsModel> events = [];
+      // List<EventsModel> events = [];
       final response = await http.get(
         Uri.parse('http://localhost:3000/events')
             .replace(queryParameters: queryParameters),
