@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -63,18 +64,18 @@ class EventsWidget extends GetView<EventsController> {
                 ),
               ),
               const SizedBox(width: 16),
-              Expanded(
+              Expanded(  // استفاده از Expanded برای جلوگیری از overflow
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(
+                        Expanded(  // استفاده از Expanded برای عنوان که طولانی نشود
                           child: Text(
                             event.title,
                             maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            overflow: TextOverflow.ellipsis,  // برش متن طولانی
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -96,29 +97,32 @@ class EventsWidget extends GetView<EventsController> {
                     Text(
                       event.description,
                       maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: TextOverflow.ellipsis,  // برش متن طولانی
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.white70,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        const Icon(Icons.calendar_today, size: 14, color: Colors.white70),
-                        const SizedBox(width: 4),
-                        Text(
-                          DateFormat('yyyy-MM-dd').format(event.date),
-                          style: const TextStyle(fontSize: 14, color: Colors.white70),
-                        ),
-                        const SizedBox(width: 16),
-                        const Icon(Icons.access_time, size: 14, color: Colors.white70),
-                        const SizedBox(width: 4),
-                        Text(
-                          DateFormat('HH:mm').format(event.date),
-                          style: const TextStyle(fontSize: 14, color: Colors.white70),
-                        ),
-                      ],
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.calendar_today, size: 14, color: Colors.white70),
+                          const SizedBox(width: 4),
+                          Text(
+                            DateFormat('yyyy-MM-dd').format(event.date),
+                            style: const TextStyle(fontSize: 14, color: Colors.white70),
+                          ),
+                          const SizedBox(width: 16),
+                          const Icon(Icons.access_time, size: 14, color: Colors.white70),
+                          const SizedBox(width: 4),
+                          Text(
+                            DateFormat('HH:mm').format(event.date),
+                            style: const TextStyle(fontSize: 14, color: Colors.white70),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -184,7 +188,7 @@ class EventsWidget extends GetView<EventsController> {
                 ),
               ),
             ],
-          ),
+          )
         ),
       ),
     );

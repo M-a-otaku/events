@@ -102,26 +102,29 @@ class MyEventsWidget extends GetView<MyEventsController> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        const Icon(Icons.calendar_today,
-                            size: 14, color: Colors.white70),
-                        const SizedBox(width: 4),
-                        Text(
-                          DateFormat('yyyy-MM-dd').format(myEvent.date),
-                          style: const TextStyle(
-                              fontSize: 14, color: Colors.white70),
-                        ),
-                        const SizedBox(width: 16),
-                        const Icon(Icons.access_time,
-                            size: 14, color: Colors.white70),
-                        const SizedBox(width: 4),
-                        Text(
-                          DateFormat('HH:mm').format(myEvent.date),
-                          style: const TextStyle(
-                              fontSize: 14, color: Colors.white70),
-                        ),
-                      ],
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.calendar_today,
+                              size: 14, color: Colors.white70),
+                          const SizedBox(width: 4),
+                          Text(
+                            DateFormat('yyyy-MM-dd').format(myEvent.date),
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.white70),
+                          ),
+                          const SizedBox(width: 16),
+                          const Icon(Icons.access_time,
+                              size: 14, color: Colors.white70),
+                          const SizedBox(width: 4),
+                          Text(
+                            DateFormat('HH:mm').format(myEvent.date),
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.white70),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Row(
