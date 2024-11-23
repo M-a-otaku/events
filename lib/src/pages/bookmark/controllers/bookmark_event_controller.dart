@@ -315,7 +315,7 @@ class BookmarkEventController extends GetxController {
     }
   }
 
-  Future<void> onBookmark({required int eventId}) async {
+  Future<void> toggleBookmark({required int eventId}) async {
     isEventRefreshing[eventId] = true;
     isBookmarked.value = true;
     update();

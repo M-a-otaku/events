@@ -19,6 +19,7 @@ dependencies:
     path: ./custom_number_picker
   image_picker: ^0.8.7
   get_storage: ^2.1.1
+  get_cli: ^1.8.1
 
 dev_dependencies:
   flutter_test:

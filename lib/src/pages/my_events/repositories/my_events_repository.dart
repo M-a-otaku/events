@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../../../infrastructure/commons/url_repository.dart';
 import '../../shared/local_storage_keys.dart';
+import '../models/events_user_dto.dart';
 import '../models/my_events_model.dart';
 
 class MyEventsRepository {
@@ -48,4 +49,30 @@ class MyEventsRepository {
       return Left(e.toString());
     }
   }
+
+  Future<Either<String, bool>> editBookmarked({
+    required EventsUserDto dto,
+    required int userId,
+  }) async {
+    try {
+      final url = UrlRepository.getUserById(userId: userId);
+      final response = await http.patch(
+        url,
+        body: json.encode(dto.toJson()),
+        headers: {
+          'Content-type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+      if (response.statusCode != 200) {
+        return const Left(
+          'Cant add this event to bookmarks',
+        );
+      }
+      return const Right(true);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
 }

@@ -5,12 +5,15 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../infrastructure/routes/route_names.dart';
 import '../../shared/local_storage_keys.dart';
+import '../models/events_user_dto.dart';
 import '../models/my_events_model.dart';
 import '../repositories/my_events_repository.dart';
 
 class MyEventsController extends GetxController {
   final MyEventsRepository _repository = MyEventsRepository();
   RxList<MyEventsModel> myEvents = RxList();
+  RxList<int> bookmarkedEvents = <int>[].obs;
+
   RxBool isLoading = false.obs;
   RxBool isRetry = false.obs;
   RxBool isRemoving = false.obs;
@@ -36,6 +39,38 @@ class MyEventsController extends GetxController {
     });
   }
 
+  void showDeleteConfirmationDialog(
+      BuildContext context, VoidCallback onConfirm) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text("Delete Event"),
+          content: const Text("Are you sure you want to delete this event?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: const Text("No"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                onConfirm();
+              },
+              child: const Text(
+                "Yes",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
 
   Map<String, String> _buildQueryParameters({
     bool? ascending,
@@ -59,6 +94,58 @@ class MyEventsController extends GetxController {
       if (searchQuery != null) 'title_like': query.value,
       if (userId != null) 'userId': userId.toString(),
     };
+  }
+
+
+  Future<void> toggleBookmark(int eventId) async {
+
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
+
+    if (userId == -1) {
+      Get.showSnackbar(
+        GetSnackBar(
+          message: "User not logged in",
+          backgroundColor: Colors.redAccent.withOpacity(0.2),
+          duration: const Duration(seconds: 5),
+        ),
+      );
+      return;
+    }
+
+    final String key = 'bookmarkedIds_$userId';
+    List<String> bookmarkedIds = preferences.getStringList(key) ?? [];
+
+    if (bookmarkedIds.contains(eventId.toString())) {
+      bookmarkedIds.remove(eventId.toString());
+    } else {
+      bookmarkedIds.add(eventId.toString());
+    }
+
+    await preferences.setStringList(key, bookmarkedIds);
+
+    bookmarkedEvents.clear();
+    bookmarkedEvents.addAll(bookmarkedIds.map(int.parse).toList());
+
+    final EventsUserDto dto = EventsUserDto(bookmark: bookmarkedIds);
+    final result = await _repository.editBookmarked(dto: dto, userId: userId);
+
+    result.fold(
+          (exception) {
+        Get.showSnackbar(
+          GetSnackBar(
+            messageText: Text(
+              exception,
+              style: const TextStyle(color: Colors.black, fontSize: 14),
+            ),
+            backgroundColor: Colors.redAccent.withOpacity(0.2),
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      },
+          (_) {
+      },
+    );
   }
 
 
@@ -308,9 +395,14 @@ class MyEventsController extends GetxController {
     isEventRemoving[eventId] = true;
 
     int index = myEvents.indexWhere((event) => event.id == eventId);
+    final isBookmarked = await _checkIfEventIsBookmarked(eventId);
+    if (isBookmarked) {
+      await _removeEventFromBookmarks(eventId);
+    }
+
     final result = await _repository.deleteEventById(eventId: eventId);
     result.fold(
-      (exception) {
+          (exception) {
         isEventRemoving[eventId] = false;
         Get.showSnackbar(
           GetSnackBar(
@@ -323,8 +415,10 @@ class MyEventsController extends GetxController {
           ),
         );
       },
-      (_) {
-        myEvents.removeAt(index);
+          (_) {
+        if (index != -1) {
+          myEvents.removeAt(index);
+        }
         isEventRemoving[eventId] = false;
         Get.showSnackbar(
           GetSnackBar(
@@ -336,9 +430,60 @@ class MyEventsController extends GetxController {
             duration: const Duration(seconds: 5),
           ),
         );
+        toggleBookmark(eventId);
       },
     );
   }
+
+  Future<bool> _checkIfEventIsBookmarked(int eventId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final List<int> bookmarkedEventIds = prefs.getStringList('bookmarkedEventIds')?.map((e) => int.parse(e)).toList() ?? [];
+    return bookmarkedEventIds.contains(eventId);
+  }
+
+  Future<void> _removeEventFromBookmarks(int eventId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final List<int> bookmarkedEventIds = prefs.getStringList('bookmarkedEventIds')?.map((e) => int.parse(e)).toList() ?? [];
+    bookmarkedEventIds.remove(eventId);
+    await prefs.setStringList('bookmarkedEventIds', bookmarkedEventIds.map((e) => e.toString()).toList());
+  }
+
+
+  // Future<void> removeEvent({required int eventId}) async {
+  //   isEventRemoving[eventId] = true;
+  //
+  //   int index = myEvents.indexWhere((event) => event.id == eventId);
+  //   final result = await _repository.deleteEventById(eventId: eventId);
+  //   result.fold(
+  //     (exception) {
+  //       isEventRemoving[eventId] = false;
+  //       Get.showSnackbar(
+  //         GetSnackBar(
+  //           messageText: Text(
+  //             exception,
+  //             style: const TextStyle(color: Colors.black, fontSize: 14),
+  //           ),
+  //           backgroundColor: Colors.redAccent.withOpacity(0.2),
+  //           duration: const Duration(seconds: 5),
+  //         ),
+  //       );
+  //     },
+  //     (_) {
+  //       myEvents.removeAt(index);
+  //       isEventRemoving[eventId] = false;
+  //       Get.showSnackbar(
+  //         GetSnackBar(
+  //           messageText: const Text(
+  //             "Event deleted successfully",
+  //             style: TextStyle(color: Colors.black, fontSize: 14),
+  //           ),
+  //           backgroundColor: Colors.greenAccent.withOpacity(0.2),
+  //           duration: const Duration(seconds: 5),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   void onInit() {

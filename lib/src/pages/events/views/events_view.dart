@@ -9,7 +9,7 @@ class EventsView extends GetView<EventsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.grey[200],
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
       appBar: _appBar(context),
       body: RefreshIndicator(
@@ -22,52 +22,123 @@ class EventsView extends GetView<EventsController> {
     );
   }
 
-  Widget _body(context) {
+  Widget _body(BuildContext context) {
     if (controller.isRetry.value) {
       return _retry();
+    }
+    if (controller.events.isEmpty && !controller.isLoading.value) {
+      return _emptyState(context);
     }
     return _success(context);
   }
 
   Widget _retry() {
     return Center(
-      child: IconButton(
-        tooltip: "press to refresh",
-        hoverColor: Colors.blueAccent,
-        highlightColor: Colors.white,
-        onPressed: controller.getEvents,
-        icon: const Icon(Icons.reset_tv),
-        iconSize: 35,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            "Failed to load events.",
+            style: TextStyle(fontSize: 16, color: Colors.black54),
+          ),
+          const SizedBox(height: 8),
+          IconButton(
+            tooltip: "Press to refresh",
+            hoverColor: Colors.blueAccent,
+            highlightColor: Colors.white,
+            onPressed: controller.getEvents,
+            icon: const Icon(Icons.refresh, size: 32, color: Colors.blue),
+          ),
+        ],
       ),
     );
   }
 
-  AppBar _appBar(context) => AppBar(
-        backgroundColor: Colors.grey,
-        centerTitle: true,
-        title: const Text("home"),
-        leading: IconButton(
-          icon: const Icon(Icons.logout),
-          hoverColor: Colors.blueAccent,
-          tooltip: "Press To Logout",
-          color: Colors.white,
-          onPressed: controller.logout,
-        ),
-      );
+  Widget _emptyState(context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0 , horizontal: 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.filter_alt, color: Colors.blue),
+                  tooltip: "Sort and Filter",
+                  onPressed: () {
+                    controller.showSortAndFilterDialog(
+                      context,
+                      initialFilterFutureEvents:
+                      controller.filterFutureEvents,
+                      initialFilterWithCapacity:
+                      controller.filterWithCapacity,
+                      initialMaxPrice: controller.savedMaxPrice,
+                      initialMinPrice: controller.savedMinPrice,
+                      initialSortOrder: controller.sortOrder,
+                    );
+                  },
+                ),
+                Expanded(
+                  child: TextField(
+                    onChanged: (searchQuery) {
+                      controller.updateSearchQuery(searchQuery);
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Search by title',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      prefixIcon: const Icon(Icons.search),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 25),
 
-  Widget _success(context) => Padding(
+            const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.event, size: 64, color: Colors.grey),
+                SizedBox(height: 16),
+                Text(
+                  "No events available.",
+                  style: TextStyle(fontSize: 18, color: Colors.black54),
+                ),
+                SizedBox(height: 8),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  AppBar _appBar(BuildContext context) => AppBar(
+    backgroundColor: Colors.blueAccent,
+    centerTitle: true,
+    title: const Text("Events"),
+    leading: IconButton(
+      icon: const Icon(Icons.logout),
+      hoverColor: Colors.blueAccent,
+      tooltip: "Press To Logout",
+      color: Colors.white,
+      onPressed: controller.logout,
+    ),
+  );
+
+  Widget _success(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
     child: Obx(
           () => Stack(
         children: [
-          // محتوای اصلی صفحه
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.filter_alt),
+                    icon: const Icon(Icons.filter_alt, color: Colors.blue),
                     tooltip: "Sort and Filter",
                     onPressed: () {
                       controller.showSortAndFilterDialog(
@@ -87,10 +158,12 @@ class EventsView extends GetView<EventsController> {
                       onChanged: (searchQuery) {
                         controller.updateSearchQuery(searchQuery);
                       },
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Search by title',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.search),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        prefixIcon: const Icon(Icons.search),
                       ),
                     ),
                   ),
@@ -113,12 +186,12 @@ class EventsView extends GetView<EventsController> {
                       controller.events[index].id,
                     ),
                   ),
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  separatorBuilder: (_, __) =>
+                  const SizedBox(height: 12),
                 ),
               ),
             ],
           ),
-          // نمایش لودینگ در مرکز صفحه
           if (controller.isLoading.value)
             const Center(
               child: CircularProgressIndicator(),

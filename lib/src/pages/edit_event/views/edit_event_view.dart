@@ -29,6 +29,7 @@ class EditEventView extends GetView<EditEventController> {
       title: const Text("Edit Event"),
       centerTitle: true,
       automaticallyImplyLeading: false,
+      backgroundColor: Colors.blueAccent,
     );
   }
 
@@ -55,18 +56,7 @@ class EditEventView extends GetView<EditEventController> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Obx(() {
-                if (controller.imageBase64.value != null) {
-                  return Image.memory(
-                    base64Decode(controller.imageBase64.value!),
-                    width: 333,
-                    height: 333,
-                  );
-                } else {
-                  const SizedBox(height: 32);
-                  return const Text("No image selected");
-                }
-              }),
+              _imageSection(),
               const SizedBox(height: 32),
               _imagePicker(),
               const SizedBox(height: 32),
@@ -78,12 +68,7 @@ class EditEventView extends GetView<EditEventController> {
               const SizedBox(height: 16),
               _capacity(),
               const SizedBox(height: 16),
-              Obx(
-                () => Text(
-                  "${controller.selectedTime2.value.hour}:${controller.selectedTime2.value.minute}",
-                  style: const TextStyle(fontSize: 25),
-                ),
-              ),
+              _timeSelector(),
               ElevatedButton(
                 onPressed: () {
                   if (controller.participants.value > 0) {
@@ -95,80 +80,47 @@ class EditEventView extends GetView<EditEventController> {
                 },
                 child: const Text('Select Time'),
               ),
-
               const SizedBox(height: 16),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Obx(() => DropdownButton<String>(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16, horizontal: 8),
-                        hint: const Text("year"),
-                        value: controller.selectedYear.value.isEmpty
-                            ? null
-                            : controller.selectedYear.value,
-                        items: controller.years.map((year) {
-                          return DropdownMenuItem(
-                            value: year,
-                            child: Text(year),
-                          );
-                        }).toList(),
-                        onChanged: controller.participants.value == 0
-                            ? (value) =>
-                                controller.selectedYear.value = value ?? ''
-                            : (value) {
-                                controller.showSnackbar(
-                                    "date cannot be changed because participants > 0");
-                              },
-                      )),
-                  Obx(() => DropdownButton<String>(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16, horizontal: 8),
-                        hint: const Text("month"),
-                        value: controller.selectedMonth.value.isEmpty
-                            ? null
-                            : controller.selectedMonth.value,
-                        items: controller.months.map((month) {
-                          return DropdownMenuItem(
-                            value: month,
-                            child: Text(month),
-                          );
-                        }).toList(),
-                        onChanged: controller.participants.value == 0
-                            ? (value) =>
-                                controller.selectedMonth.value = value ?? ''
-                            : (value) {
-                                controller.showSnackbar(
-                                    "date cannot be changed because participants > 0");
-                              },
-                      )),
-                  Obx(() => DropdownButton<String>(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16, horizontal: 8),
-                        hint: const Text("day"),
-                        value: controller.selectedDay.value.isEmpty
-                            ? null
-                            : controller.selectedDay.value,
-                        items: controller.days.map((day) {
-                          return DropdownMenuItem(
-                            value: day,
-                            child: Text(day),
-                          );
-                        }).toList(),
-                        onChanged: controller.participants.value == 0
-                            ? (value) =>
-                                controller.selectedDay.value = value ?? ''
-                            : (value) {
-                          controller.showSnackbar(
-                              "date cannot be changed because participants > 0");
-                              },
-                      )),
-                ],
-              ),
-              // _datePicker(context)
-              // Obx(() => _register()),
+              _yearMonthDaySelectors(),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _imageSection() {
+    return Obx(() {
+      if (controller.imageBase64.value != null) {
+        return Image.memory(
+          base64Decode(controller.imageBase64.value!),
+          width: 333,
+          height: 333,
+        );
+      } else {
+        return const Center(child: Text("No image selected"));
+      }
+    });
+  }
+
+  Widget _imagePicker() {
+    return InkWell(
+      onTap: controller.isLoading.value ? null : controller.pickImage,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: controller.isLoading.value ? Colors.grey : Colors.blueAccent,
+        ),
+        child: const Text(
+          "Pick Image",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            color: Colors.white,
           ),
         ),
       ),
@@ -178,18 +130,15 @@ class EditEventView extends GetView<EditEventController> {
   Widget _title() {
     return TextFormField(
       maxLength: 20,
-      readOnly: (controller.isLoading.value ? true : false),
+      readOnly: controller.isLoading.value,
       controller: controller.titleController,
       autofocus: true,
       textInputAction: TextInputAction.next,
       validator: controller.validate,
       decoration: InputDecoration(
         counter: const Offstage(),
-        prefixIcon: const Icon(
-          Icons.person_pin,
-          color: Colors.grey,
-        ),
-        labelText: "title",
+        prefixIcon: const Icon(Icons.title, color: Colors.grey),
+        labelText: "Title",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -200,21 +149,15 @@ class EditEventView extends GetView<EditEventController> {
   Widget _description() {
     return TextFormField(
       maxLength: 50,
-      readOnly: (controller.isLoading.value ? true : false),
-      // inputFormatters: [
-      //   FilteringTextInputFormatter.deny(RegExp(r'\s')),
-      // ],
+      readOnly: controller.isLoading.value,
       controller: controller.descriptionController,
       autofocus: true,
       textInputAction: TextInputAction.next,
       validator: controller.validate,
       decoration: InputDecoration(
         counter: const Offstage(),
-        prefixIcon: const Icon(
-          Icons.person_pin,
-          color: Colors.grey,
-        ),
-        labelText: "description",
+        prefixIcon: const Icon(Icons.description, color: Colors.grey),
+        labelText: "Description",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -225,18 +168,8 @@ class EditEventView extends GetView<EditEventController> {
   Widget _price() {
     return TextFormField(
       maxLength: 4,
-      // readOnly:
       keyboardType: TextInputType.number,
-      readOnly: controller.participants.value > 0,
-      onTap: () {
-        if (controller.participants.value > 0) {
-          controller
-              .showSnackbar("Price cannot be changed because participants > 0");
-        }
-      },
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-      ],
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       controller: controller.priceController,
       textInputAction: TextInputAction.next,
       validator: controller.validatePrice,
@@ -254,16 +187,7 @@ class EditEventView extends GetView<EditEventController> {
     return TextFormField(
       maxLength: 6,
       keyboardType: TextInputType.number,
-      readOnly: controller.participants.value > 0,
-      onTap: () {
-        if (controller.participants.value > 0) {
-          controller.showSnackbar(
-              "Capacity cannot be changed because participants > 0");
-        }
-      },
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-      ],
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       controller: controller.capacityController,
       autofocus: true,
       textInputAction: TextInputAction.next,
@@ -278,27 +202,70 @@ class EditEventView extends GetView<EditEventController> {
     );
   }
 
-  Widget _imagePicker() {
-    return InkWell(
-      onTap: (controller.isLoading.value) ? null : controller.pickImage,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: (controller.isLoading.value) ? Colors.grey : Colors.blueAccent,
-        ),
-        child: const Text(
-          "Pick Image",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            color: Colors.white,
-          ),
-        ),
+  Widget _timeSelector() {
+    return Obx(
+          () => Text(
+        "${controller.selectedTime2.value.hour}:${controller.selectedTime2.value.minute}",
+        style: const TextStyle(fontSize: 25),
       ),
     );
+  }
+
+  Widget _yearMonthDaySelectors() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _yearDropdown(),
+        const SizedBox(width: 8),
+        _monthDropdown(),
+        const SizedBox(width: 8),
+        _dayDropdown(),
+      ],
+    );
+  }
+
+  Widget _yearDropdown() {
+    return Obx(() => DropdownButton<String>(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+      hint: const Text("Year"),
+      value: controller.selectedYear.value.isEmpty ? null : controller.selectedYear.value,
+      items: controller.years.map((year) {
+        return DropdownMenuItem(
+          value: year,
+          child: Text(year),
+        );
+      }).toList(),
+      onChanged: (value) => controller.selectedYear.value = value ?? '',
+    ));
+  }
+
+  Widget _monthDropdown() {
+    return Obx(() => DropdownButton<String>(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+      hint: const Text("Month"),
+      value: controller.selectedMonth.value.isEmpty ? null : controller.selectedMonth.value,
+      items: controller.months.map((month) {
+        return DropdownMenuItem(
+          value: month,
+          child: Text(month),
+        );
+      }).toList(),
+      onChanged: (value) => controller.selectedMonth.value = value ?? '',
+    ));
+  }
+
+  Widget _dayDropdown() {
+    return Obx(() => DropdownButton<String>(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+      hint: const Text("Day"),
+      value: controller.selectedDay.value.isEmpty ? null : controller.selectedDay.value,
+      items: controller.days.map((day) {
+        return DropdownMenuItem(
+          value: day,
+          child: Text(day),
+        );
+      }).toList(),
+      onChanged: (value) => controller.selectedDay.value = value ?? '',
+    ));
   }
 }
