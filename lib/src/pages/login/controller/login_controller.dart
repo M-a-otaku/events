@@ -71,9 +71,9 @@ class LoginController extends GetxController {
         isLoading.value = false;
         SharedPreferences preferences = await SharedPreferences.getInstance();
         if (rememberMe.value) {
-          preferences.setBool(LocalKeys.rememberMe, true);
+          preferences.setBool(LocalStorageKeys.rememberMe, true);
         }
-        preferences.setInt(LocalKeys.userId, response);
+        preferences.setInt(LocalStorageKeys.userId, response);
         Get.offNamed(RouteNames.home);
       },
     );

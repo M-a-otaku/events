@@ -201,7 +201,7 @@ class EditEventController extends GetxController {
         eventId: eventId,
         dto: EditEventDto(
           image: imageBase64.value,
-            userId: preferences.getInt(LocalKeys.userId) ?? -1,
+            userId: preferences.getInt(LocalStorageKeys.userId) ?? -1,
             filled: filled.value,
             title: titleController.text,
             description: descriptionController.text,

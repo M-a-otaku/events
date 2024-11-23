@@ -11,5 +11,7 @@ class App extends StatelessWidget {
     theme: ThemeData(colorSchemeSeed: Colors.blueAccent),
     initialRoute: event.RouteNames.splash,
     getPages: event.RoutePages.pages,
+    locale: const Locale('en','Us'),
+    translationsKeys: event.LocalizationService.keys,
   );
 }

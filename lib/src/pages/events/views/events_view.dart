@@ -126,6 +126,16 @@ class EventsView extends GetView<EventsController> {
       color: Colors.white,
       onPressed: controller.logout,
     ),
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.language_outlined,
+            color: Colors.white,
+            size: 24,
+          ),
+          onPressed:controller.onChangeLanguage,
+        )
+      ]
   );
 
   Widget _success(BuildContext context) => Padding(

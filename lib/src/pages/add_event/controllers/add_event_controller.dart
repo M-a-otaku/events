@@ -178,7 +178,7 @@ class AddEventController extends GetxController {
       date: date ,
       capacity: capacity,
       price: price,
-      userId: preferences.getInt(LocalKeys.userId) ?? -1,
+      userId: preferences.getInt(LocalStorageKeys.userId) ?? -1,
       participants: 0,
       filled: false,
     );

@@ -48,7 +48,7 @@ class BookmarkEventRepository {
     try {
       // دسترسی به userId از SharedPreferences
       final SharedPreferences preferences = await SharedPreferences.getInstance();
-      final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
+      final int userId = preferences.getInt(LocalStorageKeys.userId) ?? -1;
 
       if (userId == -1) {
         return const Right([]); // اگر userId نامعتبر بود

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:events/generated/locales.g.dart';
 import 'package:events/src/pages/bookmark/controllers/bookmark_event_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,8 +33,8 @@ class EventsController extends GetxController {
   double savedMinPrice = 0; // ذخیره مقدار انتخاب‌شده
   double savedMaxPrice = 9999;
 
-
   Timer? _debounce;
+
   void updateSearchQuery(String searchQuery) {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(seconds: 1), () {
@@ -44,7 +45,27 @@ class EventsController extends GetxController {
     });
   }
 
-
+  void onChangeLanguage() async {
+    isLoading.value = true;
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String? localeKey = pref.getString(LocalStorageKeys.languageLocale);
+    if (localeKey == null) {
+      localeKey = 'fa';
+      pref.setString(LocalStorageKeys.languageLocale, 'fa');
+    } else {
+      if (localeKey == 'fa') {
+        localeKey = 'en';
+        pref.setString(LocalStorageKeys.languageLocale, 'en');
+      } else if (localeKey == 'en') {
+        localeKey = 'fa';
+        pref.setString(LocalStorageKeys.languageLocale, 'fa');
+      }
+    }
+    isLoading.value = false;
+    Get.updateLocale(Locale(
+      localeKey,
+    ));
+  }
 
   Future<void> goToEvent(int eventId) async {
     await Get.toNamed(
@@ -123,13 +144,12 @@ class EventsController extends GetxController {
     );
   }
 
-
   Future<void> toggleBookmark(int eventId) async {
     isEventRefreshing[eventId] = true;
     isBookmarked.value = true;
 
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
+    final int userId = preferences.getInt(LocalStorageKeys.userId) ?? -1;
 
     if (userId == -1) {
       Get.showSnackbar(
@@ -217,7 +237,7 @@ class EventsController extends GetxController {
 
   void _loadUserId() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
+    final int userId = preferences.getInt(LocalStorageKeys.userId) ?? -1;
     print("Loaded userId from SharedPreferences: $userId");
   }
 
@@ -318,7 +338,7 @@ class EventsController extends GetxController {
                   : [
                       TextButton(
                         onPressed: () => Navigator.pop(context),
-                        child: const Text("Cancel"),
+                        child: Text(LocaleKeys.filter_Dialog_cancel.tr),
                       ),
                       TextButton(
                         onPressed: () {
@@ -337,7 +357,7 @@ class EventsController extends GetxController {
                             'maxPrice': 9999,
                           });
                         },
-                        child: const Text("Reset"),
+                        child: Text(LocaleKeys.filter_Dialog_reset.tr),
                       ),
                       ElevatedButton(
                         onPressed: () async {
@@ -357,7 +377,6 @@ class EventsController extends GetxController {
                             maxPrice: priceRange.end.toInt(),
                           );
 
-                          // ذخیره مقادیر انتخاب‌شده
                           savedMinPrice = priceRange.start;
                           savedMaxPrice = priceRange.end;
 
@@ -369,7 +388,7 @@ class EventsController extends GetxController {
                             'maxPrice': priceRange.end.toInt(),
                           });
                         },
-                        child: const Text("Apply"),
+                        child: Text(LocaleKeys.filter_Dialog_apply.tr),
                       ),
                     ],
             );
@@ -389,7 +408,7 @@ class EventsController extends GetxController {
 
   void _loadBookmarkedEvents() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
+    final int userId = preferences.getInt(LocalStorageKeys.userId) ?? -1;
 
     if (userId == -1) {
       bookmarkedEvents.clear();

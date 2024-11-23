@@ -100,7 +100,7 @@ class MyEventsController extends GetxController {
   Future<void> toggleBookmark(int eventId) async {
 
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
+    final int userId = preferences.getInt(LocalStorageKeys.userId) ?? -1;
 
     if (userId == -1) {
       Get.showSnackbar(
@@ -317,7 +317,7 @@ class MyEventsController extends GetxController {
     isLoading.value = true;
     isRetry.value = false;
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
+    final int userId = preferences.getInt(LocalStorageKeys.userId) ?? -1;
 
     final queryParameters = _buildQueryParameters(
         ascending: ascending,

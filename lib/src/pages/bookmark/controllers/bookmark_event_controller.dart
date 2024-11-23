@@ -271,7 +271,7 @@ class BookmarkEventController extends GetxController {
     isLoading.value = true;
 
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
+    final int userId = preferences.getInt(LocalStorageKeys.userId) ?? -1;
 
     final queryParameters = _buildQueryParameters(
         ascending: ascending,
@@ -321,7 +321,7 @@ class BookmarkEventController extends GetxController {
     update();
 
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    final int userId = preferences.getInt(LocalKeys.userId) ?? -1;
+    final int userId = preferences.getInt(LocalStorageKeys.userId) ?? -1;
 
     final String key = 'bookmarkedIds_$userId';
     List<String> bookmarkedIds = preferences.getStringList(key) ?? [];
