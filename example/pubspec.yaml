@@ -13,6 +13,7 @@ dependencies:
   get: ^4.6.6
   events:
     path: ../
+  shared_preferences: ^2.3.3
 
 
 dev_dependencies:

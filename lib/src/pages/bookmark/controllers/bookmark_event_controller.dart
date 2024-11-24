@@ -16,7 +16,6 @@ class BookmarkEventController extends GetxController {
   var isEventRefreshing = <int, bool>{}.obs;
   RxBool isBookmarked = false.obs;
 
-  // List bookmarkedIds = [];
 
 
   var query = ''.obs;
@@ -37,7 +36,6 @@ class BookmarkEventController extends GetxController {
       isLoading.value = true;
       query.value = searchQuery;
       getBookmarked();
-      // performSearch(searchQuery);
     });
   }
 

@@ -194,7 +194,6 @@ class MyEventsWidget extends GetView<MyEventsController> {
                             : SystemMouseCursors.grab,
                     child: Container(
                       padding: const EdgeInsets.all(8),
-                      // محدوده کلیک را بزرگ می‌کند
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                       ),

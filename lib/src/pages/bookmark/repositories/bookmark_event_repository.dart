@@ -46,15 +46,10 @@ class BookmarkEventRepository {
 
   Future<Either<String, List<EventModel>>> getBookmarkedEvents() async {
     try {
-      // دسترسی به userId از SharedPreferences
       final SharedPreferences preferences = await SharedPreferences.getInstance();
       final int userId = preferences.getInt(LocalStorageKeys.userId) ?? -1;
 
-      if (userId == -1) {
-        return const Right([]); // اگر userId نامعتبر بود
-      }
 
-      // ساخت URL برای دریافت bookmarked-events
       final url = Uri.http(
         'localhost:3000',
         'users/$userId/bookmark',

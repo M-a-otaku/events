@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:events/generated/locales.g.dart';
-import 'package:events/src/pages/bookmark/controllers/bookmark_event_controller.dart';
+import '../../../../generated/locales.g.dart';
+import '../../bookmark/controllers/bookmark_event_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,7 +30,7 @@ class EventsController extends GetxController {
   bool filterFutureEvents = false;
   bool filterWithCapacity = false;
   String? sortOrder;
-  double savedMinPrice = 0; // ذخیره مقدار انتخاب‌شده
+  double savedMinPrice = 0;
   double savedMaxPrice = 9999;
 
   Timer? _debounce;
@@ -41,7 +41,6 @@ class EventsController extends GetxController {
       isLoading.value = true;
       query.value = searchQuery;
       getEvents();
-      // performSearch(searchQuery);
     });
   }
 
@@ -62,9 +61,7 @@ class EventsController extends GetxController {
       }
     }
     isLoading.value = false;
-    Get.updateLocale(Locale(
-      localeKey,
-    ));
+    Get.updateLocale(Locale(localeKey));
   }
 
   Future<void> goToEvent(int eventId) async {

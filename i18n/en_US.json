@@ -3,7 +3,8 @@
     "cancel": "Cancel",
     "apply": "Apply",
     "reset": "Reset",
-    "only_future": "Only future Events"
+    "only_future": "Only future Events",
+    "sort_filter": "Sort and Filter"
   },
   "login_page": {
     "welcome": "Welcome",
@@ -27,5 +28,13 @@
     "register": "Register",
     "or": "Or",
     "back_login": "Back To Login"
+  },
+  "event_page": {
+    "events": "Events",
+    "search": "Search by Title",
+    "retry": "Failed to Load Events",
+    "refresh": "Press to Refresh",
+    "empty": "No Events Available",
+    "logout": "Press to Logout"
   }
 }

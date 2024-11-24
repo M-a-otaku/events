@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../controllers/my_events_controller.dart';
 import 'widgets/my_events_widget.dart';
 

@@ -1,9 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:either_dart/either.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../../../infrastructure/commons/url_repository.dart';
-import '../../shared/local_storage_keys.dart';
 import '../models/events_model.dart';
 import '../models/events_user_dto.dart';
 
@@ -13,7 +11,6 @@ class EventsRepository {
     required Map<String, dynamic> queryParameters,
   }) async {
     try {
-      // List<EventsModel> events = [];
       final response = await http.get(
         Uri.parse('http://localhost:3000/events')
             .replace(queryParameters: queryParameters),

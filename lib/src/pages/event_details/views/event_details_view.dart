@@ -10,6 +10,15 @@ class EventDetailsView extends GetView<EventDetailsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          hoverColor: Colors.white,
+          tooltip: "Press To go back",
+          color: Colors.blueAccent,
+          onPressed: Get.back,
+        ),
+      ),
       body: RefreshIndicator(
         onRefresh: controller.onRefresh,
         child: Obx(() => _body(context)),
@@ -47,7 +56,6 @@ class EventDetailsView extends GetView<EventDetailsController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Event image or default icon
           Hero(
             tag: 'event_${controller.event.value.id}_${UniqueKey()}',
             child: (controller.event.value.image != null &&
@@ -64,13 +72,11 @@ class EventDetailsView extends GetView<EventDetailsController> {
             ),
           ),
 
-          // Event information
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title and description
                 Text(
                   controller.event.value.title ?? "Event Title",
                   style: const TextStyle(
@@ -89,7 +95,6 @@ class EventDetailsView extends GetView<EventDetailsController> {
                 ),
                 const Divider(height: 20, color: Colors.grey),
 
-                // Price and date
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -113,7 +118,6 @@ class EventDetailsView extends GetView<EventDetailsController> {
                 ),
                 const SizedBox(height: 10),
 
-                // Capacity
                 Text(
                   "Remaining Capacity  :  ${controller.event.value.capacity - (controller.event.value.participants ?? 0)}",
                   style: const TextStyle(
@@ -124,7 +128,6 @@ class EventDetailsView extends GetView<EventDetailsController> {
                 ),
                 const SizedBox(height: 20),
 
-                // Book Now and Submit buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

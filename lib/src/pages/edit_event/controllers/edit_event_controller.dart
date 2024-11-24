@@ -121,13 +121,11 @@ class EditEventController extends GetxController {
         int.parse(selectedYear.value),
         int.parse(selectedMonth.value),
         int.parse(selectedDay.value),
-        selectedTime2.value.hour, // اضافه کردن ساعت
-        selectedTime2.value.minute, // اضافه کردن دقیقه
+        selectedTime2.value.hour,
+        selectedTime2.value.minute,
       );
 
-      // if (date.isBefore(DateTime.now().add(const Duration(days: 1)))) {
-      //   return null;
-      // }
+
 
       if (date.isBefore(DateTime.now())) {
         return null;
@@ -175,7 +173,6 @@ class EditEventController extends GetxController {
       "Action Not Allowed",
       message,
       snackPosition: SnackPosition.BOTTOM,
-      // backgroundColor: Colors.red,
       colorText: Colors.black,
     );
   }
@@ -247,9 +244,7 @@ class EditEventController extends GetxController {
         ),
       );
     }, (right) {
-      print(isLoading.value);
       isLoading.value = false;
-      print(isLoading.value);
       selectedDay.value = right.date.day.toString();
       selectedMonth.value = right.date.month.toString();
       selectedYear.value = right.date.year.toString();

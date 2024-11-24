@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,7 +34,6 @@ class MyEventsController extends GetxController {
       isLoading.value = true;
       query.value = searchQuery;
       getEvents();
-      // performSearch(searchQuery);
     });
   }
 
@@ -449,41 +447,6 @@ class MyEventsController extends GetxController {
   }
 
 
-  // Future<void> removeEvent({required int eventId}) async {
-  //   isEventRemoving[eventId] = true;
-  //
-  //   int index = myEvents.indexWhere((event) => event.id == eventId);
-  //   final result = await _repository.deleteEventById(eventId: eventId);
-  //   result.fold(
-  //     (exception) {
-  //       isEventRemoving[eventId] = false;
-  //       Get.showSnackbar(
-  //         GetSnackBar(
-  //           messageText: Text(
-  //             exception,
-  //             style: const TextStyle(color: Colors.black, fontSize: 14),
-  //           ),
-  //           backgroundColor: Colors.redAccent.withOpacity(0.2),
-  //           duration: const Duration(seconds: 5),
-  //         ),
-  //       );
-  //     },
-  //     (_) {
-  //       myEvents.removeAt(index);
-  //       isEventRemoving[eventId] = false;
-  //       Get.showSnackbar(
-  //         GetSnackBar(
-  //           messageText: const Text(
-  //             "Event deleted successfully",
-  //             style: TextStyle(color: Colors.black, fontSize: 14),
-  //           ),
-  //           backgroundColor: Colors.greenAccent.withOpacity(0.2),
-  //           duration: const Duration(seconds: 5),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 
   @override
   void onInit() {

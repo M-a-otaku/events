@@ -64,18 +64,18 @@ class EventsWidget extends GetView<EventsController> {
                 ),
               ),
               const SizedBox(width: 16),
-              Expanded(  // استفاده از Expanded برای جلوگیری از overflow
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(  // استفاده از Expanded برای عنوان که طولانی نشود
+                        Expanded(
                           child: Text(
                             event.title,
                             maxLines: 1,
-                            overflow: TextOverflow.ellipsis,  // برش متن طولانی
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -97,7 +97,7 @@ class EventsWidget extends GetView<EventsController> {
                     Text(
                       event.description,
                       maxLines: 2,
-                      overflow: TextOverflow.ellipsis,  // برش متن طولانی
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.white70,

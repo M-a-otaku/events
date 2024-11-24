@@ -27,7 +27,7 @@ class AddEventView extends GetView<AddEventController> {
         : FloatingActionButton(
       onPressed: controller.onSubmit,
       child: const Icon(Icons.check),
-      backgroundColor: Colors.blueAccent, // added a color for visibility
+      backgroundColor: Colors.blueAccent,
     );
   }
 
@@ -36,7 +36,7 @@ class AddEventView extends GetView<AddEventController> {
       title: const Text("Add Event"),
       centerTitle: true,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.blueAccent, // added color for consistency
+      backgroundColor: Colors.blueAccent,
     );
   }
 
