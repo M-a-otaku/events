@@ -1,3 +1,4 @@
+import 'package:events/generated/locales.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -27,17 +28,17 @@ class LoginView extends GetView<LoginController> {
                   ),
                   child: Hero(tag: _icon(), child: _icon()),
                 ),
-                const Padding(
+                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Welcome",
+                        LocaleKeys.login_page_welcome.tr,
                         style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        "Sign in to continue.",
+                        LocaleKeys.login_page_sign_in.tr,
                         style: TextStyle(fontSize: 20),
                       ),
                     ],
@@ -102,7 +103,7 @@ class LoginView extends GetView<LoginController> {
                   ),
                 ),
                 const SizedBox(width: 6),
-                const Text("Remember Me"),
+                 Text(LocaleKeys.login_page_remember_me.tr),
               ],
             ),
             const SizedBox(height: 16),
@@ -120,11 +121,11 @@ class LoginView extends GetView<LoginController> {
     );
   }
 
-  Widget _or() => const Row(
+  Widget _or() =>  Row(
     children: [
       Expanded(child: Divider()),
       Text(
-        "   Or   ",
+        "   ${LocaleKeys.register_page_or.tr}   ",
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
       ),
       Expanded(child: Divider()),
@@ -142,8 +143,8 @@ class LoginView extends GetView<LoginController> {
         borderRadius: BorderRadius.circular(12),
         color: (controller.isLoading.value) ? Colors.grey : Colors.blueAccent,
       ),
-      child: const Text(
-        "Login",
+      child:  Text(
+        LocaleKeys.login_page_login.tr,
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 16,
@@ -157,14 +158,14 @@ class LoginView extends GetView<LoginController> {
     onTap: (controller.isLoading.value) ? null : controller.toRegister,
     child: RichText(
       text: TextSpan(
-        text: "Don't have a account . . . ",
+        text: "",
         style: TextStyle(
           fontSize: 14,
           color: (controller.isLoading.value) ? Colors.grey : Colors.black45,
         ),
         children: <TextSpan>[
           TextSpan(
-            text: "Create One",
+            text: LocaleKeys.login_page_register.tr,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
@@ -193,7 +194,7 @@ class LoginView extends GetView<LoginController> {
         decoration: InputDecoration(
           counter: const Offstage(),
           prefixIcon: const Icon(Icons.person_pin, color: Colors.grey),
-          labelText: "username",
+          labelText: LocaleKeys.login_page_username.tr,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
       ),
@@ -223,7 +224,7 @@ class LoginView extends GetView<LoginController> {
                   : Icons.visibility_off_outlined,
             ),
           ),
-          labelText: "password",
+          labelText: LocaleKeys.login_page_password.tr,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
       ),

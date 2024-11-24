@@ -1,3 +1,4 @@
+import '../../../../generated/locales.g.dart';
 import 'widgets/register_widgets.dart';
 import 'package:flutter/services.dart';
 import '../controllers/register_controller.dart';
@@ -27,18 +28,18 @@ class RegisterView extends GetView<RegisterController> {
                           bottomRight: Radius.elliptical(70, 70))),
                   child: Hero(tag: _icon(), child: _icon()),
                 ),
-                const Padding(
+                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Welcome",
+                        LocaleKeys.register_page_welcome.tr,
                         style: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        "Please Enter Your Information.",
+                        LocaleKeys.register_page_information.tr,
                         style: TextStyle(fontSize: 20),
                       ),
                     ],
@@ -96,9 +97,9 @@ class RegisterView extends GetView<RegisterController> {
             const SizedBox(height: 16),
             _repeatPassword(),
             const SizedBox(height: 16),
-            RegisterWidgets(gender: controller.maleUserGender, title: "male"),
+            RegisterWidgets(gender: controller.maleUserGender, title: LocaleKeys.register_page_male.tr),
             RegisterWidgets(
-                gender: controller.femaleUserGender, title: "female"),
+                gender: controller.femaleUserGender, title: LocaleKeys.register_page_female.tr),
             const SizedBox(height: 16),
             Obx(() => _register()),
             const SizedBox(height: 16),
@@ -111,20 +112,22 @@ class RegisterView extends GetView<RegisterController> {
               tag: Obx(() => _login()),
               child: Obx(() => _login()),
             ),
+            const SizedBox(height: 16),
+
           ],
         ),
       ),
     );
   }
 
-  Widget _or() => (const Row(
+  Widget _or() => ( Row(
         children: [
-          Expanded(child: Divider()),
+          const Expanded(child: Divider()),
           Text(
-            "   Or   ",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+            "   ${LocaleKeys.register_page_or.tr}   ",
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
           ),
-          Expanded(child: Divider()),
+          const Expanded(child: Divider()),
         ],
       ));
 
@@ -140,8 +143,8 @@ class RegisterView extends GetView<RegisterController> {
             color:
                 (controller.isLoading.value) ? Colors.grey : Colors.blueAccent,
           ),
-          child: const Text(
-            "Register",
+          child:  Text(
+            LocaleKeys.register_page_register.tr,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
@@ -156,7 +159,7 @@ class RegisterView extends GetView<RegisterController> {
         borderRadius: BorderRadius.circular(12),
         child: RichText(
           text: TextSpan(
-              text: "Back To . . .",
+              text: "",
               style: TextStyle(
                 fontSize: 14,
                 color:
@@ -164,7 +167,7 @@ class RegisterView extends GetView<RegisterController> {
               ),
               children: <TextSpan>[
                 TextSpan(
-                  text: "  login",
+                  text: LocaleKeys.register_page_back_login.tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -190,7 +193,7 @@ class RegisterView extends GetView<RegisterController> {
           readOnly: (controller.isLoading.value ? true : false),
           decoration: InputDecoration(
             counter: const Offstage(),
-            labelText: "Firstname",
+            labelText: LocaleKeys.register_page_firstname.tr,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -211,7 +214,7 @@ class RegisterView extends GetView<RegisterController> {
           readOnly: (controller.isLoading.value ? true : false),
           decoration: InputDecoration(
             counter: const Offstage(),
-            labelText: "Firstname",
+            labelText: LocaleKeys.register_page_lastname.tr,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -236,7 +239,7 @@ class RegisterView extends GetView<RegisterController> {
         ],
         decoration: InputDecoration(
           counter: const Offstage(),
-          labelText: "username",
+          labelText: LocaleKeys.register_page_username.tr,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -268,7 +271,7 @@ class RegisterView extends GetView<RegisterController> {
               icon: Icon(controller.isPasswordVisible.value
                   ? Icons.visibility
                   : Icons.visibility_off_outlined)),
-          labelText: "password",
+          labelText: LocaleKeys.register_page_password.tr,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -297,7 +300,7 @@ class RegisterView extends GetView<RegisterController> {
               icon: Icon(controller.isRepeatPasswordVisible.value
                   ? Icons.visibility
                   : Icons.visibility_off_outlined)),
-          labelText: "repeat password",
+          labelText: LocaleKeys.register_page_repeat_password.tr,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),

@@ -1,8 +1,31 @@
 {
-  "filter_Dialog" : {
-    "cancel" : "لغو",
-    "apply" : "تایید",
-    "reset" : "حذف فیلتر ها"
+  "filter_Dialog": {
+    "cancel": "لغو",
+    "apply": "تایید",
+    "reset": "حذف فیلتر ها",
+    "only_future": "فقط ایونت های آینده"
+  },
+  "login_page": {
+    "welcome": "خوش آمدید",
+    "sign_in": "برای ادامه وارد شوید",
+    "username": "نام کاربری",
+    "password": "رمز عبور",
+    "remember_me": "مرا به خاطر بسپار",
+    "login": "ورود",
+    "register": "اکانت ندارید ؟ ثبت نام کنید"
+  },
+  "register_page": {
+    "welcome": "خوش آمدید",
+    "information": "لطفا اطلاعات خود را وارد کنید.",
+    "firstname": "نام",
+    "lastname": "نام خانوادگی",
+    "username": "نام کاربری ",
+    "password": "رمز عبور",
+    "repeat_password": "تکرار رمز عبور",
+    "male": "مرد",
+    "female": "زن",
+    "register": "ثبت نام",
+    "or": "یا",
+    "back_login": "بازگشت به صفحه ورود"
   }
-
 }

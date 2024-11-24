@@ -1,8 +1,31 @@
 {
-  "filter_Dialog" : {
-    "cancel" : "Cancel",
-    "apply" : "Apply",
-    "reset" : "Reset"
+  "filter_Dialog": {
+    "cancel": "Cancel",
+    "apply": "Apply",
+    "reset": "Reset",
+    "only_future": "Only future Events"
+  },
+  "login_page": {
+    "welcome": "Welcome",
+    "sign_in": "Sign in To Continue",
+    "username": "Username",
+    "password": "Password",
+    "remember_me": "Remember Me",
+    "login": "Login",
+    "register": "Don't have a account ? Register"
+  },
+  "register_page": {
+    "welcome": "Welcome",
+    "information": "Please Enter Your Information.",
+    "firstname": "Firstname",
+    "lastname": "Lastname",
+    "username": "Username",
+    "password": "Password",
+    "repeat_password": "Repeat Password",
+    "male": "Male",
+    "female": "Female",
+    "register": "Register",
+    "or": "Or",
+    "back_login": "Back To Login"
   }
-
 }
