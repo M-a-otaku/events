@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import '../../../../generated/locales.g.dart';
 import '../controllers/event_details_controller.dart';
 
 class EventDetailsView extends GetView<EventDetailsController> {
@@ -14,7 +15,7 @@ class EventDetailsView extends GetView<EventDetailsController> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           hoverColor: Colors.white,
-          tooltip: "Press To go back",
+          tooltip: LocaleKeys.event_details_go_back.tr,
           color: Colors.blueAccent,
           onPressed: Get.back,
         ),
@@ -37,10 +38,15 @@ class EventDetailsView extends GetView<EventDetailsController> {
 
   Widget _retry() {
     return Center(
-      child: IconButton(
-        tooltip: "Press to refresh",
-        onPressed: controller.getEventById,
-        icon: const Icon(Icons.refresh, color: Colors.blueAccent, size: 30),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            LocaleKeys.event_page_retry.tr ,
+            style: TextStyle(fontSize: 16, color: Colors.black54),
+          ),
+          const SizedBox(height: 8),
+        ],
       ),
     );
   }
@@ -119,7 +125,7 @@ class EventDetailsView extends GetView<EventDetailsController> {
                 const SizedBox(height: 10),
 
                 Text(
-                  "Remaining Capacity  :  ${controller.event.value.capacity - (controller.event.value.participants ?? 0)}",
+                  "${LocaleKeys.event_details_remaining_capacity.tr}  :  ${controller.event.value.capacity - (controller.selectedTickets.value)}",
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -128,7 +134,7 @@ class EventDetailsView extends GetView<EventDetailsController> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  "Selected Tickets: ${controller.selectedTickets.value}",
+                  "${LocaleKeys.event_details_selected_tickets.tr}  : ${controller.selectedTickets.value}",
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -159,7 +165,7 @@ class EventDetailsView extends GetView<EventDetailsController> {
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
-      child: const Text("Submit"),
+      child: Text(LocaleKeys.event_details_submit.tr),
     );
   }
 
@@ -170,7 +176,9 @@ class EventDetailsView extends GetView<EventDetailsController> {
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
-      child: const Text("Book Now"),
+      child: Text(LocaleKeys.event_details_book_now.tr),
+
     );
   }
+
 }

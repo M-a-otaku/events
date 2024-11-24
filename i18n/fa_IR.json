@@ -71,5 +71,22 @@
   },
   "bookmarked_Events": {
     "bookmarked_events": "رویداد های ذخیره شده"
+  },
+  "event_details": {
+    "select_number": "یک عدد انتخاب کنید",
+    "select_number_done": "اتمام",
+    "go_back": "برای بازگشت کلیک کنید",
+    "remaining_capacity": "ظرفیت باقی مانده ",
+    "selected_tickets": "بلیط های خریداری شده",
+    "submit": "ثبت خرید",
+    "book_now": "خرید بلیط"
+  },
+  "time_picker": {
+    "help_text": "زمان مورد نظرتون انتخاب کنید",
+    "close": "بستن",
+    "confirm": "تایید",
+    "error": "زمان قابل قبول وارد کنید",
+    "hour": "ساعت را انتخاب کنید",
+    "minute": "دقیقه را انتخاب کنید"
   }
 }

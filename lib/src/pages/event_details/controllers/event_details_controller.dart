@@ -1,3 +1,4 @@
+import '../../../../generated/locales.g.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../models/event_details_dto.dart';
@@ -35,7 +36,7 @@ class EventDetailsController extends GetxController {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text("Select a Number"),
+        title:  Text(LocaleKeys.event_details_select_number.tr),
         content: NumberPicker(
           initialValue: _selectedNumber,
           min: 0,
@@ -51,7 +52,7 @@ class EventDetailsController extends GetxController {
               selectedTickets.value = _selectedNumber;
               Navigator.of(context).pop();
             },
-            child: const Text("Done"),
+            child: Text(LocaleKeys.event_details_select_number_done.tr),
           ),
         ],
       ),
@@ -93,7 +94,6 @@ class EventDetailsController extends GetxController {
     isLoading.value = true;
     int updatedParticipants = (event.value.participants ?? 0) + _selectedNumber;
     bool fill = updatedParticipants >= event.value.capacity;
-
 
     final EventDetailsDto dto = EventDetailsDto(
       participants: updatedParticipants,

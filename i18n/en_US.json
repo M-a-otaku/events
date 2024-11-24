@@ -71,5 +71,22 @@
   },
   "bookmarked_Events": {
     "bookmarked_events": "Bookmarked Events"
+  },
+  "event_details": {
+    "select_number": "Select a Number",
+    "select_number_done": "Done",
+    "go_back": "Press to go Back",
+    "remaining_capacity": "Remaining Capacity",
+    "selected_tickets": "Selected Tickets",
+    "submit": "Submit",
+    "book_now": "Book Now"
+  },
+  "time_picker": {
+    "help_text": "Select Departure Time",
+    "close": "Close",
+    "confirm": "confirm",
+    "error": "provide valid time",
+    "hour": "ُSelect Hour",
+    "minute": "ُSelect Minute"
   }
 }

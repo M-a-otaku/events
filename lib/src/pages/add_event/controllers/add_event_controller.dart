@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import '../../../../generated/locales.g.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -68,12 +69,12 @@ class AddEventController extends GetxController {
         );
       },
       initialEntryMode: TimePickerEntryMode.dial,
-      helpText: 'Select Departure Time',
-      cancelText: 'Close',
-      confirmText: 'Confirm',
-      errorInvalidText: 'Provide valid time',
-      hourLabelText: 'Select Hour',
-      minuteLabelText: 'Select Minute',
+      helpText: LocaleKeys.time_picker_help_text.tr,
+      cancelText: LocaleKeys.time_picker_close.tr,
+      confirmText: LocaleKeys.time_picker_confirm.tr,
+      errorInvalidText: LocaleKeys.time_picker_error.tr,
+      hourLabelText: LocaleKeys.time_picker_hour.tr,
+      minuteLabelText: LocaleKeys.time_picker_minute.tr,
     );
 
     if (pickedTime != null) {

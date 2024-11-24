@@ -69,6 +69,22 @@ class LocaleKeys {
   static const my_event_delete_failed = 'my_event_delete_failed';
   static const bookmarked_Events_bookmarked_events =
       'bookmarked_Events_bookmarked_events';
+  static const event_details_select_number = 'event_details_select_number';
+  static const event_details_select_number_done =
+      'event_details_select_number_done';
+  static const event_details_go_back = 'event_details_go_back';
+  static const event_details_remaining_capacity =
+      'event_details_remaining_capacity';
+  static const event_details_selected_tickets =
+      'event_details_selected_tickets';
+  static const event_details_submit = 'event_details_submit';
+  static const event_details_book_now = 'event_details_book_now';
+  static const time_picker_help_text = 'time_picker_help_text';
+  static const time_picker_close = 'time_picker_close';
+  static const time_picker_confirm = 'time_picker_confirm';
+  static const time_picker_error = 'time_picker_error';
+  static const time_picker_hour = 'time_picker_hour';
+  static const time_picker_minute = 'time_picker_minute';
 }
 
 class Locales {
@@ -128,6 +144,19 @@ class Locales {
     'my_event_delete_success': 'Event deleted successfully',
     'my_event_delete_failed': 'can\'t deit this event',
     'bookmarked_Events_bookmarked_events': 'Bookmarked Events',
+    'event_details_select_number': 'Select a Number',
+    'event_details_select_number_done': 'Done',
+    'event_details_go_back': 'Press to go Back',
+    'event_details_remaining_capacity': 'Remaining Capacity',
+    'event_details_selected_tickets': 'Selected Tickets',
+    'event_details_submit': 'Submit',
+    'event_details_book_now': 'Book Now',
+    'time_picker_help_text': 'Select Departure Time',
+    'time_picker_close': 'Close',
+    'time_picker_confirm': 'confirm',
+    'time_picker_error': 'provide valid time',
+    'time_picker_hour': 'ُSelect Hour',
+    'time_picker_minute': 'ُSelect Minute',
   };
   static const fa_IR = {
     'filter_Dialog_cancel': 'لغو',
@@ -187,5 +216,18 @@ class Locales {
     'my_event_delete_success': 'رویدار به صورت موفقیت آمیز حذف شد',
     'my_event_delete_failed': 'نمیتوان این رویداد رو حذف کرد',
     'bookmarked_Events_bookmarked_events': 'رویداد های ذخیره شده',
+    'event_details_select_number': 'یک عدد انتخاب کنید',
+    'event_details_select_number_done': 'اتمام',
+    'event_details_go_back': 'برای بازگشت کلیک کنید',
+    'event_details_remaining_capacity': 'ظرفیت باقی مانده ',
+    'event_details_selected_tickets': 'بلیط های خریداری شده',
+    'event_details_submit': 'ثبت خرید',
+    'event_details_book_now': 'خرید بلیط',
+    'time_picker_help_text': 'زمان مورد نظرتون انتخاب کنید',
+    'time_picker_close': 'بستن',
+    'time_picker_confirm': 'تایید',
+    'time_picker_error': 'زمان قابل قبول وارد کنید',
+    'time_picker_hour': 'ساعت را انتخاب کنید',
+    'time_picker_minute': 'دقیقه را انتخاب کنید',
   };
 }
