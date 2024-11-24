@@ -14,11 +14,12 @@ class EventDetailsView extends GetView<EventDetailsController> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          hoverColor: Colors.white,
+          hoverColor: Colors.blueAccent,
           tooltip: LocaleKeys.event_details_go_back.tr,
-          color: Colors.blueAccent,
+          color: Colors.white,
           onPressed: Get.back,
-        ),
+        )
+,
       ),
       body: RefreshIndicator(
         onRefresh: controller.onRefresh,

@@ -52,7 +52,8 @@
     "change_language": "Press to Change language"
   },
   "snack_bar": {
-    "filled": "You can't but a Event that is full or Expired"
+    "filled": "You can't but a Event that is full or Expired",
+    "date": "Please choose valid date after"
   },
   "error": {
     "repository_add_bookmark": "Can't add this Event to Bookmark",
@@ -88,5 +89,21 @@
     "error": "provide valid time",
     "hour": "ُSelect Hour",
     "minute": "ُSelect Minute"
+  },
+  "validate": {
+    "numbers_empty": "please enter your amount",
+    "numbers": "please enter numbers",
+    "numbers_capacity": "Capacity cannot be 0",
+    "required": "required"
+  },
+  "add_event": {
+    "add_event": "Add Event",
+    "no_image": "No Image Selected",
+    "pick_image": "Pick Image",
+    "title": "title",
+    "description": "Description",
+    "price": "Price",
+    "capacity": "Capacity",
+    "select_time": "Select Time"
   }
 }

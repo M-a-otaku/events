@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../generated/locales.g.dart';
 import '../../shared/local_storage_keys.dart';
 import '../models/edit_event_dto.dart';
 import '../repositories/edit_event_repository.dart';
@@ -79,12 +80,12 @@ class EditEventController extends GetxController {
         );
       },
       initialEntryMode: TimePickerEntryMode.dial,
-      helpText: 'Select Departure Time',
-      cancelText: 'Close',
-      confirmText: 'Confirm',
-      errorInvalidText: 'Provide valid time',
-      hourLabelText: 'Select Hour',
-      minuteLabelText: 'Select Minute',
+      helpText: LocaleKeys.time_picker_help_text.tr,
+      cancelText: LocaleKeys.time_picker_close.tr,
+      confirmText: LocaleKeys.time_picker_confirm.tr,
+      errorInvalidText: LocaleKeys.time_picker_error.tr,
+      hourLabelText: LocaleKeys.time_picker_hour.tr,
+      minuteLabelText: LocaleKeys.time_picker_minute.tr,
     );
 
     if (pickedTime != null) {
@@ -92,7 +93,6 @@ class EditEventController extends GetxController {
         hour: pickedTime.hour,
         minute: pickedTime.minute,
       );
-
 
     }
   }
@@ -126,19 +126,17 @@ class EditEventController extends GetxController {
   }
 
   String? validate(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'This field is required';
-    }
+    if (value != null && value.isEmpty) return LocaleKeys.validate_required.tr;
     return null;
   }
 
   String? validatePrice(String? value) {
     RegExp numberRegExp = RegExp(r'\d');
     if (value != null && value.isEmpty) {
-      return 'please enter your amount';
+      return LocaleKeys.validate_numbers_empty.tr;
     } else {
       if (!numberRegExp.hasMatch(value!)) {
-        return "Please enter numbers ";
+        return LocaleKeys.validate_numbers.tr;
       } else {
         return null;
       }
@@ -148,11 +146,11 @@ class EditEventController extends GetxController {
   String? validateCapacity(String? value) {
     RegExp numberRegExp = RegExp(r'\d');
     if (value == null || value.isEmpty) {
-      return 'Please enter your amount';
+      return LocaleKeys.validate_numbers_empty.tr;
     } else if (!numberRegExp.hasMatch(value)) {
-      return "Please enter numbers only";
+      return LocaleKeys.validate_numbers.tr;
     } else if (int.tryParse(value) == 0) {
-      return "Capacity cannot be 0";
+      return LocaleKeys.validate_numbers_capacity.tr;
     } else {
       return null;  // Valid input
     }
@@ -179,7 +177,7 @@ class EditEventController extends GetxController {
     if (date == null) {
       isLoading.value = false;
       Get.showSnackbar(GetSnackBar(
-        message: "please choose valid date after tomorrow : $formattedDate .",
+        message: "${LocaleKeys.snack_bar_date.tr} : $formattedDate .",
         duration: const Duration(seconds: 2),
       ));
       return;

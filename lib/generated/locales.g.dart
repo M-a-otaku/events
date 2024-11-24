@@ -58,6 +58,7 @@ class LocaleKeys {
   static const event_page_available = 'event_page_available';
   static const event_page_change_language = 'event_page_change_language';
   static const snack_bar_filled = 'snack_bar_filled';
+  static const snack_bar_date = 'snack_bar_date';
   static const error_repository_add_bookmark = 'error_repository_add_bookmark';
   static const error_error = 'error_error';
   static const bottom_nav_bar_home = 'bottom_nav_bar_home';
@@ -85,6 +86,18 @@ class LocaleKeys {
   static const time_picker_error = 'time_picker_error';
   static const time_picker_hour = 'time_picker_hour';
   static const time_picker_minute = 'time_picker_minute';
+  static const validate_numbers_empty = 'validate_numbers_empty';
+  static const validate_numbers = 'validate_numbers';
+  static const validate_numbers_capacity = 'validate_numbers_capacity';
+  static const validate_required = 'validate_required';
+  static const add_event_add_event = 'add_event_add_event';
+  static const add_event_no_image = 'add_event_no_image';
+  static const add_event_pick_image = 'add_event_pick_image';
+  static const add_event_title = 'add_event_title';
+  static const add_event_description = 'add_event_description';
+  static const add_event_price = 'add_event_price';
+  static const add_event_capacity = 'add_event_capacity';
+  static const add_event_select_time = 'add_event_select_time';
 }
 
 class Locales {
@@ -134,6 +147,7 @@ class Locales {
     'event_page_available': 'Available',
     'event_page_change_language': 'Press to Change language',
     'snack_bar_filled': 'You can\'t but a Event that is full or Expired',
+    'snack_bar_date': 'Please choose valid date after',
     'error_repository_add_bookmark': 'Can\'t add this Event to Bookmark',
     'error_error': 'Something Went Wrong',
     'bottom_nav_bar_home': 'Home',
@@ -157,6 +171,18 @@ class Locales {
     'time_picker_error': 'provide valid time',
     'time_picker_hour': 'ُSelect Hour',
     'time_picker_minute': 'ُSelect Minute',
+    'validate_numbers_empty': 'please enter your amount',
+    'validate_numbers': 'please enter numbers',
+    'validate_numbers_capacity': 'Capacity cannot be 0',
+    'validate_required': 'required',
+    'add_event_add_event': 'Add Event',
+    'add_event_no_image': 'No Image Selected',
+    'add_event_pick_image': 'Pick Image',
+    'add_event_title': 'title',
+    'add_event_description': 'Description',
+    'add_event_price': 'Price',
+    'add_event_capacity': 'Capacity',
+    'add_event_select_time': 'Select Time',
   };
   static const fa_IR = {
     'filter_Dialog_cancel': 'لغو',
@@ -205,6 +231,7 @@ class Locales {
     'event_page_change_language': 'برای تغییر زبان کلیک کنید',
     'snack_bar_filled':
         'رویدادی که پر است یا منقضی شده است رو نمیتوان خریداری کرد',
+    'snack_bar_date': 'لطفا زمان مناسب انتخاب کنید بعد از ',
     'error_repository_add_bookmark':
         'نمی توان این رویداد را به ذخیره شده ها اضاف کرد',
     'error_error': 'مشکلی پیش آمد',
@@ -229,5 +256,17 @@ class Locales {
     'time_picker_error': 'زمان قابل قبول وارد کنید',
     'time_picker_hour': 'ساعت را انتخاب کنید',
     'time_picker_minute': 'دقیقه را انتخاب کنید',
+    'validate_numbers_empty': 'مقدار مورد نظر خود را وارد کنید',
+    'validate_numbers': 'لطفا عدد وارد کنید',
+    'validate_numbers_capacity': 'ظرفیت نمیتواند صفر باشد',
+    'validate_required': 'الزامی است',
+    'add_event_add_event': 'ساخت رویداد',
+    'add_event_no_image': 'عکسی انتخاب نشده اس',
+    'add_event_pick_image': 'عکس انتخاب کنید',
+    'add_event_title': 'عنوان',
+    'add_event_description': 'توضیحات',
+    'add_event_price': 'قیمت',
+    'add_event_capacity': 'ظرفیت',
+    'add_event_select_time': 'زمان را انتخاب کنید',
   };
 }

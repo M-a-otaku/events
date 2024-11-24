@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import '../../../../generated/locales.g.dart';
 import '../controllers/edit_event_controller.dart';
 
 class EditEventView extends GetView<EditEventController> {
@@ -30,6 +31,13 @@ class EditEventView extends GetView<EditEventController> {
       centerTitle: true,
       automaticallyImplyLeading: false,
       backgroundColor: Colors.blueAccent,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          hoverColor: Colors.grey,
+          tooltip: LocaleKeys.event_details_go_back.tr,
+          color: Colors.white,
+          onPressed: Get.back,
+        )
     );
   }
 

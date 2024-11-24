@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:either_dart/either.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import '../../../../generated/locales.g.dart';
 import '../../../infrastructure/commons/url_repository.dart';
 import '../models/add_event_dto.dart';
 
@@ -19,9 +21,9 @@ class AddEventRepository {
       if (response.statusCode == 201) {
         return Right(result);
       }
-      return const Left('Error');
+      return  Left(LocaleKeys.error_error.tr);
     } catch (e) {
-      return Left(e.toString());
+      return Left("${LocaleKeys.error_error.tr}  ${e.toString()}");
     }
   }
 

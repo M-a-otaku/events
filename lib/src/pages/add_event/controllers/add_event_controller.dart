@@ -75,6 +75,7 @@ class AddEventController extends GetxController {
       errorInvalidText: LocaleKeys.time_picker_error.tr,
       hourLabelText: LocaleKeys.time_picker_hour.tr,
       minuteLabelText: LocaleKeys.time_picker_minute.tr,
+
     );
 
     if (pickedTime != null) {
@@ -86,17 +87,6 @@ class AddEventController extends GetxController {
     }
   }
 
-  Future<void> selectDate(context) async {
-    DateTime? _picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now(),
-        lastDate: DateTime(2100));
-
-    if (_picked != null) {
-      dateController.text = _picked.toString().split(" ")[0];
-    }
-  }
 
   DateTime? get selectedDate {
     if (selectedYear.value.isEmpty ||
@@ -127,17 +117,17 @@ class AddEventController extends GetxController {
   }
 
   String? validate(String? value) {
-    if (value != null && value.isEmpty) return 'required';
+    if (value != null && value.isEmpty) return LocaleKeys.validate_required.tr;
     return null;
   }
 
   String? validatePrice(String? value) {
     RegExp numberRegExp = RegExp(r'\d');
     if (value != null && value.isEmpty) {
-      return 'please enter your amount';
+      return LocaleKeys.validate_numbers_empty.tr;
     } else {
       if (!numberRegExp.hasMatch(value!)) {
-        return "Please enter numbers ";
+        return LocaleKeys.validate_numbers.tr;
       } else {
         return null;
       }
@@ -147,11 +137,11 @@ class AddEventController extends GetxController {
   String? validateCapacity(String? value) {
     RegExp numberRegExp = RegExp(r'\d');
     if (value == null || value.isEmpty) {
-      return 'Please enter your amount';
+      return LocaleKeys.validate_numbers_empty.tr;
     } else if (!numberRegExp.hasMatch(value)) {
-      return "Please enter numbers only";
+      return LocaleKeys.validate_numbers.tr;
     } else if (int.tryParse(value) == 0) {
-      return "Capacity cannot be 0";
+      return LocaleKeys.validate_numbers_capacity.tr;
     } else {
       return null;  // Valid input
     }
@@ -163,7 +153,7 @@ class AddEventController extends GetxController {
     if (date == null) {
       isLoading.value = false;
       Get.showSnackbar(GetSnackBar(
-        message: "please choose valid date after tomorrow : $formattedDate .",
+        message: "${LocaleKeys.snack_bar_date.tr} : $formattedDate .",
         duration: const Duration(seconds: 2),
       ));
       return;

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:events/generated/locales.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -33,10 +34,17 @@ class AddEventView extends GetView<AddEventController> {
 
   AppBar _appBar() {
     return AppBar(
-      title: const Text("Add Event"),
+      title:  Text(LocaleKeys.add_event_add_event.tr),
       centerTitle: true,
       automaticallyImplyLeading: false,
       backgroundColor: Colors.blueAccent,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          hoverColor: Colors.blueAccent,
+          tooltip: LocaleKeys.event_details_go_back.tr,
+          color: Colors.white,
+          onPressed: Get.back,
+        )
     );
   }
 
@@ -96,7 +104,7 @@ class AddEventView extends GetView<AddEventController> {
           height: 333,
         );
       } else {
-        return const Center(child: Text("No image selected"));
+        return  Center(child: Text(LocaleKeys.add_event_no_image.tr));
       }
     });
   }
@@ -113,8 +121,8 @@ class AddEventView extends GetView<AddEventController> {
           borderRadius: BorderRadius.circular(12),
           color: controller.isLoading.value ? Colors.grey : Colors.blueAccent,
         ),
-        child: const Text(
-          "Pick Image",
+        child:  Text(
+          LocaleKeys.add_event_pick_image.tr,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
@@ -136,7 +144,7 @@ class AddEventView extends GetView<AddEventController> {
       decoration: InputDecoration(
         counter: const Offstage(),
         prefixIcon: const Icon(Icons.title, color: Colors.grey),
-        labelText: "Title",
+        labelText: LocaleKeys.add_event_title.tr,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -155,7 +163,7 @@ class AddEventView extends GetView<AddEventController> {
       decoration: InputDecoration(
         counter: const Offstage(),
         prefixIcon: const Icon(Icons.description, color: Colors.grey),
-        labelText: "Description",
+        labelText: LocaleKeys.add_event_description.tr,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -173,7 +181,7 @@ class AddEventView extends GetView<AddEventController> {
       validator: controller.validatePrice,
       decoration: InputDecoration(
         counter: const Offstage(),
-        labelText: "Price",
+        labelText: LocaleKeys.add_event_price.tr,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -192,7 +200,7 @@ class AddEventView extends GetView<AddEventController> {
       validator: controller.validateCapacity,
       decoration: InputDecoration(
         counter: const Offstage(),
-        labelText: "Capacity",
+        labelText: LocaleKeys.add_event_capacity.tr,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -212,7 +220,7 @@ class AddEventView extends GetView<AddEventController> {
   Widget _dateSelector() {
     return ElevatedButton(
       onPressed: () => controller.chooseTime(),
-      child: const Text('Select Time'),
+      child:  Text(LocaleKeys.add_event_select_time.tr),
     );
   }
 
@@ -232,7 +240,6 @@ class AddEventView extends GetView<AddEventController> {
   Widget _yearDropdown() {
     return Obx(() => DropdownButton<String>(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-      hint: const Text("Year"),
       value: controller.selectedYear.value.isEmpty ? null : controller.selectedYear.value,
       items: controller.years.map((year) {
         return DropdownMenuItem(
@@ -247,7 +254,6 @@ class AddEventView extends GetView<AddEventController> {
   Widget _monthDropdown() {
     return Obx(() => DropdownButton<String>(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-      hint: const Text("Month"),
       value: controller.selectedMonth.value.isEmpty ? null : controller.selectedMonth.value,
       items: controller.months.map((month) {
         return DropdownMenuItem(
@@ -262,7 +268,6 @@ class AddEventView extends GetView<AddEventController> {
   Widget _dayDropdown() {
     return Obx(() => DropdownButton<String>(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-      hint: const Text("Day"),
       value: controller.selectedDay.value.isEmpty ? null : controller.selectedDay.value,
       items: controller.days.map((day) {
         return DropdownMenuItem(
