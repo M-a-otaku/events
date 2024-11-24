@@ -97,17 +97,7 @@ class EditEventController extends GetxController {
     }
   }
 
-  Future<void> selectDate(context) async {
-    DateTime? _picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now(),
-        lastDate: DateTime(2100));
-
-    if (_picked != null) {
-      dateController.text = _picked.toString().split(" ")[0];
-    }
-  }
+  DateTime? previousDate;
 
   DateTime? get selectedDate {
     if (selectedYear.value.isEmpty ||
@@ -125,9 +115,7 @@ class EditEventController extends GetxController {
         selectedTime2.value.minute,
       );
 
-
-
-      if (date.isBefore(DateTime.now())) {
+      if (date.isBefore(DateTime.now()) && date != previousDate) {
         return null;
       }
 
@@ -138,7 +126,9 @@ class EditEventController extends GetxController {
   }
 
   String? validate(String? value) {
-    if (value != null && value.isEmpty) return 'required';
+    if (value == null || value.isEmpty) {
+      return 'This field is required';
+    }
     return null;
   }
 
@@ -180,7 +170,11 @@ class EditEventController extends GetxController {
 
   Future<void> onSubmit() async {
     isLoading.value = true;
-    if (!(formKey.currentState?.validate() ?? false)) return;
+    if (!(formKey.currentState?.validate() ?? false)) {
+      isLoading.value = false;
+      return;
+    }
+
     DateTime? date = selectedDate;
     if (date == null) {
       isLoading.value = false;
@@ -248,14 +242,12 @@ class EditEventController extends GetxController {
       selectedDay.value = right.date.day.toString();
       selectedMonth.value = right.date.month.toString();
       selectedYear.value = right.date.year.toString();
-      DateTime? date =
-          DateTime.tryParse("$selectedYear-$selectedMonth-$selectedDay");
+      previousDate = right.date; 
       titleController.text = right.title;
       descriptionController.text = right.description;
       priceController.text = right.price.toString();
-      date = right.date.toLocal();
       priceController.text = right.price.toString();
-      selectedTime2.value = date;
+      selectedTime2.value = right.date.toLocal();
       imageBase64.value = right.image;
       capacityController.text = right.capacity.toString();
       participants.value = right.participants ?? 0;

@@ -69,17 +69,16 @@ class EditEventView extends GetView<EditEventController> {
               _capacity(),
               const SizedBox(height: 16),
               _timeSelector(),
-              ElevatedButton(
-                onPressed: () {
-                  if (controller.participants.value > 0) {
-                    controller.showSnackbar(
-                        "Time cannot be changed because participants > 0");
-                  } else {
-                    controller.chooseTime();
-                  }
-                },
-                child: const Text('Select Time'),
-              ),
+            ElevatedButton(
+              onPressed: () {
+                if (controller.participants.value > 0) {
+                  controller.showSnackbar("Time cannot be changed because participants > 0");
+                } else {
+                  controller.chooseTime();
+                }
+              },
+              child: const Text('Select Time'),
+            ),
               const SizedBox(height: 16),
               _yearMonthDaySelectors(),
             ],
@@ -169,6 +168,12 @@ class EditEventView extends GetView<EditEventController> {
     return TextFormField(
       maxLength: 4,
       keyboardType: TextInputType.number,
+      readOnly: controller.participants.value > 0,
+      onTap: () {
+        if (controller.participants.value > 0) {
+          controller.showSnackbar("Price cannot be changed because participants > 0");
+        }
+      },
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       controller: controller.priceController,
       textInputAction: TextInputAction.next,
@@ -187,6 +192,12 @@ class EditEventView extends GetView<EditEventController> {
     return TextFormField(
       maxLength: 6,
       keyboardType: TextInputType.number,
+      readOnly: controller.participants.value > 0,
+      onTap: () {
+        if (controller.participants.value > 0) {
+          controller.showSnackbar("Capacity cannot be changed because participants > 0");
+        }
+      },
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       controller: controller.capacityController,
       autofocus: true,
@@ -235,7 +246,11 @@ class EditEventView extends GetView<EditEventController> {
           child: Text(year),
         );
       }).toList(),
-      onChanged: (value) => controller.selectedYear.value = value ?? '',
+        onChanged: controller.participants.value == 0
+            ? (value) => controller.selectedYear.value = value ?? ''
+            : (value) {
+          controller.showSnackbar("date cannot be changed because participants > 0");
+        },
     ));
   }
 
@@ -250,7 +265,11 @@ class EditEventView extends GetView<EditEventController> {
           child: Text(month),
         );
       }).toList(),
-      onChanged: (value) => controller.selectedMonth.value = value ?? '',
+        onChanged: controller.participants.value == 0
+            ? (value) => controller.selectedYear.value = value ?? ''
+            : (value) {
+          controller.showSnackbar("date cannot be changed because participants > 0");
+        },
     ));
   }
 
@@ -265,7 +284,11 @@ class EditEventView extends GetView<EditEventController> {
           child: Text(day),
         );
       }).toList(),
-      onChanged: (value) => controller.selectedDay.value = value ?? '',
+        onChanged: controller.participants.value == 0
+            ? (value) => controller.selectedYear.value = value ?? ''
+            : (value) {
+          controller.showSnackbar("date cannot be changed because participants > 0");
+        },
     ));
   }
 }
