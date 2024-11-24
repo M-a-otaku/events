@@ -157,14 +157,14 @@ class EditEventController extends GetxController {
 
   String? validateCapacity(String? value) {
     RegExp numberRegExp = RegExp(r'\d');
-    if (value != null && value.isEmpty) {
-      return 'please enter your amount';
+    if (value == null || value.isEmpty) {
+      return 'Please enter your amount';
+    } else if (!numberRegExp.hasMatch(value)) {
+      return "Please enter numbers only";
+    } else if (int.tryParse(value) == 0) {
+      return "Capacity cannot be 0";
     } else {
-      if (!numberRegExp.hasMatch(value!)) {
-        return "Please enter numbers ";
-      } else {
-        return null;
-      }
+      return null;  // Valid input
     }
   }
 

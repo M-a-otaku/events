@@ -124,19 +124,21 @@ class EventsView extends GetView<EventsController> {
       hoverColor: Colors.blueAccent,
       tooltip: "Press To Logout",
       color: Colors.white,
-      onPressed: controller.logout,
+      onPressed: () =>controller.showLogoutDialog(context),
     ),
-      actions: [
-        IconButton(
-          icon: Icon(
-            Icons.language_outlined,
-            color: Colors.white,
-            size: 24,
-          ),
-          onPressed:controller.onChangeLanguage,
-        )
-      ]
+    actions: [
+      IconButton(
+        icon: const Icon(
+          Icons.language_outlined,
+          color: Colors.white,
+          size: 24,
+        ),
+        onPressed: controller.onChangeLanguage,
+      )
+    ],
   );
+
+
 
   Widget _success(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),

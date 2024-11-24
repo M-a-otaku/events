@@ -69,9 +69,11 @@ class BookmarkEventController extends GetxController {
 
   Future<List<int>> getBookmarkedEvents() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
+    final int userId = preferences.getInt(LocalStorageKeys.userId) ?? -1;
 
     List<String> bookmarkedIds =
-        preferences.getStringList('bookmarkedIds') ?? [];
+        preferences.getStringList('bookmarkedIds_$userId') ?? [];
+
 
     return bookmarkedIds.map((id) => int.parse(id)).toList();
   }
@@ -278,11 +280,11 @@ class BookmarkEventController extends GetxController {
         minPrice: minPrice,
         maxPrice: maxPrice,
         searchQuery: query.value,
-        userId: userId);
+        );
     List<String> bookmarkedIds =
-        preferences.getStringList('bookmarkedIds') ?? [];
+        preferences.getStringList('bookmarkedIds_$userId') ?? [];
 
-    final result = await _repository.getBookmarked(queryParameters: queryParameters, userId: userId );
+    final result = await _repository.getBookmarked(queryParameters: queryParameters);
     result.fold(
       (exception) {
         isLoading.value = false;
@@ -304,15 +306,6 @@ class BookmarkEventController extends GetxController {
     );
   }
 
-  void initBookmarked() async {
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
-    List<String> bookmarkedIds =
-        preferences.getStringList('bookmarkedIds') ?? [];
-    if (bookmarkedIds.isEmpty) {
-      await preferences.setStringList('bookmarkedIds', []);
-    }
-  }
-
   Future<void> toggleBookmark({required int eventId}) async {
     isEventRefreshing[eventId] = true;
     isBookmarked.value = true;
@@ -322,7 +315,8 @@ class BookmarkEventController extends GetxController {
     final int userId = preferences.getInt(LocalStorageKeys.userId) ?? -1;
 
     final String key = 'bookmarkedIds_$userId';
-    List<String> bookmarkedIds = preferences.getStringList(key) ?? [];
+    List<String> bookmarkedIds =
+        preferences.getStringList('bookmarkedIds_$userId') ?? [];
 
     if (bookmarkedIds.contains(eventId.toString())) {
       bookmarkedIds.remove(eventId.toString());

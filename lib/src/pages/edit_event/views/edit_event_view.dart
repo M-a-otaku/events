@@ -194,7 +194,7 @@ class EditEventView extends GetView<EditEventController> {
       validator: controller.validateCapacity,
       decoration: InputDecoration(
         counter: const Offstage(),
-        labelText: "Capacity",
+        labelText: "Capacity w",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),

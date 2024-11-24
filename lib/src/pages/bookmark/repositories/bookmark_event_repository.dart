@@ -9,14 +9,15 @@ import '../models/event_model.dart';
 
 class BookmarkEventRepository {
   Future<Either<String, List<EventModel>>> getBookmarked({
-    required Map<String, dynamic> queryParameters , required int userId,
+    required Map<String, dynamic> queryParameters ,
   }) async {
     try {
       List<EventModel> bookmarkedEvents = [];
 
       final SharedPreferences preferences = await SharedPreferences.getInstance();
-      String key = 'bookmarkedIds_$userId';
-      List<String> bookmarkedIds = preferences.getStringList(key) ?? [];
+      final int userId = preferences.getInt(LocalStorageKeys.userId) ?? -1;
+      List<String> bookmarkedIds =
+          preferences.getStringList('bookmarkedIds_$userId') ?? [];
 
       final response = await http.get(
         Uri.parse('http://localhost:3000/events')
@@ -37,34 +38,6 @@ class BookmarkEventRepository {
         return Right(bookmarkedEvents);
       } else {
         return const Left("Failed to load events");
-      }
-    } catch (e) {
-      return Left(e.toString());
-    }
-  }
-
-
-  Future<Either<String, List<EventModel>>> getBookmarkedEvents() async {
-    try {
-      final SharedPreferences preferences = await SharedPreferences.getInstance();
-      final int userId = preferences.getInt(LocalStorageKeys.userId) ?? -1;
-
-
-      final url = Uri.http(
-        'localhost:3000',
-        'users/$userId/bookmark',
-      );
-
-      final response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        final List<dynamic> result = jsonDecode(response.body);
-        final List<EventModel> events =
-        result.map((event) => EventModel.fromJson(event)).toList();
-
-        return Right(events);
-      } else {
-        return Left("Failed to load bookmarked events: ${response.statusCode}");
       }
     } catch (e) {
       return Left(e.toString());
