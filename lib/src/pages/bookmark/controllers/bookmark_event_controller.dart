@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../events.dart';
+import '../../../../generated/locales.g.dart';
 import '../../shared/local_storage_keys.dart';
 import '../models/bookmark_user_dto.dart';
 import '../models/event_model.dart';
@@ -51,9 +52,9 @@ class BookmarkEventController extends GetxController {
   Future<void> filledEvent() async {
     Get.showSnackbar(
       GetSnackBar(
-        messageText: const Text(
-          "you Can't Buy a Event that is Full or Expired",
-          style: TextStyle(color: Colors.black, fontSize: 14),
+        messageText: Text(
+          LocaleKeys.snack_bar_filled.tr,
+          style: const TextStyle(color: Colors.black, fontSize: 14),
         ),
         backgroundColor: Colors.redAccent.withOpacity(.2),
         duration: const Duration(seconds: 5),
@@ -96,7 +97,7 @@ class BookmarkEventController extends GetxController {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: const Text("Sort and Filter Events"),
+              title: Text(LocaleKeys.filter_Dialog_sort_filter.tr),
               content: isLoading
                   ? const SizedBox(
                 height: 80,
@@ -108,8 +109,8 @@ class BookmarkEventController extends GetxController {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text(
-                      "Price Range",
+                    Text(
+                      LocaleKeys.filter_Dialog_price_range.tr,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     RangeSlider(
@@ -128,10 +129,10 @@ class BookmarkEventController extends GetxController {
                       },
                     ),
                     Text(
-                      "Min: ${priceRange.start.toStringAsFixed(0)} - Max: ${priceRange.end.toStringAsFixed(0)}",
+                      "${LocaleKeys.filter_Dialog_price_min.tr}: ${priceRange.start.toStringAsFixed(0)} - ${LocaleKeys.filter_Dialog_price_max.tr}: ${priceRange.end.toStringAsFixed(0)}",
                     ),
                     CheckboxListTile(
-                      title: const Text("Only Future Events"),
+                      title:  Text(LocaleKeys.filter_Dialog_only_future.tr),
                       value: filterFutureEvents,
                       onChanged: (value) {
                         setState(() {
@@ -140,7 +141,7 @@ class BookmarkEventController extends GetxController {
                       },
                     ),
                     CheckboxListTile(
-                      title: const Text("Only Events With Capacity"),
+                      title: Text(LocaleKeys.filter_Dialog_only_capacity.tr),
                       value: filterWithCapacity,
                       onChanged: (value) {
                         setState(() {
@@ -150,15 +151,15 @@ class BookmarkEventController extends GetxController {
                     ),
                     DropdownButton<String>(
                       value: sortOrder,
-                      hint: const Text("Sort by Time (Optional)"),
-                      items: const [
+                      hint:  Text(LocaleKeys.filter_Dialog_sort_time.tr),
+                      items: [
                         DropdownMenuItem(
-                          value: "Ascending",
-                          child: Text("Ascending (Newest First)"),
+                          value: LocaleKeys.filter_Dialog_sort_time_ascending.tr,
+                          child:  Text(LocaleKeys.filter_Dialog_sort_time_ascending.tr),
                         ),
                         DropdownMenuItem(
-                          value: "Descending",
-                          child: Text("Descending (Oldest First)"),
+                          value: LocaleKeys.filter_Dialog_sort_time_descending.tr,
+                          child: Text(LocaleKeys.filter_Dialog_sort_time_descending.tr),
                         ),
                       ],
                       onChanged: (value) {
@@ -175,7 +176,7 @@ class BookmarkEventController extends GetxController {
                   : [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text("Cancel"),
+                  child: Text(LocaleKeys.filter_Dialog_cancel.tr),
                 ),
                 TextButton(
                   onPressed: () {
@@ -194,7 +195,7 @@ class BookmarkEventController extends GetxController {
                       'maxPrice': 9999,
                     });
                   },
-                  child: const Text("Reset"),
+                  child: Text(LocaleKeys.filter_Dialog_reset.tr),
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -225,7 +226,7 @@ class BookmarkEventController extends GetxController {
                       'maxPrice': priceRange.end.toInt(),
                     });
                   },
-                  child: const Text("Apply"),
+                  child: Text(LocaleKeys.filter_Dialog_apply.tr),
                 ),
               ],
             );
@@ -233,6 +234,58 @@ class BookmarkEventController extends GetxController {
         );
       },
     );
+  }
+
+
+  void showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(LocaleKeys.event_page_logout.tr),
+          content: Text(LocaleKeys.event_page_logout_validate.tr),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(LocaleKeys.event_page_logout_no.tr),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                logout();
+              },
+              child: Text(LocaleKeys.event_page_logout_yes.tr),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> logout() async {
+    await Get.offAllNamed(RouteNames.login);
+  }
+
+  void onChangeLanguage() async {
+    isLoading.value = true;
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String? localeKey = pref.getString(LocalStorageKeys.languageLocale);
+    if (localeKey == null) {
+      localeKey = 'fa';
+      pref.setString(LocalStorageKeys.languageLocale, 'fa');
+    } else {
+      if (localeKey == 'fa') {
+        localeKey = 'en';
+        pref.setString(LocalStorageKeys.languageLocale, 'en');
+      } else if (localeKey == 'en') {
+        localeKey = 'fa';
+        pref.setString(LocalStorageKeys.languageLocale, 'fa');
+      }
+    }
+    isLoading.value = false;
+    Get.updateLocale(Locale(localeKey));
   }
 
 
@@ -270,8 +323,6 @@ class BookmarkEventController extends GetxController {
     int? maxPrice}) async {
     isLoading.value = true;
 
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
-    final int userId = preferences.getInt(LocalStorageKeys.userId) ?? -1;
 
     final queryParameters = _buildQueryParameters(
         ascending: ascending,
@@ -281,8 +332,7 @@ class BookmarkEventController extends GetxController {
         maxPrice: maxPrice,
         searchQuery: query.value,
         );
-    List<String> bookmarkedIds =
-        preferences.getStringList('bookmarkedIds_$userId') ?? [];
+
 
     final result = await _repository.getBookmarked(queryParameters: queryParameters);
     result.fold(

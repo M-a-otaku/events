@@ -242,7 +242,7 @@ class EditEventController extends GetxController {
       selectedDay.value = right.date.day.toString();
       selectedMonth.value = right.date.month.toString();
       selectedYear.value = right.date.year.toString();
-      previousDate = right.date; 
+      previousDate = right.date;
       titleController.text = right.title;
       descriptionController.text = right.description;
       priceController.text = right.price.toString();

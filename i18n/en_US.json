@@ -4,7 +4,14 @@
     "apply": "Apply",
     "reset": "Reset",
     "only_future": "Only future Events",
-    "sort_filter": "Sort and Filter"
+    "sort_filter": "Sort and Filter events",
+    "price_range": "Price Range",
+    "price_min": "min",
+    "price_max": "max",
+    "only_capacity": "Only Events With Capacity",
+    "sort_time": "Sort by Time ",
+    "sort_time_ascending": "Ascending",
+    "sort_time_descending": "Descending"
   },
   "login_page": {
     "welcome": "Welcome",
@@ -35,6 +42,34 @@
     "retry": "Failed to Load Events",
     "refresh": "Press to Refresh",
     "empty": "No Events Available",
-    "logout": "Press to Logout"
+    "logout_validate": "Are you sure you want to Logout",
+    "logout_yes": "Yes",
+    "logout_no": "No",
+    "logout_press": "Press to Logout",
+    "logout": "Logout",
+    "full": "Full",
+    "available": "Available",
+    "change_language": "Press to Change language"
+  },
+  "snack_bar": {
+    "filled": "You can't but a Event that is full or Expired"
+  },
+  "error": {
+    "repository_add_bookmark": "Can't add this Event to Bookmark",
+    "error": "Something Went Wrong"
+  },
+  "bottom_nav_bar": {
+    "home": "Home",
+    "my_events": "My Events",
+    "bookmark": "Bookmarks"
+  },
+  "my_event": {
+    "delete": "Delete Event",
+    "delete_validate": "Are you sure want to Delete this event?",
+    "delete_success": "Event deleted successfully",
+    "delete_failed": "can't deit this event"
+  },
+  "bookmarked_Events": {
+    "bookmarked_events": "Bookmarked Events"
   }
 }

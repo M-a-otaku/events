@@ -1,3 +1,5 @@
+import 'package:events/generated/locales.g.dart';
+
 import '../../bookmark/views/bookmark_event_screen.dart';
 import '../controller/nav_bar_controller.dart';
 import '../../events/views/events_view.dart';
@@ -14,11 +16,7 @@ class BottomNavBar extends GetView<NavBarController> {
       return Scaffold(
         body: IndexedStack(
           index: controller.currentIndex,
-          children: const [
-            EventsView(),
-            MyEventsView(),
-            BookmarkEventScreen()
-          ],
+          children: const [EventsView(), MyEventsView(), BookmarkEventScreen()],
         ),
         bottomNavigationBar: BottomNavigationBar(
             unselectedItemColor: Colors.grey,
@@ -29,10 +27,14 @@ class BottomNavBar extends GetView<NavBarController> {
             showUnselectedLabels: false,
             type: BottomNavigationBarType.fixed,
             items: [
-              _BottomNavigationBarItem(icon: Icons.home, label: "Home"),
-              _BottomNavigationBarItem(icon: Icons.event, label: "My Events"),
               _BottomNavigationBarItem(
-                  icon: Icons.book_outlined, label: "Bookmarks"),
+                  icon: Icons.home, label: LocaleKeys.bottom_nav_bar_home.tr),
+              _BottomNavigationBarItem(
+                  icon: Icons.event,
+                  label: LocaleKeys.bottom_nav_bar_my_events.tr),
+              _BottomNavigationBarItem(
+                  icon: Icons.book_outlined,
+                  label: LocaleKeys.bottom_nav_bar_bookmark.tr),
             ]),
       );
     });

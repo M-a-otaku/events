@@ -3,8 +3,15 @@
     "cancel": "لغو",
     "apply": "تایید",
     "reset": "حذف فیلتر ها",
-    "only_future": "فقط ایونت های آینده",
-    "sort_filter": "مرتب‌سازی و فیلتر"
+    "only_future": "فقط  رویداد های آینده",
+    "sort_filter": "مرتب‌سازی و فیلتر رویداد ها ",
+    "price_range": "محدوده قیمت",
+    "price_min": "حداقل قیمت",
+    "price_max": "حداکثر قیمت",
+    "only_capacity": "فقط رویداد های با ظرفیت",
+    "sort_time": "مرتب سازی بر اساس زمان",
+    "sort_time_ascending": "صعودی",
+    "sort_time_descending": "نزولی"
   },
   "login_page": {
     "welcome": "خوش آمدید",
@@ -35,6 +42,34 @@
     "retry": "بارگذاری رویدادها با مشکل مواجه شد",
     "refresh": "برای بارگذاری مجدد فشار دهید",
     "empty": "هیچ رویدادی موجود نیست",
-    "logout": "برای خروج فشار دهید"
+    "logout_validate": "آیا مطمعنید که میخواید از اکانت خارج شید",
+    "logout_yes": "بله",
+    "logout_no": "خیر",
+    "logout_press": "برای خروج فشار دهید",
+    "logout": "خروج از اکانت",
+    "full": "پر شده",
+    "available": "موجود است",
+    "change_language": "برای تغییر زبان کلیک کنید"
+  },
+  "snack_bar": {
+    "filled": "رویدادی که پر است یا منقضی شده است رو نمیتوان خریداری کرد"
+  },
+  "error": {
+    "repository_add_bookmark": "نمی توان این رویداد را به ذخیره شده ها اضاف کرد",
+    "error": "مشکلی پیش آمد"
+  },
+  "bottom_nav_bar": {
+    "home": "صفحه اصلی",
+    "my_events": "رویداد های من",
+    "bookmark": "ذخیره شده ها"
+  },
+  "my_event": {
+    "delete": "حذف رویداد",
+    "delete_validate": "آیا مطمعنید که میخواید این رویداد رو حذف کنید",
+    "delete_success": "رویدار به صورت موفقیت آمیز حذف شد",
+    "delete_failed": "نمیتوان این رویداد رو حذف کرد"
+  },
+  "bookmarked_Events": {
+    "bookmarked_events": "رویداد های ذخیره شده"
   }
 }

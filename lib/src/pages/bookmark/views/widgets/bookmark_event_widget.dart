@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:events/generated/locales.g.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -28,7 +29,7 @@ class BookmarkEventWidget extends GetView<BookmarkEventController> {
       shadowColor: Colors.grey.shade300,
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: (event.filled) ? null : onTap,
+        onTap: (controller.isLoading.value) ? null : onTap,
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -136,8 +137,8 @@ class BookmarkEventWidget extends GetView<BookmarkEventController> {
                             color: Colors.red.shade400,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Text(
-                            'Full',
+                          child:  Text(
+                            LocaleKeys.event_page_full.tr,
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -153,8 +154,8 @@ class BookmarkEventWidget extends GetView<BookmarkEventController> {
                             color: Colors.green.shade400,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Text(
-                            'Available',
+                          child:  Text(
+                            LocaleKeys.event_page_available.tr,
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -177,9 +178,7 @@ class BookmarkEventWidget extends GetView<BookmarkEventController> {
                     () => IconButton(
                   icon: (controller.isEventRefreshing[event.id] ?? false)
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : (controller.bookmarkedEvents.contains(event.id))
-                      ? const Icon(Icons.bookmark, color: Colors.white)
-                      : const Icon(Icons.bookmark_border, color: Colors.white),
+                      : const Icon(Icons.bookmark, color: Colors.white),
                   onPressed: (controller.isEventRefreshing[event.id] ?? false)
                       ? null
                       : () => controller.toggleBookmark(eventId: event.id),

@@ -15,6 +15,16 @@ class LocaleKeys {
   static const filter_Dialog_apply = 'filter_Dialog_apply';
   static const filter_Dialog_reset = 'filter_Dialog_reset';
   static const filter_Dialog_only_future = 'filter_Dialog_only_future';
+  static const filter_Dialog_sort_filter = 'filter_Dialog_sort_filter';
+  static const filter_Dialog_price_range = 'filter_Dialog_price_range';
+  static const filter_Dialog_price_min = 'filter_Dialog_price_min';
+  static const filter_Dialog_price_max = 'filter_Dialog_price_max';
+  static const filter_Dialog_only_capacity = 'filter_Dialog_only_capacity';
+  static const filter_Dialog_sort_time = 'filter_Dialog_sort_time';
+  static const filter_Dialog_sort_time_ascending =
+      'filter_Dialog_sort_time_ascending';
+  static const filter_Dialog_sort_time_descending =
+      'filter_Dialog_sort_time_descending';
   static const login_page_welcome = 'login_page_welcome';
   static const login_page_sign_in = 'login_page_sign_in';
   static const login_page_username = 'login_page_username';
@@ -34,6 +44,31 @@ class LocaleKeys {
   static const register_page_register = 'register_page_register';
   static const register_page_or = 'register_page_or';
   static const register_page_back_login = 'register_page_back_login';
+  static const event_page_events = 'event_page_events';
+  static const event_page_search = 'event_page_search';
+  static const event_page_retry = 'event_page_retry';
+  static const event_page_refresh = 'event_page_refresh';
+  static const event_page_empty = 'event_page_empty';
+  static const event_page_logout_validate = 'event_page_logout_validate';
+  static const event_page_logout_yes = 'event_page_logout_yes';
+  static const event_page_logout_no = 'event_page_logout_no';
+  static const event_page_logout_press = 'event_page_logout_press';
+  static const event_page_logout = 'event_page_logout';
+  static const event_page_full = 'event_page_full';
+  static const event_page_available = 'event_page_available';
+  static const event_page_change_language = 'event_page_change_language';
+  static const snack_bar_filled = 'snack_bar_filled';
+  static const error_repository_add_bookmark = 'error_repository_add_bookmark';
+  static const error_error = 'error_error';
+  static const bottom_nav_bar_home = 'bottom_nav_bar_home';
+  static const bottom_nav_bar_my_events = 'bottom_nav_bar_my_events';
+  static const bottom_nav_bar_bookmark = 'bottom_nav_bar_bookmark';
+  static const my_event_delete = 'my_event_delete';
+  static const my_event_delete_validate = 'my_event_delete_validate';
+  static const my_event_delete_success = 'my_event_delete_success';
+  static const my_event_delete_failed = 'my_event_delete_failed';
+  static const bookmarked_Events_bookmarked_events =
+      'bookmarked_Events_bookmarked_events';
 }
 
 class Locales {
@@ -42,6 +77,14 @@ class Locales {
     'filter_Dialog_apply': 'Apply',
     'filter_Dialog_reset': 'Reset',
     'filter_Dialog_only_future': 'Only future Events',
+    'filter_Dialog_sort_filter': 'Sort and Filter events',
+    'filter_Dialog_price_range': 'Price Range',
+    'filter_Dialog_price_min': 'min',
+    'filter_Dialog_price_max': 'max',
+    'filter_Dialog_only_capacity': 'Only Events With Capacity',
+    'filter_Dialog_sort_time': 'Sort by Time ',
+    'filter_Dialog_sort_time_ascending': 'Ascending',
+    'filter_Dialog_sort_time_descending': 'Descending',
     'login_page_welcome': 'Welcome',
     'login_page_sign_in': 'Sign in To Continue',
     'login_page_username': 'Username',
@@ -61,12 +104,44 @@ class Locales {
     'register_page_register': 'Register',
     'register_page_or': 'Or',
     'register_page_back_login': 'Back To Login',
+    'event_page_events': 'Events',
+    'event_page_search': 'Search by Title',
+    'event_page_retry': 'Failed to Load Events',
+    'event_page_refresh': 'Press to Refresh',
+    'event_page_empty': 'No Events Available',
+    'event_page_logout_validate': 'Are you sure you want to Logout',
+    'event_page_logout_yes': 'Yes',
+    'event_page_logout_no': 'No',
+    'event_page_logout_press': 'Press to Logout',
+    'event_page_logout': 'Logout',
+    'event_page_full': 'Full',
+    'event_page_available': 'Available',
+    'event_page_change_language': 'Press to Change language',
+    'snack_bar_filled': 'You can\'t but a Event that is full or Expired',
+    'error_repository_add_bookmark': 'Can\'t add this Event to Bookmark',
+    'error_error': 'Something Went Wrong',
+    'bottom_nav_bar_home': 'Home',
+    'bottom_nav_bar_my_events': 'My Events',
+    'bottom_nav_bar_bookmark': 'Bookmarks',
+    'my_event_delete': 'Delete Event',
+    'my_event_delete_validate': 'Are you sure want to Delete this event?',
+    'my_event_delete_success': 'Event deleted successfully',
+    'my_event_delete_failed': 'can\'t deit this event',
+    'bookmarked_Events_bookmarked_events': 'Bookmarked Events',
   };
   static const fa_IR = {
     'filter_Dialog_cancel': 'لغو',
     'filter_Dialog_apply': 'تایید',
     'filter_Dialog_reset': 'حذف فیلتر ها',
-    'filter_Dialog_only_future': 'فقط ایونت های آینده',
+    'filter_Dialog_only_future': 'فقط  رویداد های آینده',
+    'filter_Dialog_sort_filter': 'مرتب‌سازی و فیلتر رویداد ها ',
+    'filter_Dialog_price_range': 'محدوده قیمت',
+    'filter_Dialog_price_min': 'حداقل قیمت',
+    'filter_Dialog_price_max': 'حداکثر قیمت',
+    'filter_Dialog_only_capacity': 'فقط رویداد های با ظرفیت',
+    'filter_Dialog_sort_time': 'مرتب سازی بر اساس زمان',
+    'filter_Dialog_sort_time_ascending': 'صعودی',
+    'filter_Dialog_sort_time_descending': 'نزولی',
     'login_page_welcome': 'خوش آمدید',
     'login_page_sign_in': 'برای ادامه وارد شوید',
     'login_page_username': 'نام کاربری',
@@ -86,5 +161,31 @@ class Locales {
     'register_page_register': 'ثبت نام',
     'register_page_or': 'یا',
     'register_page_back_login': 'بازگشت به صفحه ورود',
+    'event_page_events': 'رویداد ها',
+    'event_page_search': 'جستجو بر اساس عنوان',
+    'event_page_retry': 'بارگذاری رویدادها با مشکل مواجه شد',
+    'event_page_refresh': 'برای بارگذاری مجدد فشار دهید',
+    'event_page_empty': 'هیچ رویدادی موجود نیست',
+    'event_page_logout_validate': 'آیا مطمعنید که میخواید از اکانت خارج شید',
+    'event_page_logout_yes': 'بله',
+    'event_page_logout_no': 'خیر',
+    'event_page_logout_press': 'برای خروج فشار دهید',
+    'event_page_logout': 'خروج از اکانت',
+    'event_page_full': 'پر شده',
+    'event_page_available': 'موجود است',
+    'event_page_change_language': 'برای تغییر زبان کلیک کنید',
+    'snack_bar_filled':
+        'رویدادی که پر است یا منقضی شده است رو نمیتوان خریداری کرد',
+    'error_repository_add_bookmark':
+        'نمی توان این رویداد را به ذخیره شده ها اضاف کرد',
+    'error_error': 'مشکلی پیش آمد',
+    'bottom_nav_bar_home': 'صفحه اصلی',
+    'bottom_nav_bar_my_events': 'رویداد های من',
+    'bottom_nav_bar_bookmark': 'ذخیره شده ها',
+    'my_event_delete': 'حذف رویداد',
+    'my_event_delete_validate': 'آیا مطمعنید که میخواید این رویداد رو حذف کنید',
+    'my_event_delete_success': 'رویدار به صورت موفقیت آمیز حذف شد',
+    'my_event_delete_failed': 'نمیتوان این رویداد رو حذف کرد',
+    'bookmarked_Events_bookmarked_events': 'رویداد های ذخیره شده',
   };
 }

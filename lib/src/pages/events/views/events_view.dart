@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../generated/locales.g.dart';
 import '../controllers/events_controller.dart';
 import 'widgets/events_widget.dart';
 
@@ -37,13 +38,13 @@ class EventsView extends GetView<EventsController> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
-            "Failed to load events.",
+           Text(
+             LocaleKeys.event_page_retry.tr ,
             style: TextStyle(fontSize: 16, color: Colors.black54),
           ),
           const SizedBox(height: 8),
           IconButton(
-            tooltip: "Press to refresh",
+            tooltip: LocaleKeys.event_page_refresh.tr,
             hoverColor: Colors.blueAccent,
             highlightColor: Colors.white,
             onPressed: controller.getEvents,
@@ -65,7 +66,7 @@ class EventsView extends GetView<EventsController> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.filter_alt, color: Colors.blue),
-                  tooltip: "Sort and Filter",
+                  tooltip: LocaleKeys.filter_Dialog_sort_filter.tr,
                   onPressed: () {
                     controller.showSortAndFilterDialog(
                       context,
@@ -85,7 +86,7 @@ class EventsView extends GetView<EventsController> {
                       controller.updateSearchQuery(searchQuery);
                     },
                     decoration: InputDecoration(
-                      labelText: 'Search by title',
+                      labelText: LocaleKeys.event_page_search.tr,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -97,13 +98,13 @@ class EventsView extends GetView<EventsController> {
             ),
             const SizedBox(height: 25),
 
-            const Column(
+             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.event, size: 64, color: Colors.grey),
                 SizedBox(height: 16),
                 Text(
-                  "No events available.",
+                  LocaleKeys.event_page_empty.tr,
                   style: TextStyle(fontSize: 18, color: Colors.black54),
                 ),
                 SizedBox(height: 8),
@@ -118,11 +119,11 @@ class EventsView extends GetView<EventsController> {
   AppBar _appBar(BuildContext context) => AppBar(
     backgroundColor: Colors.blueAccent,
     centerTitle: true,
-    title: const Text("Events"),
+    title:  Text(LocaleKeys.event_page_events.tr),
     leading: IconButton(
       icon: const Icon(Icons.logout),
-      hoverColor: Colors.blueAccent,
-      tooltip: "Press To Logout",
+      hoverColor: Colors.grey,
+      tooltip: LocaleKeys.event_page_logout_press.tr,
       color: Colors.white,
       onPressed: () =>controller.showLogoutDialog(context),
     ),
@@ -133,6 +134,8 @@ class EventsView extends GetView<EventsController> {
           color: Colors.white,
           size: 24,
         ),
+        hoverColor: Colors.grey,
+        tooltip: LocaleKeys.event_page_change_language.tr ,
         onPressed: controller.onChangeLanguage,
       )
     ],
@@ -151,7 +154,7 @@ class EventsView extends GetView<EventsController> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.filter_alt, color: Colors.blue),
-                    tooltip: "Sort and Filter",
+                    tooltip:LocaleKeys.filter_Dialog_sort_filter.tr,
                     onPressed: () {
                       controller.showSortAndFilterDialog(
                         context,
@@ -171,7 +174,7 @@ class EventsView extends GetView<EventsController> {
                         controller.updateSearchQuery(searchQuery);
                       },
                       decoration: InputDecoration(
-                        labelText: 'Search by title',
+                        labelText:LocaleKeys.event_page_search.tr,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),

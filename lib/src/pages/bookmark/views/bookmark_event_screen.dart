@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../generated/locales.g.dart';
 import '../controllers/bookmark_event_controller.dart';
 import 'widgets/bookmark_event_widget.dart';
 
@@ -11,7 +12,7 @@ class BookmarkEventScreen extends GetView<BookmarkEventController> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
-      appBar: _appBar(),
+      appBar: _appBar(context),
       body: RefreshIndicator(
         onRefresh: controller.onRefresh,
         child: Obx(() => _body(context)),
@@ -34,13 +35,13 @@ class BookmarkEventScreen extends GetView<BookmarkEventController> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
-            "Failed to load bookmarked events.",
+          Text(
+            LocaleKeys.event_page_retry.tr ,
             style: TextStyle(fontSize: 16, color: Colors.black54),
           ),
           const SizedBox(height: 8),
           IconButton(
-            tooltip: "Press to refresh",
+            tooltip: LocaleKeys.event_page_refresh.tr,
             hoverColor: Colors.blueAccent,
             highlightColor: Colors.white,
             onPressed: controller.getBookmarked,
@@ -51,10 +52,10 @@ class BookmarkEventScreen extends GetView<BookmarkEventController> {
     );
   }
 
-  Widget _emptyState(BuildContext context) {
+  Widget _emptyState(context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 8.0 , horizontal: 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -62,12 +63,14 @@ class BookmarkEventScreen extends GetView<BookmarkEventController> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.filter_alt, color: Colors.blue),
-                  tooltip: "Sort and Filter",
+                  tooltip: LocaleKeys.filter_Dialog_sort_filter.tr,
                   onPressed: () {
                     controller.showSortAndFilterDialog(
                       context,
-                      initialFilterFutureEvents: controller.filterFutureEvents,
-                      initialFilterWithCapacity: controller.filterWithCapacity,
+                      initialFilterFutureEvents:
+                      controller.filterFutureEvents,
+                      initialFilterWithCapacity:
+                      controller.filterWithCapacity,
                       initialMaxPrice: controller.savedMaxPrice,
                       initialMinPrice: controller.savedMinPrice,
                       initialSortOrder: controller.sortOrder,
@@ -79,23 +82,26 @@ class BookmarkEventScreen extends GetView<BookmarkEventController> {
                     onChanged: (searchQuery) {
                       controller.updateSearchQuery(searchQuery);
                     },
-                    decoration: const InputDecoration(
-                      labelText: 'Search Bookmarked Events',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.search),
+                    decoration: InputDecoration(
+                      labelText: LocaleKeys.event_page_search.tr,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      prefixIcon: const Icon(Icons.search),
                     ),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 25),
-            const Column(
+
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.bookmark_border, size: 64, color: Colors.grey),
+                Icon(Icons.event, size: 64, color: Colors.grey),
                 SizedBox(height: 16),
                 Text(
-                  "No bookmarked events available.",
+                  LocaleKeys.event_page_empty.tr,
                   style: TextStyle(fontSize: 18, color: Colors.black54),
                 ),
                 SizedBox(height: 8),
@@ -107,52 +113,79 @@ class BookmarkEventScreen extends GetView<BookmarkEventController> {
     );
   }
 
-  AppBar _appBar() => AppBar(
+  AppBar _appBar(context) => AppBar(
     backgroundColor: Colors.blueAccent,
     centerTitle: true,
-    title: const Text("Bookmarked Events"),
+    title:  Text(LocaleKeys.bookmarked_Events_bookmarked_events.tr),
+    leading: IconButton(
+      icon: const Icon(Icons.logout),
+      hoverColor: Colors.grey,
+      tooltip: LocaleKeys.event_page_logout_press.tr,
+      color: Colors.white,
+      onPressed: () =>controller.showLogoutDialog(context),
+    ),
+    actions: [
+      IconButton(
+        icon: const Icon(
+          Icons.language_outlined,
+          color: Colors.white,
+          size: 24,
+        ),
+        hoverColor: Colors.grey,
+        tooltip: LocaleKeys.event_page_change_language.tr ,
+        onPressed: controller.onChangeLanguage,
+      )
+    ],
   );
 
   Widget _success(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-    child: Obx(
-          () => Stack(
-        children: [
-          Column(
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.filter_alt, color: Colors.blue),
-                    tooltip: "Sort and Filter",
-                    onPressed: () {
-                      controller.showSortAndFilterDialog(
-                        context,
-                        initialFilterFutureEvents: controller.filterFutureEvents,
-                        initialFilterWithCapacity: controller.filterWithCapacity,
-                        initialMaxPrice: controller.savedMaxPrice,
-                        initialMinPrice: controller.savedMinPrice,
-                        initialSortOrder: controller.sortOrder,
-                      );
-                    },
+    child: Column(
+      children: [
+        // Row for filter and search
+        Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.filter_alt, color: Colors.blue),
+              tooltip:LocaleKeys.filter_Dialog_sort_filter.tr,
+              onPressed: () {
+                controller.showSortAndFilterDialog(
+                  context,
+                  initialFilterFutureEvents:
+                  controller.filterFutureEvents,
+                  initialFilterWithCapacity:
+                  controller.filterWithCapacity,
+                  initialMaxPrice: controller.savedMaxPrice,
+                  initialMinPrice: controller.savedMinPrice,
+                  initialSortOrder: controller.sortOrder,
+                );
+              },
+            ),
+            Expanded(
+              child: TextField(
+                onChanged: (searchQuery) {
+                  controller.updateSearchQuery(searchQuery);
+                },
+                decoration: InputDecoration(
+                  labelText:LocaleKeys.event_page_search.tr,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  Expanded(
-                    child: TextField(
-                      onChanged: (searchQuery) {
-                        controller.updateSearchQuery(searchQuery);
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Search Bookmarked Events',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.search),
-                      ),
-                    ),
-                  ),
-                ],
+                  prefixIcon: const Icon(Icons.search),
+                ),
               ),
-              const SizedBox(height: 12),
-              Expanded(
-                child: ListView.separated(
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+
+        // Stack for loading or list
+        Expanded(
+          child: Stack(
+            children: [
+              // ListView for events
+              if (!controller.isLoading.value)
+                ListView.separated(
                   itemCount: controller.bookmarkedEvents.length,
                   itemBuilder: (_, index) => BookmarkEventWidget(
                     event: controller.bookmarkedEvents[index],
@@ -160,23 +193,23 @@ class BookmarkEventScreen extends GetView<BookmarkEventController> {
                       eventId: controller.bookmarkedEvents[index].id,
                     ),
                     onTap: (controller.bookmarkedEvents[index].filled ||
-                        controller.bookmarkedEvents[index].date
-                            .isBefore(DateTime.now()))
+                        controller.bookmarkedEvents[index].date.isBefore(DateTime.now()))
                         ? controller.filledEvent
                         : () => controller.goToEvent(
                         controller.bookmarkedEvents[index].id),
                   ),
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
                 ),
-              ),
+
+              // CircularProgressIndicator for loading
+              if (controller.isLoading.value)
+                const Center(
+                  child: CircularProgressIndicator(),
+                ),
             ],
           ),
-          if (controller.isLoading.value)
-            const Center(
-              child: CircularProgressIndicator(),
-            ),
-        ],
-      ),
+        ),
+      ],
     ),
   );
 }

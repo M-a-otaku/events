@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:events/generated/locales.g.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,22 +44,22 @@ class MyEventsController extends GetxController {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text("Delete Event"),
-          content: const Text("Are you sure you want to delete this event?"),
+          title:  Text(LocaleKeys.my_event_delete.tr),
+          content:  Text(LocaleKeys.my_event_delete_validate.tr),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
               },
-              child: const Text("No"),
+              child:  Text(LocaleKeys.event_page_logout_no.tr),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
                 onConfirm();
               },
-              child: const Text(
-                "Yes",
+              child:  Text(
+                LocaleKeys.event_page_logout_yes.tr,
                 style: TextStyle(color: Colors.red),
               ),
             ),
@@ -99,18 +100,6 @@ class MyEventsController extends GetxController {
 
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     final int userId = preferences.getInt(LocalStorageKeys.userId) ?? -1;
-
-    if (userId == -1) {
-      Get.showSnackbar(
-        GetSnackBar(
-          message: "User not logged in",
-          backgroundColor: Colors.redAccent.withOpacity(0.2),
-          duration: const Duration(seconds: 5),
-        ),
-      );
-      return;
-    }
-
     final String key = 'bookmarkedIds_$userId';
     List<String> bookmarkedIds = preferences.getStringList(key) ?? [];
 
@@ -149,13 +138,13 @@ class MyEventsController extends GetxController {
 
 
   void showSortAndFilterDialog(
-    BuildContext context, {
-    required bool initialFilterFutureEvents,
-    required bool initialFilterWithCapacity,
-    String? initialSortOrder,
-    double initialMinPrice = 0,
-    double initialMaxPrice = 9999,
-  }) {
+      BuildContext context, {
+        required bool initialFilterFutureEvents,
+        required bool initialFilterWithCapacity,
+        String? initialSortOrder,
+        double initialMinPrice = 0,
+        double initialMaxPrice = 9999,
+      }) {
     RangeValues priceRange = RangeValues(savedMinPrice, savedMaxPrice);
 
     bool isLoading = false;
@@ -166,138 +155,138 @@ class MyEventsController extends GetxController {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: const Text("Sort and Filter Events"),
+              title: Text(LocaleKeys.filter_Dialog_sort_filter.tr),
               content: isLoading
                   ? const SizedBox(
-                      height: 80,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
+                height: 80,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              )
                   : SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            "Price Range",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          RangeSlider(
-                            values: priceRange,
-                            min: 0,
-                            max: 9999,
-                            divisions: 100,
-                            labels: RangeLabels(
-                              priceRange.start.toStringAsFixed(0),
-                              priceRange.end.toStringAsFixed(0),
-                            ),
-                            onChanged: (values) {
-                              setState(() {
-                                priceRange = values;
-                              });
-                            },
-                          ),
-                          Text(
-                            "Min: ${priceRange.start.toStringAsFixed(0)} - Max: ${priceRange.end.toStringAsFixed(0)}",
-                          ),
-                          CheckboxListTile(
-                            title: const Text("Only Future Events"),
-                            value: filterFutureEvents,
-                            onChanged: (value) {
-                              setState(() {
-                                filterFutureEvents = value!;
-                              });
-                            },
-                          ),
-                          CheckboxListTile(
-                            title: const Text("Only Events With Capacity"),
-                            value: filterWithCapacity,
-                            onChanged: (value) {
-                              setState(() {
-                                filterWithCapacity = value!;
-                              });
-                            },
-                          ),
-                          DropdownButton<String>(
-                            value: sortOrder,
-                            hint: const Text("Sort by Time (Optional)"),
-                            items: const [
-                              DropdownMenuItem(
-                                value: "Ascending",
-                                child: Text("Ascending (Newest First)"),
-                              ),
-                              DropdownMenuItem(
-                                value: "Descending",
-                                child: Text("Descending (Oldest First)"),
-                              ),
-                            ],
-                            onChanged: (value) {
-                              setState(() {
-                                sortOrder = value;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      LocaleKeys.filter_Dialog_price_range.tr,
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
+                    RangeSlider(
+                      values: priceRange,
+                      min: 0,
+                      max: 9999,
+                      divisions: 100,
+                      labels: RangeLabels(
+                        priceRange.start.toStringAsFixed(0),
+                        priceRange.end.toStringAsFixed(0),
+                      ),
+                      onChanged: (values) {
+                        setState(() {
+                          priceRange = values;
+                        });
+                      },
+                    ),
+                    Text(
+                      "${LocaleKeys.filter_Dialog_price_min.tr}: ${priceRange.start.toStringAsFixed(0)} - ${LocaleKeys.filter_Dialog_price_max.tr}: ${priceRange.end.toStringAsFixed(0)}",
+                    ),
+                    CheckboxListTile(
+                      title:  Text(LocaleKeys.filter_Dialog_only_future.tr),
+                      value: filterFutureEvents,
+                      onChanged: (value) {
+                        setState(() {
+                          filterFutureEvents = value!;
+                        });
+                      },
+                    ),
+                    CheckboxListTile(
+                      title: Text(LocaleKeys.filter_Dialog_only_capacity.tr),
+                      value: filterWithCapacity,
+                      onChanged: (value) {
+                        setState(() {
+                          filterWithCapacity = value!;
+                        });
+                      },
+                    ),
+                    DropdownButton<String>(
+                      value: sortOrder,
+                      hint:  Text(LocaleKeys.filter_Dialog_sort_time.tr),
+                      items: [
+                        DropdownMenuItem(
+                          value: LocaleKeys.filter_Dialog_sort_time_ascending.tr,
+                          child:  Text(LocaleKeys.filter_Dialog_sort_time_ascending.tr),
+                        ),
+                        DropdownMenuItem(
+                          value: LocaleKeys.filter_Dialog_sort_time_descending.tr,
+                          child: Text(LocaleKeys.filter_Dialog_sort_time_descending.tr),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          sortOrder = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
               actions: isLoading
                   ? []
                   : [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text("Cancel"),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            priceRange = RangeValues(0, 9999);
-                            filterFutureEvents = false;
-                            filterWithCapacity = false;
-                            sortOrder = null;
-                          });
-                          getEvents();
-                          Navigator.pop(context, {
-                            'filterFutureEvents': false,
-                            'filterWithCapacity': false,
-                            'sortOrder': null,
-                            'minPrice': 0,
-                            'maxPrice': 9999,
-                          });
-                        },
-                        child: const Text("Reset"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          setState(() {
-                            isLoading = true;
-                          });
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(LocaleKeys.filter_Dialog_cancel.tr),
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      priceRange = RangeValues(0, 9999);
+                      filterFutureEvents = false;
+                      filterWithCapacity = false;
+                      sortOrder = null;
+                    });
+                    getEvents();
+                    Navigator.pop(context, {
+                      'filterFutureEvents': false,
+                      'filterWithCapacity': false,
+                      'sortOrder': null,
+                      'minPrice': 0,
+                      'maxPrice': 9999,
+                    });
+                  },
+                  child: Text(LocaleKeys.filter_Dialog_reset.tr),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
 
-                          await getEvents(
-                            ascending: sortOrder == "Ascending"
-                                ? true
-                                : sortOrder == "Descending"
-                                    ? false
-                                    : null,
-                            onlyFuture: filterFutureEvents,
-                            withCapacity: filterWithCapacity,
-                            minPrice: priceRange.start.toInt(),
-                            maxPrice: priceRange.end.toInt(),
-                          );
+                    await getEvents(
+                      ascending: sortOrder == "Ascending"
+                          ? true
+                          : sortOrder == "Descending"
+                          ? false
+                          : null,
+                      onlyFuture: filterFutureEvents,
+                      withCapacity: filterWithCapacity,
+                      minPrice: priceRange.start.toInt(),
+                      maxPrice: priceRange.end.toInt(),
+                    );
 
-                          savedMinPrice = priceRange.start;
-                          savedMaxPrice = priceRange.end;
+                    savedMinPrice = priceRange.start;
+                    savedMaxPrice = priceRange.end;
 
-                          Navigator.pop(context, {
-                            'filterFutureEvents': filterFutureEvents,
-                            'filterWithCapacity': filterWithCapacity,
-                            'sortOrder': sortOrder,
-                            'minPrice': priceRange.start.toInt(),
-                            'maxPrice': priceRange.end.toInt(),
-                          });
-                        },
-                        child: const Text("Apply"),
-                      ),
-                    ],
+                    Navigator.pop(context, {
+                      'filterFutureEvents': filterFutureEvents,
+                      'filterWithCapacity': filterWithCapacity,
+                      'sortOrder': sortOrder,
+                      'minPrice': priceRange.start.toInt(),
+                      'maxPrice': priceRange.end.toInt(),
+                    });
+                  },
+                  child: Text(LocaleKeys.filter_Dialog_apply.tr),
+                ),
+              ],
             );
           },
         );
@@ -420,8 +409,8 @@ class MyEventsController extends GetxController {
         isEventRemoving[eventId] = false;
         Get.showSnackbar(
           GetSnackBar(
-            messageText: const Text(
-              "Event deleted successfully",
+            messageText:  Text(
+             LocaleKeys.my_event_delete_success.tr,
               style: TextStyle(color: Colors.black, fontSize: 14),
             ),
             backgroundColor: Colors.greenAccent.withOpacity(0.2),
@@ -446,6 +435,56 @@ class MyEventsController extends GetxController {
     await prefs.setStringList('bookmarkedEventIds', bookmarkedEventIds.map((e) => e.toString()).toList());
   }
 
+  void showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(LocaleKeys.event_page_logout.tr),
+          content: Text(LocaleKeys.event_page_logout_validate.tr),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(LocaleKeys.event_page_logout_no.tr),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                logout();
+              },
+              child: Text(LocaleKeys.event_page_logout_yes.tr),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> logout() async {
+    await Get.offAllNamed(RouteNames.login);
+  }
+
+  void onChangeLanguage() async {
+    isLoading.value = true;
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String? localeKey = pref.getString(LocalStorageKeys.languageLocale);
+    if (localeKey == null) {
+      localeKey = 'fa';
+      pref.setString(LocalStorageKeys.languageLocale, 'fa');
+    } else {
+      if (localeKey == 'fa') {
+        localeKey = 'en';
+        pref.setString(LocalStorageKeys.languageLocale, 'en');
+      } else if (localeKey == 'en') {
+        localeKey = 'fa';
+        pref.setString(LocalStorageKeys.languageLocale, 'fa');
+      }
+    }
+    isLoading.value = false;
+    Get.updateLocale(Locale(localeKey));
+  }
 
 
   @override

@@ -1,6 +1,8 @@
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:either_dart/either.dart';
 import 'dart:convert';
+import '../../../../generated/locales.g.dart';
 import '../../../infrastructure/commons/url_repository.dart';
 import '../models/events_model.dart';
 import '../models/events_user_dto.dart';
@@ -24,8 +26,7 @@ class EventsRepository {
 
         return Right(fetchedEvents);
       } } catch (e) {
-      print('Error: $e');
-      return Left(e.toString());
+      return Left("${LocaleKeys.error_error.tr}  ${e.toString()}");
     }
     return null;
   }
@@ -46,13 +47,13 @@ class EventsRepository {
         },
       );
       if (response.statusCode != 200) {
-        return const Left(
-          'Cant add this event to bookmarks',
+        return  Left(
+          LocaleKeys.error_repository_add_bookmark.tr,
         );
       }
       return const Right(true);
     } catch (e) {
-      return Left(e.toString());
+      return Left("${LocaleKeys.error_error.tr}  ${e.toString()}");
     }
   }
 }

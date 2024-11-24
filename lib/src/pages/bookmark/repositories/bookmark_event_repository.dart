@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:either_dart/either.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../generated/locales.g.dart';
 import '../../../infrastructure/commons/url_repository.dart';
 import '../../shared/local_storage_keys.dart';
 import '../models/bookmark_user_dto.dart';
@@ -37,10 +39,10 @@ class BookmarkEventRepository {
 
         return Right(bookmarkedEvents);
       } else {
-        return const Left("Failed to load events");
+        return  Left(LocaleKeys.error_error.tr);
       }
     } catch (e) {
-      return Left(e.toString());
+      return Left("${LocaleKeys.error_error.tr}  ${e.toString()}");
     }
   }
 
@@ -57,13 +59,13 @@ class BookmarkEventRepository {
         },
       );
       if (response.statusCode != 200) {
-        return const Left(
-          'Cant add this event to bookmarks',
+        return  Left(
+          LocaleKeys.error_repository_add_bookmark.tr,
         );
       }
       return const Right(true);
     } catch (e) {
-      return Left(e.toString());
+      return Left("${LocaleKeys.error_error.tr}  ${e.toString()}");
     }
   }
 

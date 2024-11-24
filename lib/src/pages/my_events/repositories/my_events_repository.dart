@@ -1,6 +1,8 @@
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:either_dart/either.dart';
 import 'dart:convert';
+import '../../../../generated/locales.g.dart';
 import '../../../infrastructure/commons/url_repository.dart';
 import '../models/events_user_dto.dart';
 import '../models/my_events_model.dart';
@@ -23,8 +25,7 @@ class MyEventsRepository {
 
         return Right(fetchedEvents);
       } } catch (e) {
-      print('Error: $e');
-      return Left(e.toString());
+      return Left("${LocaleKeys.error_error.tr}  ${e.toString()}");
     }
     return null;
   }
@@ -39,11 +40,11 @@ class MyEventsRepository {
         },
       );
       if (response.statusCode != 200) {
-        return const Left("can't delete this event");
+        return  Left(LocaleKeys.my_event_delete_failed.tr);
       }
       return const Right(true);
     } catch (e) {
-      return Left(e.toString());
+      return Left("${LocaleKeys.error_error.tr}  ${e.toString()}");
     }
   }
 
@@ -62,14 +63,13 @@ class MyEventsRepository {
         },
       );
       if (response.statusCode != 200) {
-        return const Left(
-          'Cant add this event to bookmarks',
+        return  Left(
+          LocaleKeys.error_repository_add_bookmark.tr,
         );
       }
       return const Right(true);
     } catch (e) {
-      return Left(e.toString());
+      return Left("${LocaleKeys.error_error.tr}  ${e.toString()}");
     }
   }
-
 }

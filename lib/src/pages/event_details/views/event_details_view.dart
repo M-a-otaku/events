@@ -127,6 +127,15 @@ class EventDetailsView extends GetView<EventDetailsController> {
                   ),
                 ),
                 const SizedBox(height: 20),
+                Text(
+                  "Selected Tickets: ${controller.selectedTickets.value}",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 20),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

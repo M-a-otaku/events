@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import '../../../../../generated/locales.g.dart';
 import '../../controllers/events_controller.dart';
 import '../../models/events_model.dart';
 
@@ -30,7 +31,7 @@ class EventsWidget extends GetView<EventsController> {
       shadowColor: Colors.grey.shade300,
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: (event.filled) ? null : onTap,
+        onTap: (controller.isLoading.value) ? null : onTap,
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -138,8 +139,8 @@ class EventsWidget extends GetView<EventsController> {
                             color: Colors.red.shade400,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Text(
-                            'Full',
+                          child:  Text(
+                            LocaleKeys.event_page_full.tr,
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -155,8 +156,8 @@ class EventsWidget extends GetView<EventsController> {
                             color: Colors.green.shade400,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Text(
-                            'Available',
+                          child:  Text(
+                            LocaleKeys.event_page_available.tr ,
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,

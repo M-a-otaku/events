@@ -14,6 +14,8 @@ class EventDetailsController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isRetry = false.obs;
   var _selectedNumber = 0;
+  RxInt selectedTickets = 0.obs;
+
   final EventDetailsRepository _repository = EventDetailsRepository();
 
   Rx<EventDetailsModel> event = Rx(EventDetailsModel(
@@ -37,7 +39,7 @@ class EventDetailsController extends GetxController {
         content: NumberPicker(
           initialValue: _selectedNumber,
           min: 0,
-          max: event.value.capacity - event.value.participants!,
+          max: event.value.capacity - (event.value.participants ?? 0),
           step: 1,
           onChanged: (value) {
             _selectedNumber = value;
@@ -46,6 +48,7 @@ class EventDetailsController extends GetxController {
         actions: [
           TextButton(
             onPressed: () {
+              selectedTickets.value = _selectedNumber;
               Navigator.of(context).pop();
             },
             child: const Text("Done"),
@@ -53,9 +56,6 @@ class EventDetailsController extends GetxController {
         ],
       ),
     );
-
-
-
   }
 
   Future<void> onRefresh() async {

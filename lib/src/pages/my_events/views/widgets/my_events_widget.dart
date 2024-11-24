@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import '../../../../../generated/locales.g.dart';
 import '../../controllers/my_events_controller.dart';
 import '../../models/my_events_model.dart';
 
@@ -28,7 +29,7 @@ class MyEventsWidget extends GetView<MyEventsController> {
       shadowColor: Colors.grey.shade300,
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: (controller.isEventRemoving[myEvent.id] ?? false) ? null : onTap,
+        onTap: ( controller.isEventRemoving[myEvent.id] ?? false) ? null : onTap,
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -140,8 +141,8 @@ class MyEventsWidget extends GetView<MyEventsController> {
                                   color: Colors.red.shade400,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: const Text(
-                                  'Full',
+                                child:  Text(
+                                  LocaleKeys.event_page_full.tr,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -157,8 +158,8 @@ class MyEventsWidget extends GetView<MyEventsController> {
                                   color: Colors.green.shade400,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: const Text(
-                                  'Available',
+                                child:  Text(
+                                  LocaleKeys.event_page_available.tr,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,

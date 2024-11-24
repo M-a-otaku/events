@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../generated/locales.g.dart';
 import '../controllers/my_events_controller.dart';
 import 'widgets/my_events_widget.dart';
 
@@ -12,7 +13,7 @@ class MyEventsView extends GetView<MyEventsController> {
       backgroundColor: Colors.grey[200],
       floatingActionButton: _fab(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      appBar: _appBar(),
+      appBar: _appBar(context),
       body: RefreshIndicator(
         onRefresh: controller.onRefresh,
         child: Obx(() => _body(context)),
@@ -35,13 +36,13 @@ class MyEventsView extends GetView<MyEventsController> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
-            "Failed to load events.",
+          Text(
+            LocaleKeys.event_page_retry.tr ,
             style: TextStyle(fontSize: 16, color: Colors.black54),
           ),
           const SizedBox(height: 8),
           IconButton(
-            tooltip: "Press to refresh",
+            tooltip: LocaleKeys.event_page_refresh.tr,
             hoverColor: Colors.blueAccent,
             highlightColor: Colors.white,
             onPressed: controller.getEvents,
@@ -63,7 +64,7 @@ class MyEventsView extends GetView<MyEventsController> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.filter_alt, color: Colors.blue),
-                  tooltip: "Sort and Filter",
+                  tooltip: LocaleKeys.filter_Dialog_sort_filter.tr,
                   onPressed: () {
                     controller.showSortAndFilterDialog(
                       context,
@@ -83,7 +84,7 @@ class MyEventsView extends GetView<MyEventsController> {
                       controller.updateSearchQuery(searchQuery);
                     },
                     decoration: InputDecoration(
-                      labelText: 'Search by title',
+                      labelText: LocaleKeys.event_page_search.tr,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -95,13 +96,13 @@ class MyEventsView extends GetView<MyEventsController> {
             ),
             const SizedBox(height: 25),
 
-            const Column(
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.event, size: 64, color: Colors.grey),
                 SizedBox(height: 16),
                 Text(
-                  "No events available.",
+                  LocaleKeys.event_page_empty.tr,
                   style: TextStyle(fontSize: 18, color: Colors.black54),
                 ),
                 SizedBox(height: 8),
@@ -113,10 +114,29 @@ class MyEventsView extends GetView<MyEventsController> {
     );
   }
 
-  AppBar _appBar() => AppBar(
+  AppBar _appBar(context) => AppBar(
     centerTitle: true,
-    title: const Text("My Events"),
+    title:  Text(LocaleKeys.bottom_nav_bar_my_events.tr),
     backgroundColor: Colors.blueAccent,
+    leading: IconButton(
+      icon: const Icon(Icons.logout),
+      hoverColor: Colors.grey,
+      tooltip: LocaleKeys.event_page_logout_press.tr,
+      color: Colors.white,
+      onPressed: () =>controller.showLogoutDialog(context),
+    ),
+    actions: [
+      IconButton(
+        icon: const Icon(
+          Icons.language_outlined,
+          color: Colors.white,
+          size: 24,
+        ),
+        hoverColor: Colors.grey,
+        tooltip: LocaleKeys.event_page_change_language.tr ,
+        onPressed: controller.onChangeLanguage,
+      )
+    ],
   );
 
   Widget _fab() {
@@ -137,7 +157,7 @@ class MyEventsView extends GetView<MyEventsController> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.filter_alt, color: Colors.blue),
-                    tooltip: "Sort and Filter",
+                    tooltip: LocaleKeys.filter_Dialog_sort_filter.tr ,
                     onPressed: () {
                       controller.showSortAndFilterDialog(
                         context,
@@ -157,7 +177,7 @@ class MyEventsView extends GetView<MyEventsController> {
                         controller.updateSearchQuery(searchQuery);
                       },
                       decoration: InputDecoration(
-                        labelText: 'Search by title',
+                        labelText: LocaleKeys.event_page_search.tr,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -176,10 +196,11 @@ class MyEventsView extends GetView<MyEventsController> {
                     removeEvent: () => controller.removeEvent(
                       eventId: controller.myEvents[index].id,
                     ),
-                    onTap: (controller.isRemoving.value)
-                        ? null
-                        : () => controller.toEditPage(
-                        eventId: controller.myEvents[index].id),
+                      onTap: (controller.isEventRemoving[controller.myEvents[index].id] ?? false)
+                          ? null
+                          : () => controller.toEditPage(
+                        eventId: controller.myEvents[index].id,
+                      ),
                   ),
                   separatorBuilder: (_, __) =>
                   const SizedBox(height: 12),
