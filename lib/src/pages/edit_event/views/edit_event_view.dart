@@ -27,7 +27,7 @@ class EditEventView extends GetView<EditEventController> {
 
   AppBar _appBar() {
     return AppBar(
-      title: const Text("Edit Event"),
+      title:  Text(LocaleKeys.edit_event_edit_event.tr),
       centerTitle: true,
       automaticallyImplyLeading: false,
       backgroundColor: Colors.blueAccent,
@@ -80,12 +80,12 @@ class EditEventView extends GetView<EditEventController> {
             ElevatedButton(
               onPressed: () {
                 if (controller.participants.value > 0) {
-                  controller.showSnackbar("Time cannot be changed because participants > 0");
+                  controller.showSnackbar(LocaleKeys.edit_event_time_error.tr);
                 } else {
                   controller.chooseTime();
                 }
               },
-              child: const Text('Select Time'),
+              child: Text(LocaleKeys.add_event_select_time.tr),
             ),
               const SizedBox(height: 16),
               _yearMonthDaySelectors(),
@@ -105,7 +105,7 @@ class EditEventView extends GetView<EditEventController> {
           height: 333,
         );
       } else {
-        return const Center(child: Text("No image selected"));
+        return  Center(child: Text(LocaleKeys.add_event_no_image.tr));
       }
     });
   }
@@ -122,8 +122,8 @@ class EditEventView extends GetView<EditEventController> {
           borderRadius: BorderRadius.circular(12),
           color: controller.isLoading.value ? Colors.grey : Colors.blueAccent,
         ),
-        child: const Text(
-          "Pick Image",
+        child:  Text(
+          LocaleKeys.add_event_pick_image.tr,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
@@ -145,7 +145,7 @@ class EditEventView extends GetView<EditEventController> {
       decoration: InputDecoration(
         counter: const Offstage(),
         prefixIcon: const Icon(Icons.title, color: Colors.grey),
-        labelText: "Title",
+        labelText: LocaleKeys.add_event_title.tr,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -164,7 +164,7 @@ class EditEventView extends GetView<EditEventController> {
       decoration: InputDecoration(
         counter: const Offstage(),
         prefixIcon: const Icon(Icons.description, color: Colors.grey),
-        labelText: "Description",
+        labelText: LocaleKeys.add_event_description.tr,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -179,7 +179,7 @@ class EditEventView extends GetView<EditEventController> {
       readOnly: controller.participants.value > 0,
       onTap: () {
         if (controller.participants.value > 0) {
-          controller.showSnackbar("Price cannot be changed because participants > 0");
+          controller.showSnackbar(LocaleKeys.edit_event_price_error.tr);
         }
       },
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -188,7 +188,7 @@ class EditEventView extends GetView<EditEventController> {
       validator: controller.validatePrice,
       decoration: InputDecoration(
         counter: const Offstage(),
-        labelText: "Price",
+        labelText: LocaleKeys.add_event_price.tr,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -203,7 +203,7 @@ class EditEventView extends GetView<EditEventController> {
       readOnly: controller.participants.value > 0,
       onTap: () {
         if (controller.participants.value > 0) {
-          controller.showSnackbar("Capacity cannot be changed because participants > 0");
+          controller.showSnackbar(LocaleKeys.edit_event_capacity_error.tr);
         }
       },
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -213,7 +213,7 @@ class EditEventView extends GetView<EditEventController> {
       validator: controller.validateCapacity,
       decoration: InputDecoration(
         counter: const Offstage(),
-        labelText: "Capacity w",
+        labelText: LocaleKeys.add_event_capacity.tr,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -246,57 +246,62 @@ class EditEventView extends GetView<EditEventController> {
   Widget _yearDropdown() {
     return Obx(() => DropdownButton<String>(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-      hint: const Text("Year"),
-      value: controller.selectedYear.value.isEmpty ? null : controller.selectedYear.value,
+      value: controller.selectedYear.value.isEmpty ||
+          !controller.years.contains(controller.selectedYear.value)
+          ? null
+          : controller.selectedYear.value,
       items: controller.years.map((year) {
         return DropdownMenuItem(
           value: year,
           child: Text(year),
         );
       }).toList(),
-        onChanged: controller.participants.value == 0
-            ? (value) => controller.selectedYear.value = value ?? ''
-            : (value) {
-          controller.showSnackbar("date cannot be changed because participants > 0");
-        },
+      onChanged: controller.participants.value == 0
+          ? (value) => controller.selectedYear.value = value ?? ''
+          : (value) {
+        controller.showSnackbar(LocaleKeys.edit_event_date_error.tr);
+      },
     ));
   }
-
   Widget _monthDropdown() {
     return Obx(() => DropdownButton<String>(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-      hint: const Text("Month"),
-      value: controller.selectedMonth.value.isEmpty ? null : controller.selectedMonth.value,
+      value: controller.selectedMonth.value.isEmpty ||
+          !controller.months.contains(controller.selectedMonth.value)
+          ? null
+          : controller.selectedMonth.value,
       items: controller.months.map((month) {
         return DropdownMenuItem(
           value: month,
           child: Text(month),
         );
       }).toList(),
-        onChanged: controller.participants.value == 0
-            ? (value) => controller.selectedYear.value = value ?? ''
-            : (value) {
-          controller.showSnackbar("date cannot be changed because participants > 0");
-        },
+      onChanged: controller.participants.value == 0
+          ? (value) => controller.selectedMonth.value = value ?? ''
+          : (value) {
+        controller.showSnackbar(LocaleKeys.edit_event_date_error.tr);
+      },
     ));
   }
 
   Widget _dayDropdown() {
     return Obx(() => DropdownButton<String>(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-      hint: const Text("Day"),
-      value: controller.selectedDay.value.isEmpty ? null : controller.selectedDay.value,
+      value: controller.selectedDay.value.isEmpty ||
+          !controller.days.contains(controller.selectedDay.value)
+          ? null
+          : controller.selectedDay.value,
       items: controller.days.map((day) {
         return DropdownMenuItem(
           value: day,
           child: Text(day),
         );
       }).toList(),
-        onChanged: controller.participants.value == 0
-            ? (value) => controller.selectedYear.value = value ?? ''
-            : (value) {
-          controller.showSnackbar("date cannot be changed because participants > 0");
-        },
+      onChanged: controller.participants.value == 0
+          ? (value) => controller.selectedDay.value = value ?? ''
+          : (value) {
+        controller.showSnackbar(LocaleKeys.edit_event_date_error.tr);
+      },
     ));
   }
 }

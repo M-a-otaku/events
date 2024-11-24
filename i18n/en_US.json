@@ -53,7 +53,8 @@
   },
   "snack_bar": {
     "filled": "You can't but a Event that is full or Expired",
-    "date": "Please choose valid date after"
+    "date": "Please choose valid date after",
+    "not_Allowed": "Action Not Allowed"
   },
   "error": {
     "repository_add_bookmark": "Can't add this Event to Bookmark",
@@ -105,5 +106,12 @@
     "price": "Price",
     "capacity": "Capacity",
     "select_time": "Select Time"
+  },
+  "edit_event": {
+    "edit_event": "Edit Event",
+    "time_error": "Time cannot be changed because participants > 0",
+    "price_error": "Price cannot be changed because participants > 0",
+    "capacity_error": "Capacity cannot be changed because participants > 0",
+    "date_error": "date cannot be changed because participants > 0"
   }
 }

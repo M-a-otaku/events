@@ -158,7 +158,7 @@ class EditEventController extends GetxController {
 
   void showSnackbar(String message) {
     Get.snackbar(
-      "Action Not Allowed",
+      LocaleKeys.snack_bar_not_Allowed.tr,
       message,
       snackPosition: SnackPosition.BOTTOM,
       colorText: Colors.black,

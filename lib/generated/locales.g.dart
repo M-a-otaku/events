@@ -59,6 +59,7 @@ class LocaleKeys {
   static const event_page_change_language = 'event_page_change_language';
   static const snack_bar_filled = 'snack_bar_filled';
   static const snack_bar_date = 'snack_bar_date';
+  static const snack_bar_not_Allowed = 'snack_bar_not_Allowed';
   static const error_repository_add_bookmark = 'error_repository_add_bookmark';
   static const error_error = 'error_error';
   static const bottom_nav_bar_home = 'bottom_nav_bar_home';
@@ -98,6 +99,11 @@ class LocaleKeys {
   static const add_event_price = 'add_event_price';
   static const add_event_capacity = 'add_event_capacity';
   static const add_event_select_time = 'add_event_select_time';
+  static const edit_event_edit_event = 'edit_event_edit_event';
+  static const edit_event_time_error = 'edit_event_time_error';
+  static const edit_event_price_error = 'edit_event_price_error';
+  static const edit_event_capacity_error = 'edit_event_capacity_error';
+  static const edit_event_date_error = 'edit_event_date_error';
 }
 
 class Locales {
@@ -148,6 +154,7 @@ class Locales {
     'event_page_change_language': 'Press to Change language',
     'snack_bar_filled': 'You can\'t but a Event that is full or Expired',
     'snack_bar_date': 'Please choose valid date after',
+    'snack_bar_not_Allowed': 'Action Not Allowed',
     'error_repository_add_bookmark': 'Can\'t add this Event to Bookmark',
     'error_error': 'Something Went Wrong',
     'bottom_nav_bar_home': 'Home',
@@ -183,6 +190,13 @@ class Locales {
     'add_event_price': 'Price',
     'add_event_capacity': 'Capacity',
     'add_event_select_time': 'Select Time',
+    'edit_event_edit_event': 'Edit Event',
+    'edit_event_time_error': 'Time cannot be changed because participants > 0',
+    'edit_event_price_error':
+        'Price cannot be changed because participants > 0',
+    'edit_event_capacity_error':
+        'Capacity cannot be changed because participants > 0',
+    'edit_event_date_error': 'date cannot be changed because participants > 0',
   };
   static const fa_IR = {
     'filter_Dialog_cancel': 'لغو',
@@ -232,6 +246,7 @@ class Locales {
     'snack_bar_filled':
         'رویدادی که پر است یا منقضی شده است رو نمیتوان خریداری کرد',
     'snack_bar_date': 'لطفا زمان مناسب انتخاب کنید بعد از ',
+    'snack_bar_not_Allowed': 'این عمل مجاز نیست',
     'error_repository_add_bookmark':
         'نمی توان این رویداد را به ذخیره شده ها اضاف کرد',
     'error_error': 'مشکلی پیش آمد',
@@ -268,5 +283,14 @@ class Locales {
     'add_event_price': 'قیمت',
     'add_event_capacity': 'ظرفیت',
     'add_event_select_time': 'زمان را انتخاب کنید',
+    'edit_event_edit_event': 'ویرایش رویداد',
+    'edit_event_time_error':
+        'زمان قابل تغییر نیست چون خریداران رویداد صفر نیستن',
+    'edit_event_price_error':
+        'قیمت قابل تغییر نیست چون خریداران رویداد صفر نیستن',
+    'edit_event_capacity_error':
+        'ظرفیت قابل تغییر نیست چون خریداران رویداد صفر نیستن',
+    'edit_event_date_error':
+        'تاریخ  قابل تغییر نیست چون خریداران رویداد صفر نیستن',
   };
 }
