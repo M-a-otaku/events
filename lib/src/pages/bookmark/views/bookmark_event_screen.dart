@@ -192,11 +192,11 @@ class BookmarkEventScreen extends GetView<BookmarkEventController> {
                     onBookmark: () => controller.toggleBookmark(
                       eventId: controller.bookmarkedEvents[index].id,
                     ),
-                    onTap: (controller.bookmarkedEvents[index].filled ||
-                        controller.bookmarkedEvents[index].date.isBefore(DateTime.now()))
-                        ? controller.filledEvent
-                        : () => controller.goToEvent(
-                        controller.bookmarkedEvents[index].id),
+                    // onTap: (controller.bookmarkedEvents[index].filled ||
+                    //     controller.bookmarkedEvents[index].date.isBefore(DateTime.now()))
+                    //     ? controller.filledEvent
+                    //     : () => controller.goToEvent(
+                    //     controller.bookmarkedEvents[index].id),
                   ),
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
                 ),

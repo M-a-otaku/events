@@ -11,12 +11,12 @@ class BookmarkEventWidget extends GetView<BookmarkEventController> {
     super.key,
     required this.event,
     required this.onBookmark,
-    required this.onTap,
+    // required this.onTap,
   });
 
   final EventModel event;
   final void Function() onBookmark;
-  final void Function() onTap;
+  // final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class BookmarkEventWidget extends GetView<BookmarkEventController> {
       shadowColor: Colors.grey.shade300,
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: (controller.isLoading.value) ? null : onTap,
+        // onTap: (controller.isLoading.value) ? null : onTap,
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(

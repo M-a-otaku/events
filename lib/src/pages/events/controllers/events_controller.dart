@@ -74,11 +74,11 @@ class EventsController extends GetxController {
 
   Map<String, String> _buildQueryParameters(
       {bool? ascending,
-      bool? onlyFuture,
-      bool? withCapacity,
-      int? minPrice,
-      int? maxPrice,
-      String? searchQuery}) {
+        bool? onlyFuture,
+        bool? withCapacity,
+        int? minPrice,
+        int? maxPrice,
+        String? searchQuery}) {
     final today = DateTime.now().toIso8601String();
     return {
       if (ascending != null) '_sort': 'date',
@@ -122,10 +122,10 @@ class EventsController extends GetxController {
 
   Future<void> getEvents(
       {bool? ascending,
-      bool? onlyFuture,
-      bool? withCapacity,
-      int? minPrice,
-      int? maxPrice}) async {
+        bool? onlyFuture,
+        bool? withCapacity,
+        int? minPrice,
+        int? maxPrice}) async {
     events.clear();
     isLoading.value = true;
     isRetry.value = false;
@@ -140,10 +140,10 @@ class EventsController extends GetxController {
         searchQuery: query.value);
 
     final result =
-        await _repository.fetchEvents(queryParameters: queryParameters);
+    await _repository.fetchEvents(queryParameters: queryParameters);
 
     result?.fold(
-      (exception) {
+          (exception) {
         isLoading.value = false;
         isRetry.value = true;
         Get.showSnackbar(
@@ -157,7 +157,7 @@ class EventsController extends GetxController {
           ),
         );
       },
-      (eventList) {
+          (eventList) {
         isLoading.value = false;
         isRetry.value = false;
         events.value = eventList;
@@ -190,7 +190,7 @@ class EventsController extends GetxController {
     final result = await _repository.editBookmarked(dto: dto, userId: userId);
 
     result.fold(
-      (exception) {
+          (exception) {
         isEventRefreshing[eventId] = false;
         isBookmarked.value = false;
         Get.showSnackbar(
@@ -204,7 +204,7 @@ class EventsController extends GetxController {
           ),
         );
       },
-      (_) {
+          (_) {
         isEventRefreshing[eventId] = false;
         isBookmarked.value = false;
       },
@@ -251,13 +251,13 @@ class EventsController extends GetxController {
   }
 
   void showSortAndFilterDialog(
-    BuildContext context, {
-    required bool initialFilterFutureEvents,
-    required bool initialFilterWithCapacity,
-    String? initialSortOrder,
-    double initialMinPrice = 0,
-    double initialMaxPrice = 9999,
-  }) {
+      BuildContext context, {
+        required bool initialFilterFutureEvents,
+        required bool initialFilterWithCapacity,
+        String? initialSortOrder,
+        double initialMinPrice = 0,
+        double initialMaxPrice = 9999,
+      }) {
     RangeValues priceRange = RangeValues(savedMinPrice, savedMaxPrice);
 
     bool isLoading = false;
@@ -271,135 +271,135 @@ class EventsController extends GetxController {
               title: Text(LocaleKeys.filter_Dialog_sort_filter.tr),
               content: isLoading
                   ? const SizedBox(
-                      height: 80,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
+                height: 80,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              )
                   : SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            LocaleKeys.filter_Dialog_price_range.tr,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          RangeSlider(
-                            values: priceRange,
-                            min: 0,
-                            max: 9999,
-                            divisions: 100,
-                            labels: RangeLabels(
-                              priceRange.start.toStringAsFixed(0),
-                              priceRange.end.toStringAsFixed(0),
-                            ),
-                            onChanged: (values) {
-                              setState(() {
-                                priceRange = values;
-                              });
-                            },
-                          ),
-                          Text(
-                            "${LocaleKeys.filter_Dialog_price_min.tr}: ${priceRange.start.toStringAsFixed(0)} - ${LocaleKeys.filter_Dialog_price_max.tr}: ${priceRange.end.toStringAsFixed(0)}",
-                          ),
-                          CheckboxListTile(
-                            title:  Text(LocaleKeys.filter_Dialog_only_future.tr),
-                            value: filterFutureEvents,
-                            onChanged: (value) {
-                              setState(() {
-                                filterFutureEvents = value!;
-                              });
-                            },
-                          ),
-                          CheckboxListTile(
-                            title: Text(LocaleKeys.filter_Dialog_only_capacity.tr),
-                            value: filterWithCapacity,
-                            onChanged: (value) {
-                              setState(() {
-                                filterWithCapacity = value!;
-                              });
-                            },
-                          ),
-                          DropdownButton<String>(
-                            value: sortOrder,
-                            hint:  Text(LocaleKeys.filter_Dialog_sort_time.tr),
-                            items: [
-                              DropdownMenuItem(
-                                value: LocaleKeys.filter_Dialog_sort_time_ascending.tr,
-                                child:  Text(LocaleKeys.filter_Dialog_sort_time_ascending.tr),
-                              ),
-                              DropdownMenuItem(
-                                value: LocaleKeys.filter_Dialog_sort_time_descending.tr,
-                                child: Text(LocaleKeys.filter_Dialog_sort_time_descending.tr),
-                              ),
-                            ],
-                            onChanged: (value) {
-                              setState(() {
-                                sortOrder = value;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      LocaleKeys.filter_Dialog_price_range.tr,
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
+                    RangeSlider(
+                      values: priceRange,
+                      min: 0,
+                      max: 9999,
+                      divisions: 100,
+                      labels: RangeLabels(
+                        priceRange.start.toStringAsFixed(0),
+                        priceRange.end.toStringAsFixed(0),
+                      ),
+                      onChanged: (values) {
+                        setState(() {
+                          priceRange = values;
+                        });
+                      },
+                    ),
+                    Text(
+                      "${LocaleKeys.filter_Dialog_price_min.tr}: ${priceRange.start.toStringAsFixed(0)} - ${LocaleKeys.filter_Dialog_price_max.tr}: ${priceRange.end.toStringAsFixed(0)}",
+                    ),
+                    CheckboxListTile(
+                      title:  Text(LocaleKeys.filter_Dialog_only_future.tr),
+                      value: filterFutureEvents,
+                      onChanged: (value) {
+                        setState(() {
+                          filterFutureEvents = value!;
+                        });
+                      },
+                    ),
+                    CheckboxListTile(
+                      title: Text(LocaleKeys.filter_Dialog_only_capacity.tr),
+                      value: filterWithCapacity,
+                      onChanged: (value) {
+                        setState(() {
+                          filterWithCapacity = value!;
+                        });
+                      },
+                    ),
+                    DropdownButton<String>(
+                      value: sortOrder,
+                      hint:  Text(LocaleKeys.filter_Dialog_sort_time.tr),
+                      items: [
+                        DropdownMenuItem(
+                          value: LocaleKeys.filter_Dialog_sort_time_ascending.tr,
+                          child:  Text(LocaleKeys.filter_Dialog_sort_time_ascending.tr),
+                        ),
+                        DropdownMenuItem(
+                          value: LocaleKeys.filter_Dialog_sort_time_descending.tr,
+                          child: Text(LocaleKeys.filter_Dialog_sort_time_descending.tr),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          sortOrder = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
               actions: isLoading
                   ? []
                   : [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: Text(LocaleKeys.filter_Dialog_cancel.tr),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            priceRange = RangeValues(0, 9999);
-                            filterFutureEvents = false;
-                            filterWithCapacity = false;
-                            sortOrder = null;
-                          });
-                          getEvents();
-                          Navigator.pop(context, {
-                            'filterFutureEvents': false,
-                            'filterWithCapacity': false,
-                            'sortOrder': null,
-                            'minPrice': 0,
-                            'maxPrice': 9999,
-                          });
-                        },
-                        child: Text(LocaleKeys.filter_Dialog_reset.tr),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          setState(() {
-                            isLoading = true;
-                          });
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(LocaleKeys.filter_Dialog_cancel.tr),
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      priceRange = RangeValues(0, 9999);
+                      filterFutureEvents = false;
+                      filterWithCapacity = false;
+                      sortOrder = null;
+                    });
+                    getEvents();
+                    Navigator.pop(context, {
+                      'filterFutureEvents': false,
+                      'filterWithCapacity': false,
+                      'sortOrder': null,
+                      'minPrice': 0,
+                      'maxPrice': 9999,
+                    });
+                  },
+                  child: Text(LocaleKeys.filter_Dialog_reset.tr),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
 
-                          await getEvents(
-                            ascending: sortOrder == "Ascending"
-                                ? true
-                                : sortOrder == "Descending"
-                                    ? false
-                                    : null,
-                            onlyFuture: filterFutureEvents,
-                            withCapacity: filterWithCapacity,
-                            minPrice: priceRange.start.toInt(),
-                            maxPrice: priceRange.end.toInt(),
-                          );
+                    await getEvents(
+                      ascending: sortOrder == "Ascending"
+                          ? true
+                          : sortOrder == "Descending"
+                          ? false
+                          : null,
+                      onlyFuture: filterFutureEvents,
+                      withCapacity: filterWithCapacity,
+                      minPrice: priceRange.start.toInt(),
+                      maxPrice: priceRange.end.toInt(),
+                    );
 
-                          savedMinPrice = priceRange.start;
-                          savedMaxPrice = priceRange.end;
+                    savedMinPrice = priceRange.start;
+                    savedMaxPrice = priceRange.end;
 
-                          Navigator.pop(context, {
-                            'filterFutureEvents': filterFutureEvents,
-                            'filterWithCapacity': filterWithCapacity,
-                            'sortOrder': sortOrder,
-                            'minPrice': priceRange.start.toInt(),
-                            'maxPrice': priceRange.end.toInt(),
-                          });
-                        },
-                        child: Text(LocaleKeys.filter_Dialog_apply.tr),
-                      ),
-                    ],
+                    Navigator.pop(context, {
+                      'filterFutureEvents': filterFutureEvents,
+                      'filterWithCapacity': filterWithCapacity,
+                      'sortOrder': sortOrder,
+                      'minPrice': priceRange.start.toInt(),
+                      'maxPrice': priceRange.end.toInt(),
+                    });
+                  },
+                  child: Text(LocaleKeys.filter_Dialog_apply.tr),
+                ),
+              ],
             );
           },
         );

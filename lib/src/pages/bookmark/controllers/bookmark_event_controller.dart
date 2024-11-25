@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -372,8 +371,8 @@ class BookmarkEventController extends GetxController {
       bookmarkedIds.remove(eventId.toString());
       Get.showSnackbar(
         GetSnackBar(
-          messageText: const Text(
-            "The bookmarked event was successfully deleted",
+          messageText:  Text(
+            LocaleKeys.bookmarked_Events_deleted.tr,
             style: TextStyle(color: Colors.black, fontSize: 14),
           ),
           backgroundColor: Colors.greenAccent.withOpacity(.2),

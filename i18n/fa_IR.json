@@ -52,7 +52,7 @@
     "logout_no": "خیر",
     "logout_press": "برای خروج فشار دهید",
     "logout": "خروج از اکانت",
-    "full": "پر شده",
+    "full": "موجود نیست",
     "available": "موجود است",
     "change_language": "برای تغییر زبان کلیک کنید"
   },
@@ -80,7 +80,8 @@
     "delete_failed": "نمیتوان این رویداد رو حذف کرد"
   },
   "bookmarked_Events": {
-    "bookmarked_events": "رویداد های ذخیره شده"
+    "bookmarked_events": "رویداد های ذخیره شده",
+    "deleted": "رویداد ذخیره شده با موفقیت از ذخیره شده ها حذف شد"
   },
   "event_details": {
     "select_number": "یک عدد انتخاب کنید",

@@ -31,7 +31,6 @@ class EventsRepository {
     return null;
   }
 
-
   Future<Either<String, bool>> editBookmarked({
     required EventsUserDto dto,
     required int userId,

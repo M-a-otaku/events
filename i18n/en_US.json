@@ -52,7 +52,7 @@
     "logout_no": "No",
     "logout_press": "Press to Logout",
     "logout": "Logout",
-    "full": "Full",
+    "full": "Not Available",
     "available": "Available",
     "change_language": "Press to Change language"
   },
@@ -80,7 +80,8 @@
     "delete_failed": "can't deit this event"
   },
   "bookmarked_Events": {
-    "bookmarked_events": "Bookmarked Events"
+    "bookmarked_events": "Bookmarked Events",
+    "deleted": "The Bookmarked event was successfully deleted"
   },
   "event_details": {
     "select_number": "Select a Number",

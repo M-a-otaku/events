@@ -84,6 +84,7 @@ class LocaleKeys {
   static const my_event_delete_failed = 'my_event_delete_failed';
   static const bookmarked_Events_bookmarked_events =
       'bookmarked_Events_bookmarked_events';
+  static const bookmarked_Events_deleted = 'bookmarked_Events_deleted';
   static const event_details_select_number = 'event_details_select_number';
   static const event_details_select_number_done =
       'event_details_select_number_done';
@@ -168,7 +169,7 @@ class Locales {
     'event_page_logout_no': 'No',
     'event_page_logout_press': 'Press to Logout',
     'event_page_logout': 'Logout',
-    'event_page_full': 'Full',
+    'event_page_full': 'Not Available',
     'event_page_available': 'Available',
     'event_page_change_language': 'Press to Change language',
     'snack_bar_filled': 'You can\'t but a Event that is full or Expired',
@@ -187,6 +188,8 @@ class Locales {
     'my_event_delete_success': 'Event deleted successfully',
     'my_event_delete_failed': 'can\'t deit this event',
     'bookmarked_Events_bookmarked_events': 'Bookmarked Events',
+    'bookmarked_Events_deleted':
+        'The Bookmarked event was successfully deleted',
     'event_details_select_number': 'Select a Number',
     'event_details_select_number_done': 'Done',
     'event_details_go_back': 'Press to go Back',
@@ -268,7 +271,7 @@ class Locales {
     'event_page_logout_no': 'خیر',
     'event_page_logout_press': 'برای خروج فشار دهید',
     'event_page_logout': 'خروج از اکانت',
-    'event_page_full': 'پر شده',
+    'event_page_full': 'موجود نیست',
     'event_page_available': 'موجود است',
     'event_page_change_language': 'برای تغییر زبان کلیک کنید',
     'snack_bar_filled':
@@ -289,6 +292,8 @@ class Locales {
     'my_event_delete_success': 'رویدار به صورت موفقیت آمیز حذف شد',
     'my_event_delete_failed': 'نمیتوان این رویداد رو حذف کرد',
     'bookmarked_Events_bookmarked_events': 'رویداد های ذخیره شده',
+    'bookmarked_Events_deleted':
+        'رویداد ذخیره شده با موفقیت از ذخیره شده ها حذف شد',
     'event_details_select_number': 'یک عدد انتخاب کنید',
     'event_details_select_number_done': 'اتمام',
     'event_details_go_back': 'برای بازگشت کلیک کنید',
