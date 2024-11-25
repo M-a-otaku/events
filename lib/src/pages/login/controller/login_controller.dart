@@ -1,8 +1,9 @@
-import '../repositories/login_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../infrastructure/routes/route_names.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../generated/locales.g.dart';
+import '../repositories/login_repository.dart';
+import '../../../infrastructure/routes/route_names.dart';
 import '../../shared/local_storage_keys.dart';
 
 class LoginController extends GetxController {
@@ -28,10 +29,10 @@ class LoginController extends GetxController {
     RegExp regex =
         RegExp(r'^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$');
     if (value?.trim() != null && value!.trim().isEmpty) {
-      return 'Please enter password';
+      return   LocaleKeys.login_page_validate_password.tr;
     } else {
       if (!regex.hasMatch(value!)) {
-        return 'Please enter valid password minimum 8 Characters';
+        return LocaleKeys.login_page_validate_password_min.tr;
       } else {
         return null;
       }
@@ -40,7 +41,7 @@ class LoginController extends GetxController {
 
   String? validateUsername(String? value) {
     if (value?.trim() != null && value!.trim().isEmpty) {
-      return 'Please enter Username';
+      return LocaleKeys.login_page_validate_username.tr;
     } else {
       return null;
     }
@@ -53,7 +54,7 @@ class LoginController extends GetxController {
       username: usernameController.text.toLowerCase(),
       password: passwordController.text,
     );
-    result?.fold(
+    result.fold(
       (exception) {
         isLoading.value = false;
         Get.showSnackbar(
@@ -86,9 +87,9 @@ class LoginController extends GetxController {
       passwordController.text = result["password"];
       Get.showSnackbar(
         GetSnackBar(
-          messageText: const Text(
-            ('user successfully created'),
-            style: TextStyle(color: Colors.black, fontSize: 14),
+          messageText: Text(
+            LocaleKeys.login_page_create_user.tr,
+            style: const TextStyle(color: Colors.black, fontSize: 14),
           ),
           backgroundColor: Colors.green.withOpacity(.2),
           duration: const Duration(seconds: 5),

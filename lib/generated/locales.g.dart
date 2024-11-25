@@ -32,6 +32,11 @@ class LocaleKeys {
   static const login_page_remember_me = 'login_page_remember_me';
   static const login_page_login = 'login_page_login';
   static const login_page_register = 'login_page_register';
+  static const login_page_validate_password = 'login_page_validate_password';
+  static const login_page_validate_password_min =
+      'login_page_validate_password_min';
+  static const login_page_validate_username = 'login_page_validate_username';
+  static const login_page_create_user = 'login_page_create_user';
   static const register_page_welcome = 'register_page_welcome';
   static const register_page_information = 'register_page_information';
   static const register_page_firstname = 'register_page_firstname';
@@ -44,6 +49,8 @@ class LocaleKeys {
   static const register_page_register = 'register_page_register';
   static const register_page_or = 'register_page_or';
   static const register_page_back_login = 'register_page_back_login';
+  static const register_page_password_not_match =
+      'register_page_password_not_match';
   static const event_page_events = 'event_page_events';
   static const event_page_search = 'event_page_search';
   static const event_page_retry = 'event_page_retry';
@@ -62,6 +69,12 @@ class LocaleKeys {
   static const snack_bar_not_Allowed = 'snack_bar_not_Allowed';
   static const error_repository_add_bookmark = 'error_repository_add_bookmark';
   static const error_error = 'error_error';
+  static const error_repository_login_no_user =
+      'error_repository_login_no_user';
+  static const error_repository_login_invalid =
+      'error_repository_login_invalid';
+  static const error_repository_register_user_exist =
+      'error_repository_register_user_exist';
   static const bottom_nav_bar_home = 'bottom_nav_bar_home';
   static const bottom_nav_bar_my_events = 'bottom_nav_bar_my_events';
   static const bottom_nav_bar_bookmark = 'bottom_nav_bar_bookmark';
@@ -127,6 +140,11 @@ class Locales {
     'login_page_remember_me': 'Remember Me',
     'login_page_login': 'Login',
     'login_page_register': 'Don\'t have a account ? Register',
+    'login_page_validate_password': 'please enter password',
+    'login_page_validate_password_min':
+        'Please enter valid password minimum 8 Characters',
+    'login_page_validate_username': 'Please enter Username',
+    'login_page_create_user': 'User Successfully created',
     'register_page_welcome': 'Welcome',
     'register_page_information': 'Please Enter Your Information.',
     'register_page_firstname': 'Firstname',
@@ -139,6 +157,7 @@ class Locales {
     'register_page_register': 'Register',
     'register_page_or': 'Or',
     'register_page_back_login': 'Back To Login',
+    'register_page_password_not_match': 'Password is not matching',
     'event_page_events': 'Events',
     'event_page_search': 'Search by Title',
     'event_page_retry': 'Failed to Load Events',
@@ -157,6 +176,9 @@ class Locales {
     'snack_bar_not_Allowed': 'Action Not Allowed',
     'error_repository_add_bookmark': 'Can\'t add this Event to Bookmark',
     'error_error': 'Something Went Wrong',
+    'error_repository_login_no_user': 'No users found',
+    'error_repository_login_invalid': 'Invalid Username or Password',
+    'error_repository_register_user_exist': 'this Username already exist',
     'bottom_nav_bar_home': 'Home',
     'bottom_nav_bar_my_events': 'My Events',
     'bottom_nav_bar_bookmark': 'Bookmarks',
@@ -218,6 +240,11 @@ class Locales {
     'login_page_remember_me': 'مرا به خاطر بسپار',
     'login_page_login': 'ورود',
     'login_page_register': 'اکانت ندارید ؟ ثبت نام کنید',
+    'login_page_validate_password': 'رمز عبور خود را وارد کنید',
+    'login_page_validate_password_min':
+        'لطفا رمز عبور مناسب وارد کنید حداقل هشت حرف',
+    'login_page_validate_username': 'نام کاربری خود را وارد کنید',
+    'login_page_create_user': 'کاربر با موفقیت ایجاد شد',
     'register_page_welcome': 'خوش آمدید',
     'register_page_information': 'لطفا اطلاعات خود را وارد کنید.',
     'register_page_firstname': 'نام',
@@ -230,6 +257,7 @@ class Locales {
     'register_page_register': 'ثبت نام',
     'register_page_or': 'یا',
     'register_page_back_login': 'بازگشت به صفحه ورود',
+    'register_page_password_not_match': 'رمزعبور مطابقت ندارد',
     'event_page_events': 'رویداد ها',
     'event_page_search': 'جستجو بر اساس عنوان',
     'event_page_retry': 'بارگذاری رویدادها با مشکل مواجه شد',
@@ -250,6 +278,9 @@ class Locales {
     'error_repository_add_bookmark':
         'نمی توان این رویداد را به ذخیره شده ها اضاف کرد',
     'error_error': 'مشکلی پیش آمد',
+    'error_repository_login_no_user': 'هیچ کاربری یافت نشد',
+    'error_repository_login_invalid': 'نام کاربری و رمز عبور نامعتبر',
+    'error_repository_register_user_exist': 'این نام کربری قبلا وارد شده اس',
     'bottom_nav_bar_home': 'صفحه اصلی',
     'bottom_nav_bar_my_events': 'رویداد های من',
     'bottom_nav_bar_bookmark': 'ذخیره شده ها',

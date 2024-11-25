@@ -9,26 +9,30 @@ class RegisterWidgets extends StatelessWidget {
   const RegisterWidgets({super.key, required this.gender, required this.title});
 
   @override
-  Widget build(BuildContext context) => GetBuilder<RegisterController>(
-    builder: (RegisterController) {
-      return
-      InkWell(
-        onTap: () => RegisterController.changeGender(gender),
-        child: Row(
-          children: [
+  Widget build(BuildContext context) =>
+      GetBuilder<RegisterController>(
+          builder: (RegisterController) {
+            return
+              InkWell(
+                onTap: (RegisterController.isLoading.value) ? null : ()=>
+                RegisterController.changeGender(gender)
+            ,
+            child: Row(
+            children: [
             Radio(
-              value: gender,
-              groupValue: RegisterController.maleUserGender,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              onChanged: (String? gender) {},
-              activeColor: Theme
-                  .of(context)
-                  .primaryColor,
+            value: gender,
+            groupValue: RegisterController.maleUserGender,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            onChanged: (String? gender) {},
+            activeColor: Theme
+                .of(context)
+                .primaryColor,
             ),
             Text(title)
-          ],
-        ),
+            ],
+            )
+            ,
+            );
+          }
       );
-    }
-  );
 }

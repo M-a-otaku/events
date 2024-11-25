@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:either_dart/either.dart';
+import '../../../../generated/locales.g.dart';
 import '../../../infrastructure/commons/url_repository.dart';
 
 class LoginRepository {
@@ -10,19 +12,20 @@ class LoginRepository {
   }) async {
     try {
       final url = UrlRepository.login(username, password);
-      if (url == null) return const Left('Invalid URL');
 
       final response = await http.get(url);
 
       if (response.statusCode != 200) {
-        return Left('Failed to fetch data: ${response.statusCode}');
+        return Left('${LocaleKeys.error_error.tr}: ${response.statusCode}');
       }
 
       final users = json.decode(response.body) as List<dynamic>?;
-      if (users == null || users.isEmpty) return const Left('No users found');
+      if (users == null || users.isEmpty) {
+        return Left(LocaleKeys.error_repository_login_no_user.tr);
+      }
 
       final user = users.firstWhere(
-            (user) => user["username"] == username && user["password"] == password,
+        (user) => user["username"] == username && user["password"] == password,
         orElse: () => null,
       );
 
@@ -30,9 +33,9 @@ class LoginRepository {
         return Right(user["id"]);
       }
 
-      return const Left('Invalid username or password');
+      return Left(LocaleKeys.error_repository_login_invalid.tr);
     } catch (e) {
-      return Left(e.toString());
+      return Left("${LocaleKeys.error_error.tr}  ${e.toString()}");
     }
   }
 }

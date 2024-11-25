@@ -49,16 +49,6 @@ class LoginView extends GetView<LoginController> {
               ],
             ),
           ),
-          Obx(
-            () => controller.isLoading.value
-                ? Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
-                : const SizedBox.shrink(),
-          ),
         ],
       ),
     );
@@ -143,9 +133,13 @@ class LoginView extends GetView<LoginController> {
         borderRadius: BorderRadius.circular(12),
         color: (controller.isLoading.value) ? Colors.grey : Colors.blueAccent,
       ),
-      child:  Text(
+      child: controller.isLoading.value
+          ? const CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      )
+          : Text(
         LocaleKeys.login_page_login.tr,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 16,
           color: Colors.white,

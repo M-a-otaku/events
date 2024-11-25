@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../generated/locales.g.dart';
 import '../models/register_dto.dart';
 import '../repositories/register_repository.dart';
 
@@ -33,7 +34,7 @@ class RegisterController extends GetxController {
   }
 
   String? validate(String? value) {
-    if (value != null && value.isEmpty) return 'required';
+    if (value != null && value.isEmpty) return LocaleKeys.validate_required.tr;
     return null;
   }
 
@@ -41,10 +42,10 @@ class RegisterController extends GetxController {
     RegExp regex =
         RegExp(r'^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$');
     if (value != null && value.isEmpty) {
-      return 'Please enter password';
+      return LocaleKeys.login_page_validate_password.tr;
     } else {
       if (!regex.hasMatch(value!)) {
-        return 'Please enter valid password minimum 8 Characters';
+        return LocaleKeys.login_page_validate_password_min.tr;
       } else {
         return null;
       }
@@ -54,7 +55,7 @@ class RegisterController extends GetxController {
   String? validateUsername(String? value) {
     ;
     if (value != null && value.isEmpty) {
-      return 'Please enter Username';
+      return LocaleKeys.login_page_validate_username.tr;
     } else {
       return null;
     }
@@ -64,8 +65,8 @@ class RegisterController extends GetxController {
     if (!(formKey.currentState?.validate() ?? false)) return;
     if (passwordController.text != repeatPassController.text) {
       Get.showSnackbar(GetSnackBar(
-          messageText: const Text(
-            ('Password is not matching'),
+          messageText:  Text(
+            LocaleKeys.register_page_password_not_match.tr ,
             style: TextStyle(color: Colors.black, fontSize: 14),
           ),
           backgroundColor: Colors.redAccent.withOpacity(.2),

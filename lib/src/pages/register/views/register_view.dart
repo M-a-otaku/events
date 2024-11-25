@@ -28,7 +28,7 @@ class RegisterView extends GetView<RegisterController> {
                           bottomRight: Radius.elliptical(70, 70))),
                   child: Hero(tag: _icon(), child: _icon()),
                 ),
-                 Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,16 +49,6 @@ class RegisterView extends GetView<RegisterController> {
                 _body(context),
               ],
             ),
-          ),
-          Obx(
-            () => controller.isLoading.value
-                ? Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
-                : const SizedBox.shrink(),
           )
         ],
       ),
@@ -97,9 +87,12 @@ class RegisterView extends GetView<RegisterController> {
             const SizedBox(height: 16),
             _repeatPassword(),
             const SizedBox(height: 16),
-            RegisterWidgets(gender: controller.maleUserGender, title: LocaleKeys.register_page_male.tr),
             RegisterWidgets(
-                gender: controller.femaleUserGender, title: LocaleKeys.register_page_female.tr),
+                gender: controller.maleUserGender,
+                title: LocaleKeys.register_page_male.tr),
+            RegisterWidgets(
+                gender: controller.femaleUserGender,
+                title: LocaleKeys.register_page_female.tr),
             const SizedBox(height: 16),
             Obx(() => _register()),
             const SizedBox(height: 16),
@@ -113,14 +106,13 @@ class RegisterView extends GetView<RegisterController> {
               child: Obx(() => _login()),
             ),
             const SizedBox(height: 16),
-
           ],
         ),
       ),
     );
   }
 
-  Widget _or() => ( Row(
+  Widget _or() => (Row(
         children: [
           const Expanded(child: Divider()),
           Text(
@@ -143,14 +135,18 @@ class RegisterView extends GetView<RegisterController> {
             color:
                 (controller.isLoading.value) ? Colors.grey : Colors.blueAccent,
           ),
-          child:  Text(
-            LocaleKeys.register_page_register.tr,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Colors.white,
-            ),
-          ),
+          child: controller.isLoading.value
+              ? const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                )
+              : Text(
+                  LocaleKeys.register_page_register.tr,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
         ),
       );
 

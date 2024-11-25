@@ -20,7 +20,11 @@
     "password": "رمز عبور",
     "remember_me": "مرا به خاطر بسپار",
     "login": "ورود",
-    "register": "اکانت ندارید ؟ ثبت نام کنید"
+    "register": "اکانت ندارید ؟ ثبت نام کنید",
+    "validate_password": "رمز عبور خود را وارد کنید",
+    "validate_password_min": "لطفا رمز عبور مناسب وارد کنید حداقل هشت حرف",
+    "validate_username": "نام کاربری خود را وارد کنید",
+    "create_user": "کاربر با موفقیت ایجاد شد"
   },
   "register_page": {
     "welcome": "خوش آمدید",
@@ -34,7 +38,8 @@
     "female": "زن",
     "register": "ثبت نام",
     "or": "یا",
-    "back_login": "بازگشت به صفحه ورود"
+    "back_login": "بازگشت به صفحه ورود",
+    "password_not_match": "رمزعبور مطابقت ندارد"
   },
   "event_page": {
     "events": "رویداد ها",
@@ -58,7 +63,10 @@
   },
   "error": {
     "repository_add_bookmark": "نمی توان این رویداد را به ذخیره شده ها اضاف کرد",
-    "error": "مشکلی پیش آمد"
+    "error": "مشکلی پیش آمد",
+    "repository_login_no_user": "هیچ کاربری یافت نشد",
+    "repository_login_invalid": "نام کاربری و رمز عبور نامعتبر",
+    "repository_register_user_exist": "این نام کربری قبلا وارد شده اس"
   },
   "bottom_nav_bar": {
     "home": "صفحه اصلی",

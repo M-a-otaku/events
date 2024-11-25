@@ -20,7 +20,11 @@
     "password": "Password",
     "remember_me": "Remember Me",
     "login": "Login",
-    "register": "Don't have a account ? Register"
+    "register": "Don't have a account ? Register",
+    "validate_password": "please enter password",
+    "validate_password_min": "Please enter valid password minimum 8 Characters",
+    "validate_username": "Please enter Username",
+    "create_user": "User Successfully created"
   },
   "register_page": {
     "welcome": "Welcome",
@@ -34,7 +38,8 @@
     "female": "Female",
     "register": "Register",
     "or": "Or",
-    "back_login": "Back To Login"
+    "back_login": "Back To Login",
+    "password_not_match": "Password is not matching"
   },
   "event_page": {
     "events": "Events",
@@ -58,7 +63,10 @@
   },
   "error": {
     "repository_add_bookmark": "Can't add this Event to Bookmark",
-    "error": "Something Went Wrong"
+    "error": "Something Went Wrong",
+    "repository_login_no_user": "No users found",
+    "repository_login_invalid": "Invalid Username or Password",
+    "repository_register_user_exist": "this Username already exist"
   },
   "bottom_nav_bar": {
     "home": "Home",
